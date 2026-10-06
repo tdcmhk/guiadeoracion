@@ -142,7 +142,7 @@
       <!-- Slide 1 -->
       <div class="carousel-slide active">
         <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
-          <source src="videohead3.mp4" type="video/mp4">
+          <source src="videos/videohead3.webm" type="video/webm">
           Tu navegador no soporta reproducción de video.
         </video>
         <div class="slide-overlay"></div>
@@ -153,7 +153,7 @@
       <!-- Slide 2 -->
       <div class="carousel-slide active">
         <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
-          <source src="videohead6.mp4" type="video/mp4">
+          <source src="videos/videohead6.webm" type="video/webm">
           Tu navegador no soporta reproducción de video.
         </video>
         <div class="slide-overlay"></div>
@@ -164,7 +164,7 @@
       <!-- Slide 3 -->
       <div class="carousel-slide active">
         <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
-          <source src="videohead5.mp4" type="video/mp4">
+          <source src="videos/videohead5.webm" type="video/webm">
           Tu navegador no soporta reproducción de video.
         </video>
         <div class="slide-overlay"></div>
@@ -172,15 +172,15 @@
         </div>
       </div>
 
-        <!-- Slide 4: Descarga de la App 
+        <!-- Slide 4: Descarga de la App -->
         <div class="carousel-slide active">
             <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
-            <source src="videohead2.mp4" type="video/mp4">
+            <source src="videos/videohead2.webm" type="video/webm">
             </video>
                 <div class="slide-overlay"></div>
                 <div class="slide-caption">
                 </div>
-        </div>-->
+        </div>
 
     </div>
 
@@ -205,9 +205,9 @@
           <!-- Botón 3: Unirse a la Intercesión -->
           <a href="#" id="btnIntercesion" class="btn-hero btn-secondary" style="display: none;">🙏 Unirse a la Intercesión</a>
 
-          <!--<button type="button" id="btnDescargar" class="btn-hero btn-secondary pwa-install-trigger" style="display: none;">
+          <button type="button" id="btnDescargar" class="btn-hero btn-secondary pwa-install-trigger" style="display: none;">
             📲 Instalar Aplicación
-          </button>-->
+          </button>
         </div>
       </div>
     </div>
@@ -217,14 +217,13 @@
       <span class="dot active" onclick="setSlide(0)"></span>
       <span class="dot" onclick="setSlide(1)"></span>
       <span class="dot" onclick="setSlide(2)"></span>
-     <!-- <span class="dot" onclick="setSlide(3)"></span>-->
+      <span class="dot" onclick="setSlide(3)"></span>
     </div>
   </section>
 
-  <!-- ========================================================================
-       @CONTENIDO PRINCIPAL
-       ======================================================================== -->
+
   <div class="container">
+    
     <div id="contexto-general" class="intro-card">
       <svg class="intro-adorno-arabesco" aria-hidden="true">
           <use href="#iconestrella"></use>
@@ -235,22 +234,36 @@
       </div>
     </div>
 
+      <!-- ========================================================================
+       @Video
+       ======================================================================== -->
+
 <!-- BLOQUE  DE VIDEO PANORÁMICO -->
-    <div id="video-seccion" class="video-full-bleed" style="width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; margin-top: -20px; margin-bottom: -10px; background-color: #f8fafc; padding: 25px 0;">
-      <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-        <div style="background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);">
+   <div id="video-seccion" class="video-full-bleed" style="width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; margin-top: -10px; margin-bottom: 0px; background-color: #f8fafc; padding: 25px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+      <div style="background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);">
 
-          <!-- Reproductor Nativo MP4 en Alta Definición desde bunnynet -->
-          <div style="position:relative;padding-top:56.25%;"><iframe src="https://player.mediadelivery.net/embed/763408/03021c8e-9a60-42ac-843c-f9c862cbaaa0?autoplay=false&loop=false&muted=false&preload=true&responsive=true" loading="lazy" style="border:0;position:absolute;top:0;height:100%;width:100%;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;" allowfullscreen="true"></iframe></div>
-
-          <!-- Pie de Video / Pie de foto -->
-          <p style="text-align: center; font-size: 0.88rem; color: #4a5568; padding: 12px 20px; margin: 0; font-style: italic; background-color: #ffffff;">
-            Te invitamos a ver este breve video antes de iniciar el boletín de oración.
-          </p>
-
+        <!-- Reproductor Nativo HTML5 en formato WebM -->
+        <div style="position: relative; padding-top: 56.25%; background-color: #000000;">
+          <video 
+            controls 
+            preload="metadata" 
+            playsinline 
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; display: block; object-fit: contain;"
+          >
+            <source src="videos/expedicion2026iv.webm" type="video/webm">
+            Tu navegador no soporta la reproducción de video.
+          </video>
         </div>
+
+        <!-- Pie de Video / Pie de foto -->
+        <p style="text-align: center; font-size: 0.88rem; color: #4a5568; padding: 12px 20px; margin: 0; font-style: italic; background-color: #ffffff;">
+          Te invitamos a ver este breve video antes de iniciar el boletín de oración.
+        </p>
+
       </div>
     </div>
+  </div>
 
 <div class="meta-editorial">
   <!-- <div class="meta-item">
@@ -538,7 +551,7 @@
 
 <!-- ===================================================================================== -->
 <!-- @INSTALACIÓN       =========================================== -->
-<!-- ===================================================================================== 
+<!-- ===================================================================================== -->
 
     
 <div class="pwa-install-card">
@@ -561,7 +574,7 @@
             </div>
         <span>Instalar App</span>
     </button>
-</div>-->
+</div>
 
     <!-- BLOQUE 4 -->
     <div id="seccion-4" class="day-card">
@@ -640,7 +653,7 @@
     </div>
 
     <!-- BLOQUE 5 -->
-    <div id="seccion-5" class="day-card">
+    <div id="seccion-5" class="day-card motivo-extra">
       <div class="day-header">
         <span>BLOQUE 5</span>
         <span class="day-title">
@@ -713,7 +726,7 @@
     </div>
 
     <!-- BLOQUE 6 -->
-    <div id="seccion-6" class="day-card">
+    <div id="seccion-6" class="day-card motivo-extra">
       <div class="day-header">
         <span>BLOQUE 6</span>
         <span class="day-title">
@@ -778,7 +791,7 @@
     </div>
 
     <!-- BLOQUE 7 -->
-    <div id="seccion-7" class="day-card">
+    <div id="seccion-7" class="day-card motivo-extra">
       <div class="day-header">
         <span>BLOQUE 7</span>
         <span class="day-title">
@@ -943,7 +956,7 @@
 
 <!-- ===================================================================================== -->
 <!-- @CONTADOR DE INTERCESORES       =========================================== -->
-<!-- ===================================================================================== 
+<!-- ===================================================================================== -->
 
 <div class="prayer-counter-card">
   <div class="prayer-counter-content">
@@ -957,26 +970,26 @@
     <h3>¿Te uniste a este clamor?</h3>
     <p>Haz clic para registrar tu oración y sumar tu clamor por Turquía.</p>
 
-    
+    <!-- Botón de orar -->
     <button type="button" id="btnOrarYa" class="btn-prayer-action">
       <span class="material-symbols-outlined">favorite</span>
       <span id="txtBtnOrar">He orado por esta causa</span>
     </button>
 
-
+    <!-- Contador en vivo -->
     <div class="prayer-count-display">
       <span class="count-number" id="totalOraciones">...</span>
       <span class="count-label">oraciones levantadas en esta semana</span>
     </div>
 
-  
+    <!-- Mensaje de agradecimiento (oculto inicialmente) -->
     <p id="msgConfirmacionOracion" class="prayer-thanks-msg" style="display: none;">
      ¡Amén! Tu oración ha sido sumada al clamor por Turquía en esta semana.
     </p>
   </div>
 </div>
 
-  -->
+  
 
 
   <!-- ========================================================================
@@ -1029,11 +1042,11 @@
             </div>
           </div>
 
-          <!-- Botón de Instalación 
+          <!-- Botón de Instalación -->
           <button type="button" class="footer-btn btn-install-pwa pwa-install-trigger">
             <span class="material-symbols-outlined" style="font-size: 22px; color: #ffffff;">download_for_offline</span>
             <span>Instalar App en tu Celular</span>
-          </button>-->
+          </button>
 
         </div>
       </div>
