@@ -93,16 +93,6 @@ const slidesData = [
   },
   {
     category: "",
-    title: "Video Informativo",
-    description: "Conoce la Movilización Más Reciente",
-    subtag: "",
-    button: {
-      text: "▶ Ver Video",
-      link: "#video-seccion" // Te desplaza al videojavascript:void(0)
-    }
-  },
-  {
-    category: "",
     title: "Involúcrate",
     description: "Comparte la Movilización con tus Amigos",
     subtag: "",
@@ -120,13 +110,23 @@ const slidesData = [
       text: "⭣ Instalar Aplicación",
       link: "javascript:void(0)"
     }
+  },
+  {
+    category: "",
+    title: "Video Informativo",
+    description: "Conoce la Movilización Más Reciente",
+    subtag: "",
+    button: {
+      text: "▶ Ver Video",
+      link: "#video-seccion" // Te desplaza al videojavascript:void(0)
+    }
   }
 ];
 
 
 // Duraciones individuales por slide
-const SLIDE_IMAGE_DURATION = 10000; // 10 segundos para diapositivas con fotos
-const SLIDE_VIDEO_DURATION = 10000; // 14 segundos para la diapositiva con video de 14s
+const SLIDE_IMAGE_DURATION = 12000; // 10 segundos para diapositivas con fotos
+const SLIDE_VIDEO_DURATION = 12000; // 14 segundos para la diapositiva con video de 14s
 
 let carouselTimer = null;
 
@@ -135,7 +135,7 @@ let carouselTimer = null;
    3. FUNCIONES DE CONTROL DEL CARRUSEL
    ========================================================================== */
 
-/* Reiniciar el temporizador de forma segura según el slide activo
+/*//Reiniciar el temporizador de forma segura según el slide activo
 function resetCarouselTimer(duration = SLIDE_IMAGE_DURATION) {
   if (carouselTimer) {
     clearInterval(carouselTimer);
@@ -145,13 +145,14 @@ function resetCarouselTimer(duration = SLIDE_IMAGE_DURATION) {
   }, duration);
 }
 
-function startCarouselTimer(duration = 10000) {
+function startCarouselTimer(duration = 12000) {
   if (carouselTimer) clearInterval(carouselTimer);
 
   carouselTimer = setInterval(() => {
     showSlide(currentSlide + 1);
   }, duration);
 }*/
+
 
 // Temporizador DESACTIVADO: El carrusel no avanza automáticamente
 function resetCarouselTimer(duration = SLIDE_IMAGE_DURATION) {

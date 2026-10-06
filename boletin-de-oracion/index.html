@@ -151,19 +151,8 @@
           </div>
       </div>
 
-      <!-- Slide 2 -->
-      <div class="carousel-slide active">
-        <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
-          <source src="videos/videohead6.webm" type="video/webm">
-          Tu navegador no soporta reproducción de video.
-        </video>
-        <div class="slide-overlay"></div>
-        <div class="slide-caption">
-        </div>
-      </div>
-
       <!-- Slide 3 -->
-      <div class="carousel-slide active">
+      <div class="carousel-slide">
         <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
           <source src="videos/videohead5.webm" type="video/webm">
           Tu navegador no soporta reproducción de video.
@@ -174,7 +163,7 @@
       </div>
 
         <!-- Slide 4: Descarga de la App -->
-        <div class="carousel-slide active">
+        <div class="carousel-slide">
             <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
             <source src="videos/videohead2.webm" type="video/webm">
             </video>
@@ -182,6 +171,17 @@
                 <div class="slide-caption">
                 </div>
         </div>
+        
+        <!-- Slide 2 -->
+      <div class="carousel-slide">
+        <video autoplay loop muted playsinline preload="metadata" class="slide-video-bg">
+          <source src="videos/videohead6.webm" type="video/webm">
+          Tu navegador no soporta reproducción de video.
+        </video>
+        <div class="slide-overlay"></div>
+        <div class="slide-caption">
+        </div>
+      </div>
 
     </div>
 
@@ -554,27 +554,26 @@
 <!-- @INSTALACIÓN       =========================================== -->
 <!-- ===================================================================================== -->
 
-    
 <div class="pwa-install-card">
-    <div class="pwa-info">
-        <div class="material-icon">
-              <svg class="material-icono-svg-app" >
-                <use href="#iconapp"></use>
-              </svg>
-            </div>
-        <div>
-            <h4>Instala el Boletín de Oración</h4>
-            <p>Accede rápidamente desde tu pantalla de inicio sin usar el navegador.</p>
-        </div>
+  <div class="pwa-info">
+    <div class="material-icon">
+      <svg class="material-icono-svg-app">
+        <use href="#iconapp"></use>
+      </svg>
     </div>
-    <button type="button" class="btn-install-pwa" onclick="installPWA()">
-        <div class="material-icon">
-              <svg class="material-icono-svg-install" >
-                <use href="#iconguardar-el-archivo"></use>
-              </svg>
-            </div>
-        <span>Instalar App</span>
-    </button>
+    <div>
+      <h4>Instala el Boletín de Oración</h4>
+      <p>Accede rápidamente desde tu pantalla de inicio sin usar el navegador.</p>
+    </div>
+  </div>
+  <button type="button" class="btn-install-pwa pwa-install-trigger">
+    <div class="material-icon">
+      <svg class="material-icono-svg-install">
+        <use href="#iconguardar-el-archivo"></use>
+      </svg>
+    </div>
+    <span>Instalar App</span>
+  </button>
 </div>
 
     <!-- BLOQUE 4 -->
@@ -1508,7 +1507,7 @@ l-5 -281 188 -145 c104 -79 242 -184 307 -233 l117 -88 213 160 c116 88 254
 
 </svg>
 
-  </body>
+
 
 </body>
 </html>
