@@ -1,3 +1,36 @@
+// Evento Formulario Correo/Clave
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.style.display = 'none';
+      try {
+        await signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value);
+      } catch (err) {
+        errorMsg.textContent = "Credenciales incorrectas o error de inicio de sesión.";
+        errorMsg.style.display = 'block';
+      }
+    });
+
+    // Iniciar con Google
+    window.loginWithGoogle = async () => {
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+      } catch (err) {
+        console.error("Error Google Auth:", err);
+      }
+    };
+
+    // Iniciar con Facebook
+    window.loginWithFacebook = async () => {
+      try {
+        await signInWithPopup(auth, new FacebookAuthProvider());
+      } catch (err) {
+        console.error("Error Facebook Auth:", err);
+      }
+    };
+
+    // Cerrar sesión
+    window.logout = () => signOut(auth);
+
 /* ==========================================================================
    OCULTAR PANTALLA DE CARGA CUANDO LA PÁGINA ESTÉ LISTA
    ========================================================================== */
