@@ -41,43 +41,6 @@
 
 <body>
 
-  <!-- 1. PANTALLA DE INICIO DE SESIÓN -->
-  <div id="login-screen" class="card-box">
-    <h2>Acceso Restringido</h2>
-    <p style="color: #4a5568; font-size: 0.9rem;">Ingresa a la intranet del equipo de intercesión</p>
-
-    <form id="login-form">
-      <input type="email" id="email" placeholder="Correo electrónico" required>
-      <input type="password" id="password" placeholder="Contraseña" required>
-      <button type="submit" class="btn btn-primary">Ingresar con Correo</button>
-    </form>
-
-    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-
-    <button onclick="loginWithGoogle()" class="btn btn-google">Continuar con Google</button>
-    <button onclick="loginWithFacebook()" class="btn btn-facebook">Continuar con Facebook</button>
-
-    <p id="error-msg" style="color: #e53e3e; font-size: 0.85rem; margin-top: 15px; display: none;"></p>
-  </div>
-
-  <!-- 2. PANTALLA DE PENDIENTE DE APROBACIÓN POR WHATSAPP -->
-  <div id="pending-screen" class="card-box" style="display: none;">
-    <h3 style="color: #2b6cb0; margin-top: 0;">Verificación Requerida</h3>
-    <p style="color: #4a5568; font-size: 0.9rem;">Por la seguridad y confidencialidad de la obra misionera, tu cuenta requiere ser validada personalmente.</p>
-    
-    <p style="font-size: 0.85rem; color: #718096;">Por favor, envía un mensaje para aprobar tu acceso:</p>
-    <a id="whatsapp-link" href="#" target="_blank" class="btn btn-wa">Validar por WhatsApp</a>
-    
-    <br><br>
-    <button onclick="logout()" style="background: none; border: none; color: #e53e3e; cursor: pointer; text-decoration: underline;">Cerrar Sesión</button>
-  </div>
-
-  <!-- 3. CONTENIDO PROTEGIDO DE TU SITIO WEB -->
-  <div id="app-content" style="display: none; max-width: 900px; margin: 0 auto;">
-    <div style="text-align: right; padding: 10px 0;">
-      <button onclick="logout()" style="background: #e53e3e; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer;">Cerrar Sesión</button>
-    </div>
-
 <!-- PANTALLA DE CARGA (PRELOADER) -->
   <div id="pageLoader" class="page-loader">
     <div class="loader-content">
@@ -1544,7 +1507,43 @@ l-5 -281 188 -145 c104 -79 242 -184 307 -233 l117 -88 213 160 c116 88 254
 
 </svg>
 
+<!-- GUARDIÁN DE SEGURIDAD DEL BOLETÍN -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyBeuFR_MvuAWKan95TEhKvyap51n189tcM",
+    authDomain: "intranet-movilizacion-turquia.firebaseapp.com",
+    projectId: "intranet-movilizacion-turquia",
+    storageBucket: "intranet-movilizacion-turquia.firebasestorage.app",
+    messagingSenderId: "633633525264",
+    appId: "1:633633525264:web:93010e98058338f3580495"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      // Si no ha iniciado sesión, expulsar al login de la intranet
+      window.location.replace("/intranet/");
+      return;
+    }
+    const snap = await getDoc(doc(db, "usuarios", user.uid));
+    if (!snap.exists() || snap.data().aprobado !== true) {
+      // Si no está aprobado aún, devolver a la pantalla de espera
+      window.location.replace("/intranet/");
+    }
+  });
+
+  // Por si quieres poner un botón de "Salir" en el menú del boletín
+  window.cerrarSesionIntranet = () => {
+    signOut(auth).then(() => window.location.replace("/intranet/"));
+  };
+</script>
 
 </body>
 </html>
