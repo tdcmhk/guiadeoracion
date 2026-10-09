@@ -117,7 +117,7 @@
       <span>Continuar con Google</span>
     </button>
 
-    <div class="divider"><span id="dividerText">o ingresa con tu correo</span></div>
+    <!--<div class="divider"><span id="dividerText">o ingresa con tu correo</span></div>-->
 
     <form id="auth-form" class="auth-form">
       <!-- Campos adicionales solo visibles al Registrarse -->
@@ -134,10 +134,10 @@
       </div>
 
       <!-- Campos de Correo y Contraseña -->
-      <input type="email" id="email" placeholder="Correo electrónico" required>
+       <!--<input type="email" id="email" placeholder="Correo electrónico" required>
       <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>
 
-      <p id="error-msg" class="auth-error"></p>
+      <p id="error-msg" class="auth-error"></p>-->
 
       <button type="submit" id="btnSubmitAuth" class="btn-submit">Ingresar al Boletín</button>
     </form>
@@ -177,6 +177,7 @@
   </div>
 
   <script type="module">
+   
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getAuth, 
@@ -279,7 +280,7 @@
         })
       }).catch(() => {});
     }
-
+    
     // Escuchar estado de sesión
     onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -332,6 +333,42 @@
         completeProfileScreen.style.display = 'none';
         pendingScreen.style.display = 'none';
       }
+      if (!userSnap.exists()) {
+            const partesNombre = (user.displayName || "").split(" ");
+            const zonaHoraria = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+
+            // Si entró con el Link VIP, se auto-aprueba y captura todo lo que da Google
+            if (esUsuarioVip) {
+              await setDoc(userRef, {
+                nombre: partesNombre[0] || "Pastor / Líder",
+                apellido: partesNombre.slice(1).join(" ") || "",
+                email: user.email,
+                foto: user.photoURL || "",
+                telefono: user.phoneNumber || "",
+                pais: zonaHoraria, // Ej: America/Lima, Europe/Istanbul
+                iglesia: "Completar en Mi Perfil",
+                rol: "VIP / Liderazgo",
+                aprobado: true,    // <-- ¡BYPASS AUTOMÁTICO! Pasa directo sin esperar
+                fechaRegistro: new Date()
+              });
+
+              // Te avisa a tu Gmail que un Pastor VIP acaba de ingresar
+              fetch("https://formsubmit.co/ajax/adolescentespl@gmail.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                body: JSON.stringify({
+                  _subject: `⭐ Acceso VIP Directo: ${user.displayName || user.email}`,
+                  Nombre: user.displayName || "Líder VIP",
+                  Correo: user.email,
+                  Zona_Horaria: zonaHoraria,
+                  Tipo_Acceso: "Enlace Bypass VIP (Auto-aprobado)"
+                })
+              }).catch(() => {});
+
+              window.location.replace("/intranet/boletin-de-oracion/");
+              return;
+            }
+          }
     });
 
     // Envío del formulario (Login o Registro)
@@ -399,6 +436,17 @@
     };
 
     window.logout = () => signOut(auth);
+
+     // 1. Detectar si entró con el Enlace Privado VIP (Bypass)
+    const urlParams = new URLSearchParams(window.location.search);
+    const codigoVipUrl = urlParams.get('vip');
+    const CLAVE_SECRETA_VIP = "LIDERES2026"; // <-- Puedes cambiarla cuando quieras
+
+    if (codigoVipUrl === CLAVE_SECRETA_VIP) {
+      sessionStorage.setItem('acceso_vip', 'true');
+    }
+
+    const esUsuarioVip = sessionStorage.getItem('acceso_vip') === 'true';
   </script>
 </body>
 </html>

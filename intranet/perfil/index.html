@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mi Perfil y Dashboard — Movilización Turquía</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    :root {
+      --primary: #1a365d;
+      --accent: #0e9594;
+      --bg: #f1f5f9;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      color: #1e293b;
+    }
+    /* Barra Superior */
+    .top-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .top-bar-inner {
+      max-width: 950px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn-volver {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: #e2e8f0;
+      transition: background 0.2s;
+    }
+    .btn-volver:hover { background: #cbd5e1; }
+
+    .dashboard-container {
+      max-width: 950px;
+      margin: 28px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) {
+      .dashboard-container { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Cabecera del usuario */
+    .user-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .user-avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+      margin-bottom: 10px;
+    }
+    .badge-rol {
+      display: inline-block;
+      background: #fef3c7;
+      color: #b45309;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    /* Formulario de Datos */
+    .profile-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .profile-form label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: -6px;
+    }
+    .profile-form input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    .btn-save {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .btn-save:hover { background: #0b7a79; }
+
+    /* Tarjetas de Estadísticas y Favoritos */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .stat-box {
+      background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+      color: #ffffff;
+      padding: 18px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .stat-box span.material-symbols-outlined { font-size: 34px; opacity: 0.9; }
+    .stat-num { font-size: 1.5rem; font-weight: 800; display: block; }
+    .stat-label { font-size: 0.78rem; opacity: 0.85; }
+
+    .empty-state {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.88rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE NAVEGACIÓN DEL PERFIL -->
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <a href="/intranet/boletin-de-oracion/" class="btn-volver">
+        <span class="material-symbols-outlined">arrow_back</span>
+        <span>Ir al Boletín de Oración</span>
+      </a>
+      <button onclick="cerrarSesion()" style="background:none; border:none; color:#dc2626; font-weight:700; cursor:pointer;">
+        Cerrar Sesión
+      </button>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+
+    <!-- COLUMNA IZQUIERDA: DATOS PERSONALES DEL INTERCESOR / PASTOR -->
+    <section class="card">
+      <div class="user-header">
+        <img id="userFoto" src="https://ui-avatars.com/api/?name=Intercesor&background=1a365d&color=fff" alt="Foto" class="user-avatar">
+        <h3 id="userSaludo" style="margin: 0 0 6px 0; color: var(--primary);">Cargando perfil...</h3>
+        <span id="userRol" class="badge-rol">Intercesor</span>
+      </div>
+
+      <form id="formPerfil" class="profile-form">
+        <label>Nombre</label>
+        <input type="text" id="inpNombre" placeholder="Tu nombre" required>
+
+        <label>Apellido</label>
+        <input type="text" id="inpApellido" placeholder="Tu apellido" required>
+
+        <label>WhatsApp / Teléfono</label>
+        <input type="tel" id="inpTelefono" placeholder="+51 999 999 999" required>
+
+        <label>País y Ciudad</label>
+        <input type="text" id="inpPais" placeholder="Ej: Perú - Lima" required>
+
+        <label>Iglesia o Cargo Ministerial</label>
+        <input type="text" id="inpIglesia" placeholder="Nombre de tu iglesia o ministerio" required>
+
+        <button type="submit" id="btnGuardar" class="btn-save">Guardar Mis Datos</button>
+        <p id="msgExito" style="display:none; color:#059669; text-align:center; font-weight:600; font-size:0.85rem; margin:0;">
+          ✅ ¡Tus datos han sido guardados!
+        </p>
+      </form>
+    </section>
+
+    <!-- COLUMNA DERECHA: DASHBOARD DE INTERCESIÓN Y FAVORITOS -->
+    <section style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- Resumen de actividad -->
+      <div class="card">
+        <h3 style="margin: 0 0 14px 0; color: var(--primary);">Mi Actividad en el Clamor</h3>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="material-symbols-outlined">folded_hands</span>
+            <div>
+              <span class="stat-num" id="numOraciones">0</span>
+              <span class="stat-label">Mis Oraciones Registradas</span>
+            </div>
+          </div>
+          <div class="stat-box" style="background: linear-gradient(135deg, #0e9594 0%, #0b7a79 100%);">
+            <span class="material-symbols-outlined">bookmark_heart</span>
+            <div>
+              <span class="stat-num" id="numFavoritos">0</span>
+              <span class="stat-label">Motivos y Videos Guardados</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Motivos de Oración Guardados -->
+      <div class="card">
+        <h4 style="margin: 0 0 6px 0; color: var(--primary); display:flex; align-items:center; gap:8px;">
+          <span class="material-symbols-outlined" style="color:var(--accent);">menu_book</span>
+          Mis Motivos de Oración Guardados
+        </h4>
+        <div id="listaMotivosGuardados" class="empty-state">
+          Pronto podrás marcar tus bloques de oración favoritos desde el boletín para hacerles seguimiento aquí.
+        </div>
+      </div>
+
+      <!-- Videos Favoritos -->
+      <div class="card">
+        <h4 style="margin: 0 0 6px 0; color: var(--primary); display:flex; align-items:center; gap:8px;">
+          <span class="material-symbols-outlined" style="color:var(--accent);">smart_display</span>
+          Videos de Movilización que me gustan
+        </h4>
+        <div id="listaVideosGuardados" class="empty-state">
+          Aquí aparecerán los videos misioneros que guardes para compartir con tu iglesia.
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBeuFR_MvuAWKan95TEhKvyap51n189tcM",
+      authDomain: "intranet-movilizacion-turquia.firebaseapp.com",
+      projectId: "intranet-movilizacion-turquia",
+      storageBucket: "intranet-movilizacion-turquia.firebasestorage.app",
+      messagingSenderId: "633633525264",
+      appId: "1:633633525264:web:93010e98058338f3580495"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let uidActual = null;
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.replace("/intranet/");
+        return;
+      }
+      uidActual = user.uid;
+
+      const snap = await getDoc(doc(db, "usuarios", user.uid));
+      if (!snap.exists() || snap.data().aprobado !== true) {
+        window.location.replace("/intranet/");
+        return;
+      }
+
+      const d = snap.data();
+      if (user.photoURL || d.foto) {
+        document.getElementById('userFoto').src = user.photoURL || d.foto;
+      }
+      document.getElementById('userSaludo').textContent = `${d.nombre || ''} ${d.apellido || ''}`.trim() || user.email;
+      document.getElementById('userRol').textContent = d.rol || "Intercesor Aprobado";
+
+      document.getElementById('inpNombre').value = d.nombre || "";
+      document.getElementById('inpApellido').value = d.apellido || "";
+      document.getElementById('inpTelefono').value = d.telefono || "";
+      document.getElementById('inpPais').value = d.pais || "";
+      document.getElementById('inpIglesia').value = (d.iglesia === "Completar en Mi Perfil") ? "" : (d.iglesia || "");
+
+      // Estadísticas personales guardadas en su documento
+      document.getElementById('numOraciones').textContent = d.misOracionesCount || 0;
+      const favs = (d.motivosFavoritos?.length || 0) + (d.videosFavoritos?.length || 0);
+      document.getElementById('numFavoritos').textContent = favs;
+    });
+
+    /*const esLocal = window.location.hostname === "localhost" || 
+                    window.location.hostname === "127.0.0.1" || 
+                    window.location.protocol === "file:";
+
+    if (!user) {
+      if (esLocal) {
+        console.log("🛠️ Modo Local en VS Code: Guardián desactivado para que puedas editar libremente.");
+        inyectarBotonesEnBloques();
+        return; // No te expulsa cuando estás en tu PC
+      }
+      window.location.replace("/intranet/");
+      return;
+    }*/
+
+    // Mostrar lista de Motivos Guardados y Orados en el Dashboard
+      const contenedorMotivos = document.getElementById('listaMotivosGuardados');
+      const guardados = d.motivosFavoritos || [];
+      const orados = d.bloquesOrados || [];
+
+      if (guardados.length > 0 || orados.length > 0) {
+        let html = '<div style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px;">';
+        
+        guardados.forEach(m => {
+          html += `
+            <a href="/intranet/boletin-de-oracion/#${m.id}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; text-decoration:none; color:#1e3a8a; font-weight:600; font-size:0.88rem;">
+              <span>🔖 ${m.titulo}</span>
+              <span class="material-symbols-outlined" style="font-size:18px;">open_in_new</span>
+            </a>`;
+        });
+
+        orados.forEach(m => {
+          html += `
+            <a href="/intranet/boletin-de-oracion/#${m.id}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; text-decoration:none; color:#065f46; font-weight:600; font-size:0.88rem;">
+              <span>🙏 Orado: ${m.titulo}</span>
+              <span class="material-symbols-outlined" style="font-size:18px;">check_circle</span>
+            </a>`;
+        });
+
+        html += '</div>';
+        contenedorMotivos.innerHTML = html;
+        contenedorMotivos.style.background = 'transparent';
+        contenedorMotivos.style.border = 'none';
+        contenedorMotivos.style.padding = '0';
+      }
+
+    document.getElementById('formPerfil').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!uidActual) return;
+
+      const btn = document.getElementById('btnGuardar');
+      const msg = document.getElementById('msgExito');
+      btn.textContent = "Guardando...";
+
+      const nombre = document.getElementById('inpNombre').value.trim();
+      const apellido = document.getElementById('inpApellido').value.trim();
+
+      await updateDoc(doc(db, "usuarios", uidActual), {
+        nombre: nombre,
+        apellido: apellido,
+        telefono: document.getElementById('inpTelefono').value.trim(),
+        pais: document.getElementById('inpPais').value.trim(),
+        iglesia: document.getElementById('inpIglesia').value.trim()
+      });
+
+      document.getElementById('userSaludo').textContent = `${nombre} ${apellido}`;
+      btn.textContent = "Guardar Mis Datos";
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 3000);
+    });
+
+    window.cerrarSesion = () => {
+      signOut(auth).then(() => window.location.replace("/intranet/"));
+    };
+  </script>
+</body>
+</html>

@@ -2378,4 +2378,57 @@ body.dark-mode .form-group-chat textarea {
   color: #f1f5f9;
 }
 
+/* Barra de Reacción Social en cada Bloque */
+.social-prayer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid #e2e8f0;
+}
 
+.btn-social-pray,
+.btn-social-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #334155;
+  transition: all 0.2s ease;
+}
+
+.btn-social-pray:hover,
+.btn-social-save:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+/* Estado Activo: Cuando el intercesor YA ORÓ por este bloque */
+.btn-social-pray.prayed {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #047857;
+}
+
+/* Estado Activo: Cuando el intercesor GUARDÓ el motivo */
+.btn-social-save.saved {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+.pray-count-badge {
+  background: rgba(0, 0, 0, 0.07);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+}
