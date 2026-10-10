@@ -1989,7 +1989,7 @@ l-5 -281 188 -145 c104 -79 242 -184 307 -233 l117 -88 213 160 c116 88 254
  // 5. Verificar sesión y sincronizar en tiempo real con el perfil del usuario
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
-      window.location.replace("/intranet/");
+     // window.location.replace("/intranet/");
       return;
     }
     currentUser = user;
@@ -1999,7 +1999,7 @@ l-5 -281 188 -145 c104 -79 242 -184 307 -233 l117 -88 213 160 c116 88 254
     const userRef = doc(db, "usuarios", user.uid);
     onSnapshot(userRef, (snap) => {
       if (!snap.exists() || snap.data().aprobado !== true) {
-        window.location.replace("/intranet/");
+        //window.location.replace("/intranet/");
         return;
       }
       const data = snap.data();
@@ -2010,7 +2010,7 @@ l-5 -281 188 -145 c104 -79 242 -184 307 -233 l117 -88 213 160 c116 88 254
   });
 
   window.cerrarSesionIntranet = () => {
-    signOut(auth).then(() => window.location.replace("/intranet/"));
+   // signOut(auth).then(() => window.location.replace("/intranet/"));
   };
 
   /*const esLocal = window.location.hostname === "localhost" || 
