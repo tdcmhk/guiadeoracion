@@ -176,19 +176,20 @@
     <button type="button" onclick="logout()" class="btn-logout">Cerrar sesión</button>
   </div>
 
-  <script type="module">
-   
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getAuth, 
       signInWithEmailAndPassword, 
       createUserWithEmailAndPassword,
       GoogleAuthProvider, 
-      signInWithPopup, 
+      signInWithPopup,
+      signInWithRedirect,
+      getRedirectResult,
       onAuthStateChanged, 
       signOut 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBeuFR_MvuAWKan95TEhKvyap51n189tcM",
@@ -203,250 +204,123 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // 1. GUARDAR EL PASE VIP EN LOCALSTORAGE (No se borra en celulares al abrir Google)
+    const urlParams = new URLSearchParams(window.location.search);
+    const codigoVipUrl = (urlParams.get('vip') || "").trim().toUpperCase();
+    const CLAVE_SECRETA_VIP = "LIDERES2026";
+
+    if (codigoVipUrl === CLAVE_SECRETA_VIP) {
+      localStorage.setItem('pase_vip_activo', 'true');
+    }
+
     const loginScreen = document.getElementById('login-screen');
     const completeProfileScreen = document.getElementById('complete-profile-screen');
     const pendingScreen = document.getElementById('pending-screen');
     const whatsappLink = document.getElementById('whatsapp-link');
     const errorMsg = document.getElementById('error-msg');
 
-    let modoActual = 'login';
-    let datosRegistroTemp = null;
-
-    // Cambiar entre pestaña "Iniciar Sesión" y "Solicitar Acceso"
-    window.cambiarModo = (modo) => {
-      modoActual = modo;
-      errorMsg.style.display = 'none';
-      const camposReg = document.getElementById('campos-registro');
-      const btnSubmit = document.getElementById('btnSubmitAuth');
-      const tabLogin = document.getElementById('tabLogin');
-      const tabRegistro = document.getElementById('tabRegistro');
-
-      if (modo === 'registro') {
-        camposReg.style.display = 'flex';
-        btnSubmit.textContent = 'Registrarme y Solicitar Acceso';
-        tabRegistro.classList.add('active');
-        tabLogin.classList.remove('active');
-        document.getElementById('regNombre').required = true;
-        document.getElementById('regApellido').required = true;
-        document.getElementById('regTelefono').required = true;
-        document.getElementById('regPais').required = true;
-        document.getElementById('regIglesia').required = true;
-      } else {
-        camposReg.style.display = 'none';
-        btnSubmit.textContent = 'Ingresar al Boletín';
-        tabLogin.classList.add('active');
-        tabRegistro.classList.remove('active');
-        document.getElementById('regNombre').required = false;
-        document.getElementById('regApellido').required = false;
-        document.getElementById('regTelefono').required = false;
-        document.getElementById('regPais').required = false;
-        document.getElementById('regIglesia').required = false;
+    // Si es VIP, mostrar un aviso visual arriba para saber que el link VIP está activo
+    if (localStorage.getItem('pase_vip_activo') === 'true') {
+      const sub = document.querySelector('#login-screen .subtitle');
+      if (sub) {
+        sub.innerHTML = `<strong style="color:#059669;">⭐ Acceso Directo VIP Activado.</strong><br>Inicia sesión para entrar directamente al Boletín.`;
       }
-    };
-
-    function mostrarError(texto) {
-      errorMsg.textContent = texto;
-      errorMsg.style.display = 'block';
     }
 
-    // Función para guardar ficha completa en Firestore y avisar por Gmail
-    async function guardarFichaIntercesor(user, datosExtra) {
-      const userRef = doc(db, "usuarios", user.uid);
-      const ficha = {
-        nombre: datosExtra.nombre,
-        apellido: datosExtra.apellido,
-        telefono: datosExtra.telefono,
-        pais: datosExtra.pais,
-        iglesia: datosExtra.iglesia,
-        email: user.email,
-        aprobado: false,
-        fechaRegistro: new Date()
-      };
+    // Procesar regreso de redirección en móviles
+    getRedirectResult(auth).catch((err) => console.warn("Redirect info:", err));
 
-      await setDoc(userRef, ficha);
-
-      // Enviar alerta automática a tu correo adolescentespl@gmail.com
-      fetch("https://formsubmit.co/ajax/adolescentespl@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          _subject: `🔔 Nuevo Intercesor: ${ficha.nombre} ${ficha.apellido} (${ficha.pais})`,
-          Nombre_Completo: `${ficha.nombre} ${ficha.apellido}`,
-          Telefono_WhatsApp: ficha.telefono,
-          Pais: ficha.pais,
-          Iglesia: ficha.iglesia,
-          Correo: ficha.email,
-          Instruccion: "Entra a Firebase > Firestore Database > colección 'usuarios' y cambia 'aprobado' a true."
-        })
-      }).catch(() => {});
-    }
-    
-    // Escuchar estado de sesión
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         loginScreen.style.display = 'none';
+        const tienePaseVip = localStorage.getItem('pase_vip_activo') === 'true';
+
         try {
           const userRef = doc(db, "usuarios", user.uid);
           const userSnap = await getDoc(userRef);
+          const partesNombre = (user.displayName || "").split(" ");
+          const zonaHoraria = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
 
-          // Si se acaba de registrar con el formulario completo
-          if (!userSnap.exists() && datosRegistroTemp) {
-            await guardarFichaIntercesor(user, datosRegistroTemp);
-            datosRegistroTemp = null;
-          } 
-          // Si entró con Google por primera vez y aún no llenó sus datos de iglesia/país
-          else if (!userSnap.exists()) {
-            const partesNombre = (user.displayName || "").split(" ");
-            document.getElementById('profNombre').value = partesNombre[0] || "";
-            document.getElementById('profApellido').value = partesNombre.slice(1).join(" ") || "";
-            completeProfileScreen.style.display = 'block';
+          // CASO A: TIENE EL LINK VIP (Sea nuevo o ya existía pendiente, lo aprueba de inmediato)
+          if (tienePaseVip) {
+            await setDoc(userRef, {
+              nombre: userSnap.exists() ? (userSnap.data().nombre || partesNombre[0] || "Pastor / Líder") : (partesNombre[0] || "Pastor / Líder"),
+              apellido: userSnap.exists() ? (userSnap.data().apellido || partesNombre.slice(1).join(" ")) : (partesNombre.slice(1).join(" ") || ""),
+              email: user.email,
+              foto: user.photoURL || "",
+              pais: userSnap.exists() ? (userSnap.data().pais || zonaHoraria) : zonaHoraria,
+              rol: "VIP / Liderazgo",
+              aprobado: true, // <-- APRUEBA DIRECTAMENTE EN FIREBASE
+              fechaActualizacionVip: new Date()
+            }, { merge: true });
+
+            // Limpiamos la llave temporal y entramos directo al boletín
+            localStorage.removeItem('pase_vip_activo');
+            window.location.replace("/intranet/boletin-de-oracion/");
             return;
           }
 
-          // Escuchar en tiempo real si ya está aprobado
+          // CASO B: USUARIO NORMAL (Sin link VIP)
+          if (!userSnap.exists()) {
+            if (completeProfileScreen) {
+              document.getElementById('profNombre').value = partesNombre[0] || "";
+              document.getElementById('profApellido').value = partesNombre.slice(1).join(" ") || "";
+              completeProfileScreen.style.display = 'block';
+              return;
+            } else {
+              await setDoc(userRef, {
+                nombre: partesNombre[0] || "Intercesor",
+                email: user.email,
+                aprobado: false,
+                fechaRegistro: new Date()
+              });
+            }
+          }
+
           onSnapshot(userRef, (snap) => {
             const data = snap.data();
             if (!data) return;
-            completeProfileScreen.style.display = 'none';
+            if (completeProfileScreen) completeProfileScreen.style.display = 'none';
 
             if (data.aprobado === true) {
               window.location.replace("/intranet/boletin-de-oracion/");
             } else {
               pendingScreen.style.display = 'block';
-              const msg = encodeURIComponent(
-                `Hola, solicito aprobación para acceder al Boletín de Oración por Turquía.\n\n` +
-                `👤 *Nombre:* ${data.nombre} ${data.apellido}\n` +
-                `📱 *Teléfono:* ${data.telefono}\n` +
-                `🌎 *País:* ${data.pais}\n` +
-                `⛪ *Iglesia:* ${data.iglesia}\n` +
-                `✉️ *Correo:* ${data.email}`
-              );
+              const msg = encodeURIComponent(`Hola, me registré con el correo ${user.email} y solicito aprobación para el Boletín de Oración.`);
               whatsappLink.href = `https://wa.me/51983204456?text=${msg}`;
             }
           });
+
         } catch (dbErr) {
           loginScreen.style.display = 'block';
-          mostrarError("Error de base de datos: " + dbErr.code);
+          errorMsg.textContent = "Error de permisos en Firestore: " + dbErr.code;
+          errorMsg.style.display = 'block';
         }
       } else {
         loginScreen.style.display = 'block';
-        completeProfileScreen.style.display = 'none';
+        if (completeProfileScreen) completeProfileScreen.style.display = 'none';
         pendingScreen.style.display = 'none';
       }
-      if (!userSnap.exists()) {
-            const partesNombre = (user.displayName || "").split(" ");
-            const zonaHoraria = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-
-            // Si entró con el Link VIP, se auto-aprueba y captura todo lo que da Google
-            if (esUsuarioVip) {
-              await setDoc(userRef, {
-                nombre: partesNombre[0] || "Pastor / Líder",
-                apellido: partesNombre.slice(1).join(" ") || "",
-                email: user.email,
-                foto: user.photoURL || "",
-                telefono: user.phoneNumber || "",
-                pais: zonaHoraria, // Ej: America/Lima, Europe/Istanbul
-                iglesia: "Completar en Mi Perfil",
-                rol: "VIP / Liderazgo",
-                aprobado: true,    // <-- ¡BYPASS AUTOMÁTICO! Pasa directo sin esperar
-                fechaRegistro: new Date()
-              });
-
-              // Te avisa a tu Gmail que un Pastor VIP acaba de ingresar
-              fetch("https://formsubmit.co/ajax/adolescentespl@gmail.com", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                body: JSON.stringify({
-                  _subject: `⭐ Acceso VIP Directo: ${user.displayName || user.email}`,
-                  Nombre: user.displayName || "Líder VIP",
-                  Correo: user.email,
-                  Zona_Horaria: zonaHoraria,
-                  Tipo_Acceso: "Enlace Bypass VIP (Auto-aprobado)"
-                })
-              }).catch(() => {});
-
-              window.location.replace("/intranet/boletin-de-oracion/");
-              return;
-            }
-          }
     });
 
-    // Envío del formulario (Login o Registro)
-    document.getElementById('auth-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorMsg.style.display = 'none';
-
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-
-      if (modoActual === 'registro') {
-        datosRegistroTemp = {
-          nombre: document.getElementById('regNombre').value.trim(),
-          apellido: document.getElementById('regApellido').value.trim(),
-          telefono: document.getElementById('regTelefono').value.trim(),
-          pais: document.getElementById('regPais').value.trim(),
-          iglesia: document.getElementById('regIglesia').value.trim()
-        };
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-        } catch (err) {
-          if (err.code === 'auth/email-already-in-use') {
-            mostrarError("Este correo ya está registrado. Usa la pestaña 'Iniciar Sesión'.");
-          } else if (err.code === 'auth/weak-password') {
-            mostrarError("La contraseña debe tener al menos 6 caracteres.");
-          } else {
-            mostrarError("Error al registrar: " + err.code);
-          }
-        }
-      } else {
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-        } catch (err) {
-          mostrarError("Correo o contraseña incorrectos. Si eres nuevo, toca la pestaña 'Solicitar Acceso'.");
-        }
-      }
-    });
-
-    // Guardar datos adicionales cuando entran con Google por primera vez
-    document.getElementById('profile-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
-
-      await guardarFichaIntercesor(user, {
-        nombre: document.getElementById('profNombre').value.trim(),
-        apellido: document.getElementById('profApellido').value.trim(),
-        telefono: document.getElementById('profTelefono').value.trim(),
-        pais: document.getElementById('profPais').value.trim(),
-        iglesia: document.getElementById('profIglesia').value.trim()
-      });
-
-      window.location.reload();
-    });
-
+    // Botón de Google compatible con Celulares (Popup + Respaldo Redirect)
     window.loginWithGoogle = async () => {
       errorMsg.style.display = 'none';
+      const provider = new GoogleAuthProvider();
       try {
-        await signInWithPopup(auth, new GoogleAuthProvider());
+        await signInWithPopup(auth, provider);
       } catch (err) {
-        if (err.code !== 'auth/popup-closed-by-user') {
-          mostrarError("Error con Google: " + err.code);
+        // Si el navegador del celular bloquea el popup, usa redirección automática
+        if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request' || err.code === 'auth/operation-not-supported-in-this-environment') {
+          await signInWithRedirect(auth, provider);
+        } else if (err.code !== 'auth/popup-closed-by-user') {
+          errorMsg.textContent = "Error con Google: " + err.code;
+          errorMsg.style.display = 'block';
         }
       }
     };
 
     window.logout = () => signOut(auth);
-
-     // 1. Detectar si entró con el Enlace Privado VIP (Bypass)
-    const urlParams = new URLSearchParams(window.location.search);
-    const codigoVipUrl = urlParams.get('vip');
-    const CLAVE_SECRETA_VIP = "LIDERES2026"; // <-- Puedes cambiarla cuando quieras
-
-    if (codigoVipUrl === CLAVE_SECRETA_VIP) {
-      sessionStorage.setItem('acceso_vip', 'true');
-    }
-
-    const esUsuarioVip = sessionStorage.getItem('acceso_vip') === 'true';
   </script>
 </body>
 </html>
