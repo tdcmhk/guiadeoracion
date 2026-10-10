@@ -184,12 +184,10 @@
       createUserWithEmailAndPassword,
       GoogleAuthProvider, 
       signInWithPopup,
-      signInWithRedirect,
-      getRedirectResult,
       onAuthStateChanged, 
       signOut 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBeuFR_MvuAWKan95TEhKvyap51n189tcM",
@@ -204,7 +202,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // 1. GUARDAR EL PASE VIP EN LOCALSTORAGE (No se borra en celulares al abrir Google)
+    // 1. Detectar Pase VIP en la URL
     const urlParams = new URLSearchParams(window.location.search);
     const codigoVipUrl = (urlParams.get('vip') || "").trim().toUpperCase();
     const CLAVE_SECRETA_VIP = "LIDERES2026";
@@ -219,20 +217,48 @@
     const whatsappLink = document.getElementById('whatsapp-link');
     const errorMsg = document.getElementById('error-msg');
 
-    // Si es VIP, mostrar un aviso visual arriba para saber que el link VIP está activo
+    let modoActual = 'login';
+
+    function mostrarError(texto) {
+      if (!errorMsg) return;
+      errorMsg.textContent = texto;
+      errorMsg.style.display = 'block';
+    }
+
+    // Mostrar aviso visual si el Pase VIP está activo
     if (localStorage.getItem('pase_vip_activo') === 'true') {
       const sub = document.querySelector('#login-screen .subtitle');
       if (sub) {
-        sub.innerHTML = `<strong style="color:#059669;">⭐ Acceso Directo VIP Activado.</strong><br>Inicia sesión para entrar directamente al Boletín.`;
+        sub.innerHTML = `<strong style="color:#059669;">⭐ Acceso Directo VIP Activado.</strong><br>Ingresa tu correo y una clave (o usa Google) para entrar directo sin esperar aprobación.`;
       }
     }
 
-    // Procesar regreso de redirección en móviles
-    getRedirectResult(auth).catch((err) => console.warn("Redirect info:", err));
+    // 2. Función de las pestañas (Iniciar Sesión / Solicitar Acceso)
+    window.cambiarModo = (modo) => {
+      modoActual = modo;
+      if (errorMsg) errorMsg.style.display = 'none';
+      const camposReg = document.getElementById('campos-registro');
+      const btnSubmit = document.getElementById('btnSubmitAuth');
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegistro = document.getElementById('tabRegistro');
 
+      if (modo === 'registro') {
+        if (camposReg) camposReg.style.display = 'flex';
+        if (btnSubmit) btnSubmit.textContent = 'Registrarme y Entrar';
+        if (tabRegistro) tabRegistro.classList.add('active');
+        if (tabLogin) tabLogin.classList.remove('active');
+      } else {
+        if (camposReg) camposReg.style.display = 'none';
+        if (btnSubmit) btnSubmit.textContent = 'Ingresar al Boletín';
+        if (tabLogin) tabLogin.classList.add('active');
+        if (tabRegistro) tabRegistro.classList.remove('active');
+      }
+    };
+
+    // 3. Vigilar cuando el usuario inicia sesión
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        loginScreen.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'none';
         const tienePaseVip = localStorage.getItem('pase_vip_activo') === 'true';
 
         try {
@@ -241,82 +267,99 @@
           const partesNombre = (user.displayName || "").split(" ");
           const zonaHoraria = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
 
-          // CASO A: TIENE EL LINK VIP (Sea nuevo o ya existía pendiente, lo aprueba de inmediato)
+          // SI TIENE PASE VIP: Lo aprueba inmediatamente y lo lleva al boletín
           if (tienePaseVip) {
             await setDoc(userRef, {
-              nombre: userSnap.exists() ? (userSnap.data().nombre || partesNombre[0] || "Pastor / Líder") : (partesNombre[0] || "Pastor / Líder"),
-              apellido: userSnap.exists() ? (userSnap.data().apellido || partesNombre.slice(1).join(" ")) : (partesNombre.slice(1).join(" ") || ""),
+              nombre: partesNombre[0] || document.getElementById('regNombre')?.value || "Pastor / Líder",
+              apellido: partesNombre.slice(1).join(" ") || document.getElementById('regApellido')?.value || "",
               email: user.email,
               foto: user.photoURL || "",
-              pais: userSnap.exists() ? (userSnap.data().pais || zonaHoraria) : zonaHoraria,
+              pais: zonaHoraria,
               rol: "VIP / Liderazgo",
-              aprobado: true, // <-- APRUEBA DIRECTAMENTE EN FIREBASE
-              fechaActualizacionVip: new Date()
+              aprobado: true,
+              fechaRegistro: new Date()
             }, { merge: true });
 
-            // Limpiamos la llave temporal y entramos directo al boletín
-            localStorage.removeItem('pase_vip_activo');
-            window.location.replace("/intranet/boletin-de-oracion/");
+            window.location.href = "/intranet/boletin-de-oracion/";
             return;
           }
 
-          // CASO B: USUARIO NORMAL (Sin link VIP)
+          // SI ES USUARIO NORMAL NUEVO
           if (!userSnap.exists()) {
-            if (completeProfileScreen) {
-              document.getElementById('profNombre').value = partesNombre[0] || "";
-              document.getElementById('profApellido').value = partesNombre.slice(1).join(" ") || "";
-              completeProfileScreen.style.display = 'block';
-              return;
-            } else {
-              await setDoc(userRef, {
-                nombre: partesNombre[0] || "Intercesor",
-                email: user.email,
-                aprobado: false,
-                fechaRegistro: new Date()
-              });
-            }
+            await setDoc(userRef, {
+              nombre: document.getElementById('regNombre')?.value || partesNombre[0] || "Intercesor",
+              apellido: document.getElementById('regApellido')?.value || partesNombre.slice(1).join(" ") || "",
+              telefono: document.getElementById('regTelefono')?.value || "",
+              pais: document.getElementById('regPais')?.value || zonaHoraria,
+              iglesia: document.getElementById('regIglesia')?.value || "",
+              email: user.email,
+              aprobado: false,
+              fechaRegistro: new Date()
+            });
           }
 
           onSnapshot(userRef, (snap) => {
             const data = snap.data();
             if (!data) return;
-            if (completeProfileScreen) completeProfileScreen.style.display = 'none';
-
             if (data.aprobado === true) {
-              window.location.replace("/intranet/boletin-de-oracion/");
+              window.location.href = "/intranet/boletin-de-oracion/";
             } else {
-              pendingScreen.style.display = 'block';
+              if (pendingScreen) pendingScreen.style.display = 'block';
               const msg = encodeURIComponent(`Hola, me registré con el correo ${user.email} y solicito aprobación para el Boletín de Oración.`);
-              whatsappLink.href = `https://wa.me/51983204456?text=${msg}`;
+              if (whatsappLink) whatsappLink.href = `https://wa.me/51983204456?text=${msg}`;
             }
           });
 
         } catch (dbErr) {
-          loginScreen.style.display = 'block';
-          errorMsg.textContent = "Error de permisos en Firestore: " + dbErr.code;
-          errorMsg.style.display = 'block';
+          if (loginScreen) loginScreen.style.display = 'block';
+          mostrarError("Error en Firestore Database: " + dbErr.message);
         }
       } else {
-        loginScreen.style.display = 'block';
-        if (completeProfileScreen) completeProfileScreen.style.display = 'none';
-        pendingScreen.style.display = 'none';
+        if (loginScreen) loginScreen.style.display = 'block';
+        if (pendingScreen) pendingScreen.style.display = 'none';
       }
     });
 
-    // Botón de Google compatible con Celulares (Popup + Respaldo Redirect)
-    window.loginWithGoogle = async () => {
-      errorMsg.style.display = 'none';
-      const provider = new GoogleAuthProvider();
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (err) {
-        // Si el navegador del celular bloquea el popup, usa redirección automática
-        if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request' || err.code === 'auth/operation-not-supported-in-this-environment') {
-          await signInWithRedirect(auth, provider);
-        } else if (err.code !== 'auth/popup-closed-by-user') {
-          errorMsg.textContent = "Error con Google: " + err.code;
-          errorMsg.style.display = 'block';
+    // 4. FUNCIONAMIENTO DEL FORMULARIO DE CORREO Y CONTRASEÑA (Login + Auto-Registro)
+    const formEl = document.getElementById('auth-form') || document.getElementById('login-form');
+    if (formEl) {
+      formEl.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (errorMsg) errorMsg.style.display = 'none';
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const btn = document.getElementById('btnSubmitAuth') || formEl.querySelector('button[type="submit"]');
+        if (btn) btn.textContent = "Verificando...";
+
+        try {
+          // Intentar entrar si ya existe
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+          // Si no existe aún (o si es VIP nuevo), crearle la cuenta automáticamente
+          try {
+            await createUserWithEmailAndPassword(auth, email, password);
+          } catch (createErr) {
+            if (btn) btn.textContent = "Ingresar al Boletín";
+            if (createErr.code === 'auth/email-already-in-use') {
+              mostrarError("La contraseña ingresada es incorrecta para este correo.");
+            } else if (createErr.code === 'auth/weak-password') {
+              mostrarError("La contraseña debe tener mínimo 6 caracteres.");
+            } else {
+              mostrarError("Aviso Firebase: " + createErr.code);
+            }
+          }
         }
+      });
+    }
+
+    // 5. FUNCIONAMIENTO DEL BOTÓN GOOGLE
+    window.loginWithGoogle = async () => {
+      if (errorMsg) errorMsg.style.display = 'none';
+      try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+      } catch (err) {
+        mostrarError("Aviso Google: " + err.code);
       }
     };
 
