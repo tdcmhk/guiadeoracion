@@ -20,58 +20,71 @@
     }
     .auth-card {
       background: #ffffff;
-      max-width: 430px;
+      max-width: 410px;
       width: 100%;
       border-radius: 16px;
-      padding: 28px 24px;
+      padding: 32px 24px;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
       text-align: center;
     }
-    .auth-logo { height: 36px; margin-bottom: 12px; }
-    h2 { margin: 0 0 6px 0; color: #1a365d; font-size: 1.3rem; }
-    .subtitle { font-size: 0.85rem; color: #64748b; margin-bottom: 18px; line-height: 1.45; }
-
-    /* Pestañas Login / Registro */
-    .auth-tabs {
-      display: flex;
-      background: #f1f5f9;
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 18px;
+    .auth-logo {
+      height: 38px;
+      margin-bottom: 14px;
     }
-    .auth-tab {
-      flex: 1;
-      padding: 9px;
-      border: none;
-      background: transparent;
-      color: #64748b;
-      font-weight: 600;
-      font-size: 0.85rem;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .auth-tab.active {
-      background: #ffffff;
+    h2 {
+      margin: 0 0 8px 0;
       color: #1a365d;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      font-size: 1.35rem;
     }
-
+    .subtitle {
+      font-size: 0.88rem;
+      color: #64748b;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
     .btn-google {
-      width: 100%; padding: 10px 16px; border-radius: 8px; border: 1px solid #cbd5e1;
-      background: #fff; color: #1e293b; font-weight: 600; font-size: 0.88rem;
-      display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #1e293b;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
     }
-    .btn-google:hover { background: #f8fafc; }
-    .divider { display: flex; align-items: center; margin: 15px 0; color: #94a3b8; font-size: 0.72rem; text-transform: uppercase; }
-    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
-    .divider span { padding: 0 10px; }
+    .btn-google:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+    .btn-google:active {
+      transform: scale(0.98);
+    }
 
-    .auth-form { display: flex; flex-direction: column; gap: 10px; text-align: left; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      text-align: left;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
     .auth-form input {
-      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1;
-      border-radius: 8px; font-size: 0.88rem; box-sizing: border-box;
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      box-sizing: border-box;
       font-family: inherit;
     }
     .auth-form input:focus {
@@ -80,114 +93,134 @@
       box-shadow: 0 0 0 3px rgba(14, 149, 148, 0.15);
     }
     .btn-submit {
-      background: #0e9594; color: #fff; border: none; padding: 12px;
-      border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 4px;
+      background: #0e9594;
+      color: #ffffff;
+      border: none;
+      padding: 13px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      margin-top: 6px;
     }
-    .btn-submit:hover { background: #0b7a79; }
+    .btn-submit:hover {
+      background: #0b7a79;
+    }
     .auth-error {
-      color: #dc2626; background: #fef2f2; border: 1px solid #fecaca;
-      padding: 8px 10px; border-radius: 6px; font-size: 0.8rem; display: none; text-align: center;
+      color: #dc2626;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      margin-top: 14px;
+      display: none;
     }
-    .btn-wa {
-      background: #25d366; color: #fff; text-decoration: none; padding: 12px 16px;
-      border-radius: 8px; font-weight: 700; font-size: 0.9rem; display: flex;
-      align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px;
+    .pending-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #f0fdf4;
+      color: #0e9594;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px auto;
     }
-    .btn-logout { background: none; border: none; color: #64748b; font-size: 0.82rem; text-decoration: underline; cursor: pointer; }
+    .pending-icon span {
+      font-size: 32px;
+    }
+    .btn-logout {
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 0.82rem;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: 16px;
+    }
   </style>
 </head>
 <body>
 
   <!-- ======================================================================
-       VISTA 1: INICIO DE SESIÓN Y REGISTRO COMPLETO
+       VISTA 1: ACCESO ÚNICO CON GOOGLE (SIGN UP / SIGN IN)
        ====================================================================== -->
   <div id="login-screen" class="auth-card">
     <img src="boletin-de-oracion/images/Logowebmt1.png" alt="MMM Turquía" class="auth-logo">
     <h2>Intranet de Intercesión</h2>
-    <p class="subtitle">Acceso exclusivo para intercesores del Boletín de Oración por Turquía.</p>
+    <p class="subtitle">
+      Acceso exclusivo para intercesores de la obra en Turquía. Ingresa o regístrate con tu cuenta de Google.
+    </p>
 
-    <!-- Selector de Pestañas -->
-    <div class="auth-tabs">
-      <button type="button" class="auth-tab active" id="tabLogin" onclick="cambiarModo('login')">Iniciar Sesión</button>
-      <button type="button" class="auth-tab" id="tabRegistro" onclick="cambiarModo('registro')">Solicitar Acceso</button>
-    </div>
-
-    <button type="button" onclick="loginWithGoogle()" class="btn-google">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18" alt="Google">
+    <button type="button" id="btnGoogleLogin" onclick="loginWithGoogle()" class="btn-google">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20" alt="Google">
       <span>Continuar con Google</span>
     </button>
 
-    <!--<div class="divider"><span id="dividerText">o ingresa con tu correo</span></div>-->
-
-    <form id="auth-form" class="auth-form">
-      <!-- Campos adicionales solo visibles al Registrarse -->
-      <div id="campos-registro" style="display: none; flex-direction: column; gap: 10px;">
-        <div class="form-row">
-          <input type="text" id="regNombre" placeholder="Nombre">
-          <input type="text" id="regApellido" placeholder="Apellido">
-        </div>
-        <div class="form-row">
-          <input type="tel" id="regTelefono" placeholder="WhatsApp / Teléfono">
-          <input type="text" id="regPais" placeholder="País">
-        </div>
-        <input type="text" id="regIglesia" placeholder="Iglesia o Ministerio al que perteneces">
-      </div>
-
-      <!-- Campos de Correo y Contraseña 
-       <input type="email" id="email" placeholder="Correo electrónico" required>
-      <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>-->
-
-      <p id="error-msg" class="auth-error"></p>
-
-      <!--<button type="submit" id="btnSubmitAuth" class="btn-submit">Ingresar al Boletín</button>-->
-    </form>
+    <p id="error-msg" class="auth-error"></p>
   </div>
 
   <!-- ======================================================================
-       VISTA 2: COMPLETAR DATOS (PARA QUIENES ENTRARON CON GOOGLE POR 1ª VEZ)
+       VISTA 2: FORMULARIO DE DATOS PERSONALES (SOLO 1ª VEZ)
        ====================================================================== -->
   <div id="complete-profile-screen" class="auth-card" style="display: none;">
-    <h2>Completa tus Datos</h2>
-    <p class="subtitle">Para aprobar tu acceso como intercesor, por favor indícanos tus datos de contacto e iglesia:</p>
+    <h2>Registro de Intercesor</h2>
+    <p class="subtitle">
+      Completa tus datos personales por única vez para enviar tu solicitud de acceso al equipo pastoral:
+    </p>
+
     <form id="profile-form" class="auth-form">
       <div class="form-row">
         <input type="text" id="profNombre" placeholder="Nombre" required>
         <input type="text" id="profApellido" placeholder="Apellido" required>
       </div>
       <div class="form-row">
-        <input type="tel" id="profTelefono" placeholder="Teléfono" required>
+        <input type="tel" id="profTelefono" placeholder="Teléfono / Celular" required>
         <input type="text" id="profPais" placeholder="País" required>
       </div>
-      <input type="text" id="profIglesia" placeholder="Iglesia" required>
-      <button type="submit" class="btn-submit">Guardar y Solicitar Acceso</button>
+      <input type="text" id="profIglesia" placeholder="Iglesia a la que perteneces" required>
+
+      <button type="submit" id="btnGuardarRegistro" class="btn-submit">Enviar Solicitud de Acceso</button>
     </form>
   </div>
 
   <!-- ======================================================================
-       VISTA 3: SOLICITUD EN REVISIÓN (BOTÓN WHATSAPP)
+       VISTA 3: ESPERA DE APROBACIÓN PASTORAL (SIN BOTÓN WHATSAPP)
        ====================================================================== -->
   <div id="pending-screen" class="auth-card" style="display: none;">
-    <h2>Solicitud en Revisión</h2>
-    <p class="subtitle">Tus datos han sido registrados. Comunícate con el equipo pastoral para que active tu cuenta:</p>
-      <!-- <a id="whatsapp-link" href="#" target="_blank" class="btn-wa">
-      <span class="material-symbols-outlined">chat</span>
-      <span>Notificar por WhatsApp</span>
-    </a>
-    <button type="button" onclick="logout()" class="btn-logout">Cerrar sesión</button>-->
+    <div class="pending-icon">
+      <span class="material-symbols-outlined">schedule_send</span>
+    </div>
+    <h2>Solicitud en Espera de Aprobación</h2>
+    <p class="subtitle" style="margin-bottom: 10px;">
+      Tus datos han sido enviados exitosamente al equipo pastoral.
+    </p>
+    <p class="subtitle" style="font-size: 0.82rem; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+      En cuanto el equipo pastoral apruebe tu cuenta, ingresarás automáticamente al Boletín de Oración. Si deseas agilizar tu ingreso, puedes comunicarte directamente con el equipo pastoral.
+    </p>
+
+    <button type="button" onclick="logout()" class="btn-logout">Cerrar sesión o cambiar de cuenta</button>
   </div>
 
-<script type="module">
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getAuth, 
-      signInWithEmailAndPassword, 
-      createUserWithEmailAndPassword,
       GoogleAuthProvider, 
       signInWithPopup, 
+      signInWithRedirect,
+      getRedirectResult,
       onAuthStateChanged, 
       signOut 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      getFirestore, 
+      doc, 
+      getDoc, 
+      setDoc, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBeuFR_MvuAWKan95TEhKvyap51n189tcM",
@@ -205,195 +238,136 @@
     const loginScreen = document.getElementById('login-screen');
     const completeProfileScreen = document.getElementById('complete-profile-screen');
     const pendingScreen = document.getElementById('pending-screen');
-    const whatsappLink = document.getElementById('whatsapp-link');
     const errorMsg = document.getElementById('error-msg');
-
-    let modoActual = 'login';
-    let datosRegistroTemp = null;
-
-    // Cambiar entre pestaña "Iniciar Sesión" y "Solicitar Acceso"
-    window.cambiarModo = (modo) => {
-      modoActual = modo;
-      errorMsg.style.display = 'none';
-      const camposReg = document.getElementById('campos-registro');
-      const btnSubmit = document.getElementById('btnSubmitAuth');
-      const tabLogin = document.getElementById('tabLogin');
-      const tabRegistro = document.getElementById('tabRegistro');
-
-      if (modo === 'registro') {
-        camposReg.style.display = 'flex';
-        btnSubmit.textContent = 'Registrarme y Solicitar Acceso';
-        tabRegistro.classList.add('active');
-        tabLogin.classList.remove('active');
-        document.getElementById('regNombre').required = true;
-        document.getElementById('regApellido').required = true;
-        document.getElementById('regTelefono').required = true;
-        document.getElementById('regPais').required = true;
-        document.getElementById('regIglesia').required = true;
-      } else {
-        camposReg.style.display = 'none';
-        btnSubmit.textContent = 'Ingresar al Boletín';
-        tabLogin.classList.add('active');
-        tabRegistro.classList.remove('active');
-        document.getElementById('regNombre').required = false;
-        document.getElementById('regApellido').required = false;
-        document.getElementById('regTelefono').required = false;
-        document.getElementById('regPais').required = false;
-        document.getElementById('regIglesia').required = false;
-      }
-    };
 
     function mostrarError(texto) {
       errorMsg.textContent = texto;
       errorMsg.style.display = 'block';
     }
 
-    // Función para guardar ficha completa en Firestore y avisar por Gmail
-    async function guardarFichaIntercesor(user, datosExtra) {
-      const userRef = doc(db, "usuarios", user.uid);
-      const ficha = {
-        nombre: datosExtra.nombre,
-        apellido: datosExtra.apellido,
-        telefono: datosExtra.telefono,
-        pais: datosExtra.pais,
-        iglesia: datosExtra.iglesia,
-        email: user.email,
-        aprobado: false,
-        fechaRegistro: new Date()
-      };
+    // Procesar retorno de login en navegadores móviles si usó redirección
+    getRedirectResult(auth).catch(() => {});
 
-      await setDoc(userRef, ficha);
-
-      // Enviar alerta automática a tu correo adolescentespl@gmail.com
-      fetch("https://formsubmit.co/ajax/adolescentespl@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          _subject: `🔔 Nuevo Intercesor: ${ficha.nombre} ${ficha.apellido} (${ficha.pais})`,
-          Nombre_Completo: `${ficha.nombre} ${ficha.apellido}`,
-          Telefono_WhatsApp: ficha.telefono,
-          Pais: ficha.pais,
-          Iglesia: ficha.iglesia,
-          Correo: ficha.email,
-          Instruccion: "Entra a Firebase > Firestore Database > colección 'usuarios' y cambia 'aprobado' a true."
-        })
-      }).catch(() => {});
-    }
-
-    // Escuchar estado de sesión
+    // 1. Escuchar sesión de Google automáticamente
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         loginScreen.style.display = 'none';
+
         try {
           const userRef = doc(db, "usuarios", user.uid);
           const userSnap = await getDoc(userRef);
 
-          // Si se acaba de registrar con el formulario completo
-          if (!userSnap.exists() && datosRegistroTemp) {
-            await guardarFichaIntercesor(user, datosRegistroTemp);
-            datosRegistroTemp = null;
-          } 
-          // Si entró con Google por primera vez y aún no llenó sus datos de iglesia/país
-          else if (!userSnap.exists()) {
+          // Si es la primera vez que entra con Google, mostrar el formulario de datos personales
+          if (!userSnap.exists()) {
             const partesNombre = (user.displayName || "").split(" ");
             document.getElementById('profNombre').value = partesNombre[0] || "";
             document.getElementById('profApellido').value = partesNombre.slice(1).join(" ") || "";
             completeProfileScreen.style.display = 'block';
+            pendingScreen.style.display = 'none';
             return;
           }
 
-          // Escuchar en tiempo real si ya está aprobado
+          // Si ya llenó sus datos antes (o entra desde otro dispositivo), verificar si está aprobado
           onSnapshot(userRef, (snap) => {
             const data = snap.data();
             if (!data) return;
+
             completeProfileScreen.style.display = 'none';
 
             if (data.aprobado === true) {
+              // Usuario aprobado: entra automáticamente al boletín
               window.location.replace("/intranet/boletin-de-oracion/");
             } else {
-              pendingScreen.style.display = 'block';
-              const msg = encodeURIComponent(
-                `Hola, solicito aprobación para acceder al Boletín de Oración por Turquía.\n\n` +
-                `👤 *Nombre:* ${data.nombre} ${data.apellido}\n` +
-                `📱 *Teléfono:* ${data.telefono}\n` +
-                `🌎 *País:* ${data.pais}\n` +
-                `⛪ *Iglesia:* ${data.iglesia}\n` +
-                `✉️ *Correo:* ${data.email}`
-              );
-              whatsappLink.href = `https://wa.me/51983204456?text=${msg}`;
+              // Usuario en espera de aprobación en la sala de espera
+              window.location.replace("/intranet/espera.html");
             }
           });
+
         } catch (dbErr) {
           loginScreen.style.display = 'block';
-          mostrarError("Error de base de datos: " + dbErr.code);
+          mostrarError("Error de conexión con la base de datos: " + dbErr.code);
         }
       } else {
+        // No ha iniciado sesión aún
         loginScreen.style.display = 'block';
         completeProfileScreen.style.display = 'none';
         pendingScreen.style.display = 'none';
       }
     });
 
-    // Envío del formulario (Login o Registro)
-    document.getElementById('auth-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      errorMsg.style.display = 'none';
-
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-
-      if (modoActual === 'registro') {
-        datosRegistroTemp = {
-          nombre: document.getElementById('regNombre').value.trim(),
-          apellido: document.getElementById('regApellido').value.trim(),
-          telefono: document.getElementById('regTelefono').value.trim(),
-          pais: document.getElementById('regPais').value.trim(),
-          iglesia: document.getElementById('regIglesia').value.trim()
-        };
-        try {
-          await createUserWithEmailAndPassword(auth, email, password);
-        } catch (err) {
-          if (err.code === 'auth/email-already-in-use') {
-            mostrarError("Este correo ya está registrado. Usa la pestaña 'Iniciar Sesión'.");
-          } else if (err.code === 'auth/weak-password') {
-            mostrarError("La contraseña debe tener al menos 6 caracteres.");
-          } else {
-            mostrarError("Error al registrar: " + err.code);
-          }
-        }
-      } else {
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-        } catch (err) {
-          mostrarError("Correo o contraseña incorrectos. Si eres nuevo, toca la pestaña 'Solicitar Acceso'.");
-        }
-      }
-    });
-
-    // Guardar datos adicionales cuando entran con Google por primera vez
+    // 2. Guardar formulario de datos personales y enviar correo a rvicentetapia@gmail.com
     document.getElementById('profile-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const user = auth.currentUser;
       if (!user) return;
 
-      await guardarFichaIntercesor(user, {
+      const btn = document.getElementById('btnGuardarRegistro');
+      btn.disabled = true;
+      btn.textContent = "Enviando solicitud...";
+
+      const ficha = {
         nombre: document.getElementById('profNombre').value.trim(),
         apellido: document.getElementById('profApellido').value.trim(),
         telefono: document.getElementById('profTelefono').value.trim(),
         pais: document.getElementById('profPais').value.trim(),
-        iglesia: document.getElementById('profIglesia').value.trim()
-      });
+        iglesia: document.getElementById('profIglesia').value.trim(),
+        email: user.email,
+        foto: user.photoURL || "",
+        aprobado: false,
+        fechaRegistro: new Date()
+      };
 
-      window.location.reload();
+      try {
+        // Guardar en Firestore Database
+        await setDoc(doc(db, "usuarios", user.uid), ficha);
+
+        // Enviar correo automático a rvicentetapia@gmail.com
+        await fetch("https://formsubmit.co/ajax/rvicentetapia@gmail.com", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json", 
+            "Accept": "application/json" 
+          },
+          body: JSON.stringify({
+            _subject: `🔔 Nuevo Intercesor Registrado: ${ficha.nombre} ${ficha.apellido} (${ficha.pais})`,
+            Nombre: ficha.nombre,
+            Apellido: ficha.apellido,
+            Telefono: ficha.telefono,
+            Pais: ficha.pais,
+            Iglesia: ficha.iglesia,
+            Correo_Google: ficha.email,
+            Accion: "Para darle acceso, entra a Firebase > Firestore Database > colección 'usuarios' y cambia 'aprobado' a true."
+          })
+        }).catch(() => {});
+
+        // Pasar a la sala de espera y activar escucha en tiempo real
+        completeProfileScreen.style.display = 'none';
+        window.location.replace("/intranet/espera.html");
+
+        onSnapshot(doc(db, "usuarios", user.uid), (snap) => {
+          if (snap.exists() && snap.data().aprobado === true) {
+            window.location.replace("/intranet/boletin-de-oracion/");
+          }
+        });
+
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = "Enviar Solicitud de Acceso";
+        alert("Hubo un error al guardar tus datos: " + err.message);
+      }
     });
 
+    // 3. Botón de Google (Funciona en PC y Celulares)
     window.loginWithGoogle = async () => {
       errorMsg.style.display = 'none';
+      const provider = new GoogleAuthProvider();
       try {
-        await signInWithPopup(auth, new GoogleAuthProvider());
+        await signInWithPopup(auth, provider);
       } catch (err) {
-        if (err.code !== 'auth/popup-closed-by-user') {
-          mostrarError("Error con Google: " + err.code);
+        if (err.code === 'auth/popup-blocked' || err.code === 'auth/operation-not-supported-in-this-environment') {
+          await signInWithRedirect(auth, provider);
+        } else if (err.code !== 'auth/popup-closed-by-user') {
+          mostrarError("No se pudo iniciar con Google (" + err.code + ")");
         }
       }
     };
