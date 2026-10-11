@@ -22,8 +22,8 @@ setTimeout(() => {
 }, 4000); 
  
  
- /* ==========================================================================
-   1. CONTROL DE NAVEGACIÓN Y MENÚ HAMBURGUESA
+/* ==========================================================================
+   1. CONTROL DE NAVEGACIÓN Y MENÚ HAMBURGUESA (CLIC EN PC Y CELULAR)
    ========================================================================== */
 
 const navToggle = document.getElementById('navToggle');
@@ -32,49 +32,71 @@ const navbar = document.querySelector('.sticky-nav');
 let lastScrollTop = 0;
 
 if (navToggle && navLinks) {
-  // Abrir / Cerrar menú al presionar el botón hamburguesa
+  // 1. Abrir / Cerrar menú principal al presionar el botón hamburguesa
   navToggle.addEventListener('click', (e) => {
-    e.stopPropagation(); // Evita que el clic se propague y active otros enlaces por error
+    e.stopPropagation();
     navLinks.classList.toggle('nav-active');
+    // Si se cierra el menú principal, cerrar también los submenús internos
+    if (!navLinks.classList.contains('nav-active')) {
+      document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+    }
   });
 
-  // Cerrar el menú automáticamente al hacer clic en cualquier opción/enlace
-  document.querySelectorAll('.nav-link, .dropdown-menu a').forEach((link) => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('nav-active');
+  // 2. Abrir / Cerrar "Bloques ▾" y "Compartir ▾" SOLO al hacer clic en ellos
+  document.querySelectorAll('.dropdown-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation(); // Evita que cierre el menú principal en el celular
+
+      const esteSubmenu = toggle.nextElementSibling;
+
+      // Cerrar el otro submenú si estaba abierto (ej: si abres Compartir, se cierra Bloques)
+      document.querySelectorAll('.dropdown-menu.open').forEach((menuAbierto) => {
+        if (menuAbierto !== esteSubmenu) {
+          menuAbierto.classList.remove('open');
+        }
+      });
+
+      // Alternar el submenú actual
+      if (esteSubmenu) {
+        esteSubmenu.classList.toggle('open');
+      }
     });
   });
 
-  // Cerrar el menú si se hace clic fuera de él en la pantalla
+  // 3. Cerrar el menú principal SOLO cuando hacen clic en un enlace final (NO en Bloques ▾ ni Compartir ▾)
+  document.querySelectorAll('.nav-link:not(.dropdown-toggle), .dropdown-menu a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('nav-active');
+      document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+    });
+  });
+
+  // 4. Cerrar todo si el usuario toca fuera del menú en la pantalla
   document.addEventListener('click', (e) => {
     if (!navLinks.contains(e.target) && !navToggle.contains(e.target)) {
       navLinks.classList.remove('nav-active');
+      document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
     }
   });
 }
 
-// Ocultar y mostrar la barra sticky al hacer scroll
+// Ocultar y mostrar la barra sticky al hacer scroll (SOLO si el menú no está abierto)
 window.addEventListener('scroll', () => {
-  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  // Si el menú desplegable está abierto, no ocultar la barra
+  if (navLinks && navLinks.classList.contains('nav-active')) return;
 
-  // Previene comportamiento errático en rebotes de pantalla (iOS)
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   if (scrollTop < 0) return;
 
-  // Solo oculta la barra si hemos bajado más de 80px
   if (scrollTop > lastScrollTop && scrollTop > 80) {
-    // Deslizando hacia ABAJO: se oculta la barra
     if (navbar) navbar.classList.add('nav-hidden');
-
-    // Si el menú hamburguesa estaba abierto, se cierra al bajar
-    if (navLinks) navLinks.classList.remove('nav-active');
   } else {
-    // Deslizando hacia ARRIBA: reaparece la barra
     if (navbar) navbar.classList.remove('nav-hidden');
   }
 
   lastScrollTop = scrollTop;
-});
-
+}, { passive: true });
 
 /* ==========================================================================
    2. CONFIGURACIÓN Y DATOS DEL CARRUSEL
@@ -749,3 +771,4 @@ if (formWsp) {
     formWsp.reset();
   });
 }
+

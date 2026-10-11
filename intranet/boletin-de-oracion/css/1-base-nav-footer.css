@@ -1,0 +1,852 @@
+/* ==========================================================================
+   1. @VARIABLES GLOBALES Y CONFIGURACIÓN BASE
+   ========================================================================== */
+
+:root {
+  /* Colores Principales Inspirados en Turquía */
+  --primary-color: #1a365d;    /* Azul Bósforo profundo */
+  --secondary-color: #0e9594;  /* Turquesa tradicional de İznik */
+  --accent-color: #c1272d;     /* Rojo Carmesí de la bandera */
+  --warm-gold: #e5a93b;        /* Dorado Azafrán / Bazar */
+  
+  /* Fondos y Estructura */
+  --bg-color: #f8fafc;         /* Blanco suave (Travertino Pamukkale) */
+  --card-bg: #ffffff;          /* Blanco mármol para tarjetas */
+  --text-color: #2d3748;       /* Texto oscuro de alta legibilidad */
+  --light-gray: #e2e8f0;       /* Bordes y separadores sutiles */
+  --dark-border: #cbd5e0;
+
+  /* Variables de Tipografía */
+  --font-title: 'RiyadhusSholihin', serif;
+  --font-subtitle: 'Marcellus', Georgia, serif;
+  --font-button: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+/* Smooth Scroll y reajuste de caja para evitar desbordamientos */
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Declarar la fuente OpenType (.otf) */
+@font-face {
+  font-family: 'RiyadhusSholihin';
+  src: url('../fonts/RiyadhusSholihin.woff2') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
+/* ==========================================================================
+   @PANTALLA DE CARGA (PRELOADER)
+   ========================================================================== */
+
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #1a365d; /* Fondo Azul Bósforo elegante */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999; /* Por encima de todo el contenido */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Estado cuando la página termina de cargar */
+.page-loader.loader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Rueda de carga (Spinner circular con dos tonos) */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.2);     /* Aro de base translúcido */
+  border-top-color: #0e9594;                      /* Segmento activo Turquesa İznik */
+  border-right-color: #ffffff;                    /* Destello blanco */
+  border-radius: 50%;
+  animation: spinLoader 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+}
+
+.loader-text {
+  color: #e2e8f0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  margin: 0;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Animación de rotación continua */
+@keyframes spinLoader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ==========================================================================
+   2. @BARRA DE NAVEGACIÓN STICKY
+   ========================================================================== */
+
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background-color: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--accent-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 10px 0;
+  margin-bottom: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Oculta la barra hacia arriba */
+.sticky-nav.nav-hidden {
+  transform: translateY(-100%);
+}
+
+.nav-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: relative;
+}
+
+
+.nav-logo-img {
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+.nav-toggle:hover {
+  background: #e2e8f0;
+}
+
+/* El contenedor de enlaces está oculto por defecto y se despliega como tarjeta flotante */
+.nav-links {
+  display: none !important;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 16px;
+  left: auto !important;             /* Evita que se estire hacia la izquierda en celular */
+  width: 230px !important;
+  max-width: calc(100vw - 32px);
+    max-height: 80vh;                  /* <-- PERMITE SCROLL INTERNO EN CELULAR */
+  overflow-y: auto;                  /* <-- PERMITE DESLIZAR CON EL DEDO */
+  -webkit-overflow-scrolling: touch; /* <-- SCROLL SUAVE EN IPHONE/ANDROID */ 
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+  padding: 12px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  z-index: 2001;
+}
+
+/* Cuando se toca el botón Hamburguesa, aparece el menú desplegable */
+.nav-links.nav-active {
+  display: flex !important;
+  animation: fadeInMenu 0.2s ease;
+}
+
+@keyframes fadeInMenu {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cada opción dentro del menú desplegable */
+.nav-link {
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  text-align: left;
+  padding: 10px;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.nav-link:hover {
+  background-color: #ebf8ff;
+  color: var(--primary-color);
+}
+
+/* Botón hamburguesa */
+.nav-toggle {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: background-color 0.2s ease;
+}
+.nav-toggle span {
+  font-size: 28px;
+}
+
+/* Submenús internos (Bloques y Compartir) dentro del desplegable */
+.nav-links .dropdown {
+  width: 100%;
+}
+
+.nav-links .dropdown-menu {
+  position: static;
+  box-shadow: none;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  width: 100%;
+  margin-top: 4px;
+  border-radius: 8px;
+}
+
+/* Modo Nocturno para el nuevo menú desplegable */
+body.dark-mode .sticky-nav {
+  background-color: rgba(18, 18, 18, 0.95);
+}
+
+body.dark-mode .nav-toggle {
+  background: #262626;
+  border-color: #404040;
+}
+
+body.dark-mode .nav-toggle span {
+  color: #f1f5f9;
+}
+
+body.dark-mode .nav-links {
+  background-color: #1e1e1e !important;
+  border-color: #333333 !important;
+}
+
+body.dark-mode .nav-link {
+  background-color: #262626;
+  color: #f1f5f9;
+}
+
+
+/* ==========================================================================
+   3. @MENÚ DESPLEGABLE
+   ========================================================================== */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  display: none !important;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  min-width: 240px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--light-gray);
+  border-radius: 8px;
+  padding: 8px 0;
+  z-index: 1100;
+  margin-top: 5px;
+}
+
+/* SOLO se muestra cuando tiene la clase .open puesta por el clic */
+.dropdown-menu.open {
+  display: block !important;
+}
+
+.dropdown-menu a {
+  color: var(--text-color);
+  padding: 10px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.dropdown-menu a:hover {
+  background-color: #ebf8ff;
+  color: var(--secondary-color);
+}
+
+
+/* ==========================================================================
+   4. @ELEMENTOS DE COMPARTIR Y REDES SOCIALES
+   ========================================================================== */
+
+.share-item {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  color: #2d3748 !important;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.share-item:hover {
+  background-color: #f7fafc;
+}
+
+/* Color distintivo suave para WhatsApp al pasar el mouse */
+.share-wa {
+  color: #2d3748;
+}
+
+.share-wa:hover {
+  background-color: #e8fadf !important;
+  color: #25D366 !important;
+}
+
+/* Color distintivo suave para Facebook al pasar el mouse */
+.share-fb {
+  color: #2d3748;
+}
+
+.share-fb:hover {
+  background-color: #e7f1ff !important;
+  color: #1877F2 !important;
+}
+
+.share-item.wa i {
+  color: #25d366;
+}
+
+.share-item.fb i {
+  color: #1877f2;
+}
+
+/* Ajuste de tamaño para iconos de Flaticon en el menú */
+.flaticon-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  padding: 6px 10px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  font-weight: 550;
+  font-size: 0.85rem;
+  text-align: left;
+  width: 100%;
+  gap: 10px;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+/* ==========================================================================
+   9. @FOOTER
+   ========================================================================== */
+
+footer {
+  text-align: center;
+  padding: 20px 15px;
+  color: #718096;
+  font-size: 0.85rem;
+  margin-top: 30px;
+  border-top: 1px solid var(--light-gray);
+}
+
+.main-footer {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background-color: #1a202c;
+  color: #e2e8f0;
+  padding: 40px 0 20px 0;
+  margin-top: 50px;
+  border-top: 4px solid #2b6cb0;
+  box-sizing: border-box;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  align-items: start;
+  box-sizing: border-box;
+}
+
+.footer-brand {
+  text-align: left;
+}
+
+.footer-logo {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+.footer-brand h4 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin: 0 0 8px 0;
+}
+
+.footer-brand p {
+  font-size: 0.88rem;
+  color: #a0aec0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.footer-actions h5 {
+  color: #ffffff;
+  font-size: 1.05rem;
+  margin: 0 0 8px 0;
+}
+
+.footer-actions p {
+  font-size: 0.88rem;
+  color: #a0aec0;
+  margin-bottom: 15px;
+}
+
+.footer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ==========================================================================
+   @BOTONES DEL FOOTER (3 BOTONES DE ACCIÓN)
+   ========================================================================== */
+
+/* Contenedor de botones en el footer */
+.footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  margin: 25px auto 15px auto;
+  max-width: 850px;
+}
+
+/* Estilo Base Común */
+.footer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.footer-btn:hover {
+  transform: translateY(-2px);
+}
+
+.footer-btn:active {
+  transform: scale(0.97);
+}
+
+.footer-btn span.material-symbols-outlined {
+  font-size: 20px;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   1. BOTÓN: GRUPO DE INTERCESIÓN (Verde Esmeralda WhatsApp Oficial)
+   -------------------------------------------------------------------------- */
+.footer-btn.btn-wa-group {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+}
+
+.footer-btn.btn-wa-group:hover {
+  background: linear-gradient(135deg, #22bf5b 0%, #0e7266 100%);
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   2. BOTÓN: INSTALAR APP (Turquesa de İznik)
+   -------------------------------------------------------------------------- */
+.footer-btn.btn-install-pwa {
+  background: linear-gradient(135deg, #0e9594 0%, #1a365d 100%);
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(14, 149, 148, 0.25);
+}
+
+.footer-btn.btn-install-pwa:hover {
+  background: linear-gradient(135deg, #0c8281 0%, #132742 100%);
+  box-shadow: 0 6px 18px rgba(14, 149, 148, 0.4);
+}
+
+.btn-install-pwa .material-symbols-outlined{
+  color: #ffffff !important;
+}
+/* --------------------------------------------------------------------------
+   3. BOTÓN: COMPARTIR (Efecto Vidrio Translúcido / Acompañante)
+   -------------------------------------------------------------------------- */
+.footer-btn.btn-share-trigger {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+}
+
+.footer-btn.btn-share-trigger:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.1);
+}
+
+
+/* ==========================================================================
+   @ADAPTACIÓN PARA CELULARES (≤ 520px)
+   ========================================================================== */
+@media screen and (max-width: 520px) {
+  .footer-actions {
+    flex-direction: column; /* Se colocan uno debajo del otro con orden limpio */
+    gap: 10px;
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  .footer-btn {
+    width: 100%;
+    max-width: 280px; /* Tamaño perfecto para pulsar con el pulgar */
+    padding: 10px 16px;
+    font-size: 0.84rem;
+  }
+}
+
+.btn-wa-group {
+  background-color: #25d366;
+  color: #ffffff !important;
+}
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: 30px auto 0 auto;
+  padding: 20px 20px 0 20px;
+  border-top: 1px solid #2d3748;
+  text-align: center;
+  font-size: 0.82rem;
+  color: #718096;
+  box-sizing: border-box;
+}
+
+.footer-bottom p {
+  margin: 4px 0;
+}
+
+.footer-legal {
+  font-style: italic;
+}
+
+/* ==========================================================================
+   @BOTÓN FLOTANTE "VOLVER ARRIBA" (SCROLL TO TOP)
+   ========================================================================== */
+
+.btn-scroll-top {
+  position: fixed;
+  bottom: 70px;
+  right: 15px;
+  width: 46px;
+  height: 46px;
+  background-color: var(--primary-color, #1a365d);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1500;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  
+  /* Inicialmente oculto con transición suave */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px);
+  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, visibility 0.3s;
+}
+
+/* Estado visible al hacer scroll hacia abajo */
+.btn-scroll-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Quita el marco azul/turquesa del navegador al hacer clic */
+.btn-scroll-top:focus,
+.btn-scroll-top:focus-visible {
+  outline: none;
+  background-color: var(--primary-color, #1a365d);
+}
+
+/* Solo se vuelve turquesa si se pasa el ratón por encima (no se queda pegado en celular) */
+@media (hover: hover) {
+  .btn-scroll-top:hover {
+    background-color: var(--secondary-color, #0e9594);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(14, 149, 148, 0.35);
+  }
+}
+
+/* Al tocarlo en pantalla táctil */
+.btn-scroll-top:active {
+  background-color: var(--secondary-color, #0e9594);
+  transform: scale(0.95);
+}
+
+.btn-scroll-top:active {
+  transform: scale(0.95);
+}
+
+.btn-scroll-top span {
+  font-size: 24px;
+}
+
+/* Ajuste sutil para celulares */
+@media screen and (max-width: 480px) {
+  .btn-scroll-top {
+    bottom: 70px;
+    right: 18px;
+    width: 42px;
+    height: 42px;
+  }
+  .btn-scroll-top span {
+    font-size: 22px;
+  }
+}
+
+/* Compatibilidad con Modo Nocturno */
+body.dark-mode .btn-scroll-top {
+  background-color: #2b6cb0;
+  border-color: #4a5568;
+}
+
+body.dark-mode .btn-scroll-top:hover {
+  background-color: #0e9594;
+}
+
+/* ==========================================================================
+   @Tamaño base para tus iconos SVG
+   ========================================================================== */
+
+.icono-svg {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  fill: currentColor; /* Hereda el color del texto donde se encuentra */
+}
+
+/* En el botón del footer: blanco */
+.footer-btn .icono-svg {
+  fill: #ffffff;
+}
+
+.icon-footer-btn .icono-svg {
+  color: #ffffff;
+  fill: #ffffff ;
+  width: 20px;
+  height: 20px;
+  
+}
+
+/* ==========================================================================
+   10. @MODO NOCTURNO (DARK MODE)
+   ========================================================================== */
+
+body.dark-mode {
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .intro-card,
+body.dark-mode .day-card {
+  background-color: #1e1e1e !important;
+  border-color: #2d2d2d !important;
+}
+
+body.dark-mode .verse-box {
+  background-color: #2a2a2a !important;
+  border-left-color: #4299e1 !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-mode p,
+body.dark-mode h3,
+body.dark-mode li,
+body.dark-mode .motivo-texto {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode h3[style*="color: var(--primary-color)"],
+body.dark-mode .section-title {
+  color: #63b3ed !important;
+}
+
+body.dark-mode .day-item {
+  background-color: #262626 !important;
+  border-color: #333333 !important;
+  border-left-color: #4299e1 !important;
+}
+
+body.dark-mode .day-item strong {
+  color: #90cdf4 !important;
+}
+
+body.dark-mode .share-item {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .share-wa:hover {
+  background-color: #1b3823 !important;
+  color: #25D366 !important;
+}
+
+body.dark-mode .share-fb:hover {
+  background-color: #102a45 !important;
+  color: #1877F2 !important;
+}
+
+/* Modo Nocturno - Sección de Video */
+body.dark-mode #video-seccion {
+  background-color: #121212 !important;
+}
+
+body.dark-mode #video-seccion > div > div {
+  background-color: #1e1e1e !important;
+  border-color: #2d2d2d !important;
+}
+
+body.dark-mode #video-seccion div[style*="background-color: #ffffff"] {
+  background-color: #1e1e1e !important;
+  border-bottom-color: #2d2d2d !important;
+}
+
+body.dark-mode #video-seccion h3 {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode #video-seccion .material-symbols-outlined {
+  color: #63b3ed !important;
+}
+
+body.dark-mode #video-seccion p {
+  background-color: #1e1e1e !important;
+  color: #a0aec0 !important;
+}
+
+/* Modo Nocturno - Header y Navegación */
+body.dark-mode .nav-links,
+body.dark-mode .mobile-menu,
+body.dark-mode .dropdown-menu {
+  background-color: #1e1e1e !important;
+  border-color: #333333 !important;
+}
+
+body.dark-mode #darkModeToggle,
+body.dark-mode .theme-toggle {
+  color: #f6ad55 !important;
+}
+
+body.dark-mode header a {
+  color: #ffffff !important;
+}
+
+body.dark-mode .hero-content,
+.hero-content {
+  padding-top: 2rem !important;
+  margin-top: 0 !important;
+}

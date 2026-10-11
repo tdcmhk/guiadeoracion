@@ -34,7 +34,10 @@
 
   <!-- Carga universal de Google Material Symbols (Soporta todos los iconos) -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link rel="stylesheet" href="css/estilosmt.css">
+  <!-- Hojas de estilo organizadas por módulos -->
+  <link rel="stylesheet" href="css/1-base-nav-footer.css">
+  <link rel="stylesheet" href="css/2-boletin-contenido.css">
+  <link rel="stylesheet" href="css/3-widgets-interactivos.css">
   <script src="js/funcionesmt.js" defer></script>
   
 </head>
@@ -50,7 +53,7 @@
   </div>
 
   <!-- ========================================================================
-       @MENU
+       @MENU NAV
        ======================================================================== -->
   <nav class="sticky-nav">
     <div class="nav-container">
@@ -68,9 +71,10 @@
       <!-- Menú de enlaces desplegable -->
       <div class="nav-links" id="navLinks">
 
-        <!-- Enlace a Video -->
-        <a href="#video-seccion" class="nav-link">
-          <span class="material-symbols-outlined" >play_arrow</span> Video
+        <!-- Botón Mi Perfil en el menú -->
+        <a href="/intranet/perfil/" class="nav-link">
+          <span class="material-symbols-outlined">account_circle</span>
+          <span>Mi Perfil</span>
         </a>
 
         <!-- Menú Secciones -->
@@ -133,17 +137,16 @@
           </div>
         </div>
 
+        <!-- Enlace a Video -->
+        <a href="#video-seccion" class="nav-link">
+          <span class="material-symbols-outlined" >play_arrow</span> Video
+        </a>
+
         <!-- Botón Modo Oscuro -->
         <button type="button" id="themeToggle" class="theme-toggle-btn" aria-label="Cambiar modo de lectura">
           <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
           <span>Modo Oscuro</span>
         </button>
-
-         <!-- Botón Mi Perfil en el menú -->
-        <a href="/intranet/perfil/" class="nav-link">
-          <span class="material-symbols-outlined">account_circle</span>
-          <span>Mi Perfil</span>
-        </a>
 
       </div>
     </div>
@@ -295,29 +298,22 @@
 </div>
 
 <!-- ==========================================================================
-     @CABECERA DE ENTRADA AL BOLETÍN DE ORACIÓN
+     @ENTRADA AL BOLETÍN DE ORACIÓN
      ========================================================================== -->
-<!--<div class="boletin-hero-header">
-
-  <h1 class="boletin-main-title">BOLETÍN DE ORACIÓN</h1>
-  <p class="boletin-subtitle">Intercediendo juntos por la Iglesia y los creyentes en Turquía</p>
-  
-  Enlace/Botón para ir directamente al contenido
-  
-</div>-->
 
     <!-- VERSÍCULO Y CONTEXTO -->
     <div id="contexto-general" class="intro-card">
-       <!-- <svg class="intro-adorno-arabesco" aria-hidden="true">
-          <use href="icons/iconos.svg#iconestrella"></use>
-        </svg>
-      <div class="verse-box">
-        «Pídeme, y te daré por herencia las naciones, y como posesión tuya los confines de la tierra.»
-        <br><strong>— Salmos 2:8</strong>
-      </div>-->
+       
       <h3 style="color: var(--primary-color); margin-top: 0; text-transform: uppercase; font-size: 1.1rem;">
         Contexto General de la Iglesia en Turquía
       </h3>
+      <!-- <svg class="intro-adorno-arabesco" aria-hidden="true">
+          <use href="icons/iconos.svg#iconestrella"></use>
+        </svg>-->
+      <div class="verse-box">
+        «Pídeme, y te daré por herencia las naciones, y como posesión tuya los confines de la tierra.»
+        <br><strong>— Salmos 2:8</strong>
+      </div>
       <!--<p style="margin-bottom: 15px; font-size: 0.95rem; line-height: 1.6;">
         Nuestra Hna. Andrea Pico estará recorriendo durante un mes diversas ciudades de Turquía (Estambul, Bursa, Tekirdağ, Trabzon, Sardis, Adana y Balıkesir) para fortalecer el trabajo de discipulado y desarrollar el <strong>Taller del Método Inductivo de Estudio Bíblico</strong> con mujeres latinas y jóvenes turcos hispanohablantes.
       </p>-->
@@ -1277,7 +1273,7 @@
 
 
   <!-- ========================================================================
-       FOOTER OFICIAL COMPLETO
+       @FOOTER OFICIAL COMPLETO
        ======================================================================== -->
   <footer class="main-footer">
     <div class="footer-container">
@@ -1412,140 +1408,6 @@
     <span class="material-symbols-outlined chat-icon-close">close</span>
   </button>
 </div>
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-<!-- ==========================================================================
-     ESTILOS DE LA BARRA SOCIAL DE ORACIÓN EN CADA BLOQUE
-     ========================================================================== -->
-<style>
-  .social-prayer-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 22px;
-    padding-top: 15px;
-    border-top: 1px dashed #cbd5e1;
-  }
-  .btn-social-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    border: 1px solid #cbd5e1;
-    background: #f8fafc;
-    color: #334155;
-    transition: all 0.2s ease;
-    font-family: inherit;
-  }
-  .btn-social-action:hover {
-    background: #f1f5f9;
-    transform: translateY(-1px);
-  }
-  .btn-social-action .material-symbols-outlined {
-    font-size: 19px;
-  }
-  /* Estado cuando el usuario YA ORÓ por ese bloque */
-  .btn-social-pray.active {
-    background: #ecfdf5;
-    border-color: #10b981;
-    color: #047857;
-  }
-  /* Estado cuando el usuario GUARDÓ ese bloque en su perfil */
-  .btn-social-save.active {
-    background: #eff6ff;
-    border-color: #3b82f6;
-    color: #1d4ed8;
-  }
-  .social-count-pill {
-    background: rgba(0, 0, 0, 0.08);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.76rem;
-  }
-  body.dark-mode .social-prayer-bar { border-color: #334155; }
-  body.dark-mode .btn-social-action { background: #1e293b; border-color: #475569; color: #e2e8f0; }
-  body.dark-mode .btn-social-pray.active { background: #064e3b; border-color: #10b981; color: #a7f3d0; }
-  body.dark-mode .btn-social-save.active { background: #1e3a8a; border-color: #3b82f6; color: #bfdbfe; }
-</style>
-
-<!-- ==========================================================================
-     ESTILOS DE LA BARRA SOCIAL DE ORACIÓN EN CADA BLOQUE
-     ========================================================================== -->
-<style>
-  .social-prayer-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 22px;
-    padding-top: 15px;
-    border-top: 1px dashed #cbd5e1;
-  }
-  .btn-social-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    cursor: pointer;
-    border: 1px solid #cbd5e1;
-    background: #f8fafc;
-    color: #334155;
-    transition: all 0.2s ease;
-    font-family: inherit;
-  }
-  .btn-social-action:hover {
-    background: #f1f5f9;
-    transform: translateY(-1px);
-  }
-  .btn-social-action .material-symbols-outlined {
-    font-size: 19px;
-  }
-  /* Estado cuando el usuario YA ORÓ por ese bloque */
-  .btn-social-pray.active {
-    background: #ecfdf5;
-    border-color: #10b981;
-    color: #047857;
-  }
-  /* Estado cuando el usuario GUARDÓ ese bloque en su perfil */
-  .btn-social-save.active {
-    background: #eff6ff;
-    border-color: #3b82f6;
-    color: #1d4ed8;
-  }
-  .social-count-pill {
-    background: rgba(0, 0, 0, 0.08);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.76rem;
-  }
-  body.dark-mode .social-prayer-bar { border-color: #334155; }
-  body.dark-mode .btn-social-action { background: #1e293b; border-color: #475569; color: #e2e8f0; }
-  body.dark-mode .btn-social-pray.active { background: #064e3b; border-color: #10b981; color: #a7f3d0; }
-  body.dark-mode .btn-social-save.active { background: #1e3a8a; border-color: #3b82f6; color: #bfdbfe; }
-</style>
 
 <!-- ==========================================================================
      SCRIPT FIREBASE: GUARDIÁN + REACCIONES DE ORACIÓN POR BLOQUE
