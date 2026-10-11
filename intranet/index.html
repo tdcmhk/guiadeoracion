@@ -133,13 +133,13 @@
         <input type="text" id="regIglesia" placeholder="Iglesia o Ministerio al que perteneces">
       </div>
 
-      <!-- Campos de Correo y Contraseña -->
-       <!--<input type="email" id="email" placeholder="Correo electrónico" required>
-      <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>
+      <!-- Campos de Correo y Contraseña 
+       <input type="email" id="email" placeholder="Correo electrónico" required>
+      <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required>-->
 
-      <p id="error-msg" class="auth-error"></p>-->
+      <p id="error-msg" class="auth-error"></p>
 
-      <button type="submit" id="btnSubmitAuth" class="btn-submit">Ingresar al Boletín</button>
+      <!--<button type="submit" id="btnSubmitAuth" class="btn-submit">Ingresar al Boletín</button>-->
     </form>
   </div>
 
@@ -155,10 +155,10 @@
         <input type="text" id="profApellido" placeholder="Apellido" required>
       </div>
       <div class="form-row">
-        <input type="tel" id="profTelefono" placeholder="WhatsApp / Teléfono" required>
+        <input type="tel" id="profTelefono" placeholder="Teléfono" required>
         <input type="text" id="profPais" placeholder="País" required>
       </div>
-      <input type="text" id="profIglesia" placeholder="Iglesia o Ministerio" required>
+      <input type="text" id="profIglesia" placeholder="Iglesia" required>
       <button type="submit" class="btn-submit">Guardar y Solicitar Acceso</button>
     </form>
   </div>
@@ -168,12 +168,12 @@
        ====================================================================== -->
   <div id="pending-screen" class="auth-card" style="display: none;">
     <h2>Solicitud en Revisión</h2>
-    <p class="subtitle">Tus datos han sido registrados. Envía tu confirmación por WhatsApp para que el equipo pastoral active tu cuenta:</p>
-    <a id="whatsapp-link" href="#" target="_blank" class="btn-wa">
+    <p class="subtitle">Tus datos han sido registrados. Comunícate con el equipo pastoral para que active tu cuenta:</p>
+      <!-- <a id="whatsapp-link" href="#" target="_blank" class="btn-wa">
       <span class="material-symbols-outlined">chat</span>
       <span>Notificar por WhatsApp</span>
     </a>
-    <button type="button" onclick="logout()" class="btn-logout">Cerrar sesión</button>
+    <button type="button" onclick="logout()" class="btn-logout">Cerrar sesión</button>-->
   </div>
 
 <script type="module">
@@ -183,7 +183,7 @@
       signInWithEmailAndPassword, 
       createUserWithEmailAndPassword,
       GoogleAuthProvider, 
-      signInWithPopup,
+      signInWithPopup, 
       onAuthStateChanged, 
       signOut 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -202,15 +202,6 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // 1. Detectar Pase VIP en la URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const codigoVipUrl = (urlParams.get('vip') || "").trim().toUpperCase();
-    const CLAVE_SECRETA_VIP = "LIDERES2026";
-
-    if (codigoVipUrl === CLAVE_SECRETA_VIP) {
-      localStorage.setItem('pase_vip_activo', 'true');
-    }
-
     const loginScreen = document.getElementById('login-screen');
     const completeProfileScreen = document.getElementById('complete-profile-screen');
     const pendingScreen = document.getElementById('pending-screen');
@@ -218,148 +209,192 @@
     const errorMsg = document.getElementById('error-msg');
 
     let modoActual = 'login';
+    let datosRegistroTemp = null;
 
-    function mostrarError(texto) {
-      if (!errorMsg) return;
-      errorMsg.textContent = texto;
-      errorMsg.style.display = 'block';
-    }
-
-    // Mostrar aviso visual si el Pase VIP está activo
-    if (localStorage.getItem('pase_vip_activo') === 'true') {
-      const sub = document.querySelector('#login-screen .subtitle');
-      if (sub) {
-        sub.innerHTML = `<strong style="color:#059669;">⭐ Acceso Directo VIP Activado.</strong><br>Ingresa tu correo y una clave (o usa Google) para entrar directo sin esperar aprobación.`;
-      }
-    }
-
-    // 2. Función de las pestañas (Iniciar Sesión / Solicitar Acceso)
+    // Cambiar entre pestaña "Iniciar Sesión" y "Solicitar Acceso"
     window.cambiarModo = (modo) => {
       modoActual = modo;
-      if (errorMsg) errorMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
       const camposReg = document.getElementById('campos-registro');
       const btnSubmit = document.getElementById('btnSubmitAuth');
       const tabLogin = document.getElementById('tabLogin');
       const tabRegistro = document.getElementById('tabRegistro');
 
       if (modo === 'registro') {
-        if (camposReg) camposReg.style.display = 'flex';
-        if (btnSubmit) btnSubmit.textContent = 'Registrarme y Entrar';
-        if (tabRegistro) tabRegistro.classList.add('active');
-        if (tabLogin) tabLogin.classList.remove('active');
+        camposReg.style.display = 'flex';
+        btnSubmit.textContent = 'Registrarme y Solicitar Acceso';
+        tabRegistro.classList.add('active');
+        tabLogin.classList.remove('active');
+        document.getElementById('regNombre').required = true;
+        document.getElementById('regApellido').required = true;
+        document.getElementById('regTelefono').required = true;
+        document.getElementById('regPais').required = true;
+        document.getElementById('regIglesia').required = true;
       } else {
-        if (camposReg) camposReg.style.display = 'none';
-        if (btnSubmit) btnSubmit.textContent = 'Ingresar al Boletín';
-        if (tabLogin) tabLogin.classList.add('active');
-        if (tabRegistro) tabRegistro.classList.remove('active');
+        camposReg.style.display = 'none';
+        btnSubmit.textContent = 'Ingresar al Boletín';
+        tabLogin.classList.add('active');
+        tabRegistro.classList.remove('active');
+        document.getElementById('regNombre').required = false;
+        document.getElementById('regApellido').required = false;
+        document.getElementById('regTelefono').required = false;
+        document.getElementById('regPais').required = false;
+        document.getElementById('regIglesia').required = false;
       }
     };
 
-    // 3. Vigilar cuando el usuario inicia sesión
+    function mostrarError(texto) {
+      errorMsg.textContent = texto;
+      errorMsg.style.display = 'block';
+    }
+
+    // Función para guardar ficha completa en Firestore y avisar por Gmail
+    async function guardarFichaIntercesor(user, datosExtra) {
+      const userRef = doc(db, "usuarios", user.uid);
+      const ficha = {
+        nombre: datosExtra.nombre,
+        apellido: datosExtra.apellido,
+        telefono: datosExtra.telefono,
+        pais: datosExtra.pais,
+        iglesia: datosExtra.iglesia,
+        email: user.email,
+        aprobado: false,
+        fechaRegistro: new Date()
+      };
+
+      await setDoc(userRef, ficha);
+
+      // Enviar alerta automática a tu correo adolescentespl@gmail.com
+      fetch("https://formsubmit.co/ajax/adolescentespl@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          _subject: `🔔 Nuevo Intercesor: ${ficha.nombre} ${ficha.apellido} (${ficha.pais})`,
+          Nombre_Completo: `${ficha.nombre} ${ficha.apellido}`,
+          Telefono_WhatsApp: ficha.telefono,
+          Pais: ficha.pais,
+          Iglesia: ficha.iglesia,
+          Correo: ficha.email,
+          Instruccion: "Entra a Firebase > Firestore Database > colección 'usuarios' y cambia 'aprobado' a true."
+        })
+      }).catch(() => {});
+    }
+
+    // Escuchar estado de sesión
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        if (loginScreen) loginScreen.style.display = 'none';
-        const tienePaseVip = localStorage.getItem('pase_vip_activo') === 'true';
-
+        loginScreen.style.display = 'none';
         try {
           const userRef = doc(db, "usuarios", user.uid);
           const userSnap = await getDoc(userRef);
-          const partesNombre = (user.displayName || "").split(" ");
-          const zonaHoraria = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
 
-          // SI TIENE PASE VIP: Lo aprueba inmediatamente y lo lleva al boletín
-          if (tienePaseVip) {
-            await setDoc(userRef, {
-              nombre: partesNombre[0] || document.getElementById('regNombre')?.value || "Pastor / Líder",
-              apellido: partesNombre.slice(1).join(" ") || document.getElementById('regApellido')?.value || "",
-              email: user.email,
-              foto: user.photoURL || "",
-              pais: zonaHoraria,
-              rol: "VIP / Liderazgo",
-              aprobado: true,
-              fechaRegistro: new Date()
-            }, { merge: true });
-
-            window.location.href = "/intranet/boletin-de-oracion/";
+          // Si se acaba de registrar con el formulario completo
+          if (!userSnap.exists() && datosRegistroTemp) {
+            await guardarFichaIntercesor(user, datosRegistroTemp);
+            datosRegistroTemp = null;
+          } 
+          // Si entró con Google por primera vez y aún no llenó sus datos de iglesia/país
+          else if (!userSnap.exists()) {
+            const partesNombre = (user.displayName || "").split(" ");
+            document.getElementById('profNombre').value = partesNombre[0] || "";
+            document.getElementById('profApellido').value = partesNombre.slice(1).join(" ") || "";
+            completeProfileScreen.style.display = 'block';
             return;
           }
 
-          // SI ES USUARIO NORMAL NUEVO
-          if (!userSnap.exists()) {
-            await setDoc(userRef, {
-              nombre: document.getElementById('regNombre')?.value || partesNombre[0] || "Intercesor",
-              apellido: document.getElementById('regApellido')?.value || partesNombre.slice(1).join(" ") || "",
-              telefono: document.getElementById('regTelefono')?.value || "",
-              pais: document.getElementById('regPais')?.value || zonaHoraria,
-              iglesia: document.getElementById('regIglesia')?.value || "",
-              email: user.email,
-              aprobado: false,
-              fechaRegistro: new Date()
-            });
-          }
-
+          // Escuchar en tiempo real si ya está aprobado
           onSnapshot(userRef, (snap) => {
             const data = snap.data();
             if (!data) return;
+            completeProfileScreen.style.display = 'none';
+
             if (data.aprobado === true) {
-              window.location.href = "/intranet/boletin-de-oracion/";
+              window.location.replace("/intranet/boletin-de-oracion/");
             } else {
-              if (pendingScreen) pendingScreen.style.display = 'block';
-              const msg = encodeURIComponent(`Hola, me registré con el correo ${user.email} y solicito aprobación para el Boletín de Oración.`);
-              if (whatsappLink) whatsappLink.href = `https://wa.me/51983204456?text=${msg}`;
+              pendingScreen.style.display = 'block';
+              const msg = encodeURIComponent(
+                `Hola, solicito aprobación para acceder al Boletín de Oración por Turquía.\n\n` +
+                `👤 *Nombre:* ${data.nombre} ${data.apellido}\n` +
+                `📱 *Teléfono:* ${data.telefono}\n` +
+                `🌎 *País:* ${data.pais}\n` +
+                `⛪ *Iglesia:* ${data.iglesia}\n` +
+                `✉️ *Correo:* ${data.email}`
+              );
+              whatsappLink.href = `https://wa.me/51983204456?text=${msg}`;
             }
           });
-
         } catch (dbErr) {
-          if (loginScreen) loginScreen.style.display = 'block';
-          mostrarError("Error en Firestore Database: " + dbErr.message);
+          loginScreen.style.display = 'block';
+          mostrarError("Error de base de datos: " + dbErr.code);
         }
       } else {
-        if (loginScreen) loginScreen.style.display = 'block';
-        if (pendingScreen) pendingScreen.style.display = 'none';
+        loginScreen.style.display = 'block';
+        completeProfileScreen.style.display = 'none';
+        pendingScreen.style.display = 'none';
       }
     });
 
-    // 4. FUNCIONAMIENTO DEL FORMULARIO DE CORREO Y CONTRASEÑA (Login + Auto-Registro)
-    const formEl = document.getElementById('auth-form') || document.getElementById('login-form');
-    if (formEl) {
-      formEl.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (errorMsg) errorMsg.style.display = 'none';
+    // Envío del formulario (Login o Registro)
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMsg.style.display = 'none';
 
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const btn = document.getElementById('btnSubmitAuth') || formEl.querySelector('button[type="submit"]');
-        if (btn) btn.textContent = "Verificando...";
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
 
+      if (modoActual === 'registro') {
+        datosRegistroTemp = {
+          nombre: document.getElementById('regNombre').value.trim(),
+          apellido: document.getElementById('regApellido').value.trim(),
+          telefono: document.getElementById('regTelefono').value.trim(),
+          pais: document.getElementById('regPais').value.trim(),
+          iglesia: document.getElementById('regIglesia').value.trim()
+        };
         try {
-          // Intentar entrar si ya existe
-          await signInWithEmailAndPassword(auth, email, password);
+          await createUserWithEmailAndPassword(auth, email, password);
         } catch (err) {
-          // Si no existe aún (o si es VIP nuevo), crearle la cuenta automáticamente
-          try {
-            await createUserWithEmailAndPassword(auth, email, password);
-          } catch (createErr) {
-            if (btn) btn.textContent = "Ingresar al Boletín";
-            if (createErr.code === 'auth/email-already-in-use') {
-              mostrarError("La contraseña ingresada es incorrecta para este correo.");
-            } else if (createErr.code === 'auth/weak-password') {
-              mostrarError("La contraseña debe tener mínimo 6 caracteres.");
-            } else {
-              mostrarError("Aviso Firebase: " + createErr.code);
-            }
+          if (err.code === 'auth/email-already-in-use') {
+            mostrarError("Este correo ya está registrado. Usa la pestaña 'Iniciar Sesión'.");
+          } else if (err.code === 'auth/weak-password') {
+            mostrarError("La contraseña debe tener al menos 6 caracteres.");
+          } else {
+            mostrarError("Error al registrar: " + err.code);
           }
         }
-      });
-    }
+      } else {
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+          mostrarError("Correo o contraseña incorrectos. Si eres nuevo, toca la pestaña 'Solicitar Acceso'.");
+        }
+      }
+    });
 
-    // 5. FUNCIONAMIENTO DEL BOTÓN GOOGLE
+    // Guardar datos adicionales cuando entran con Google por primera vez
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return;
+
+      await guardarFichaIntercesor(user, {
+        nombre: document.getElementById('profNombre').value.trim(),
+        apellido: document.getElementById('profApellido').value.trim(),
+        telefono: document.getElementById('profTelefono').value.trim(),
+        pais: document.getElementById('profPais').value.trim(),
+        iglesia: document.getElementById('profIglesia').value.trim()
+      });
+
+      window.location.reload();
+    });
+
     window.loginWithGoogle = async () => {
-      if (errorMsg) errorMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
       try {
         await signInWithPopup(auth, new GoogleAuthProvider());
       } catch (err) {
-        mostrarError("Aviso Google: " + err.code);
+        if (err.code !== 'auth/popup-closed-by-user') {
+          mostrarError("Error con Google: " + err.code);
+        }
       }
     };
 

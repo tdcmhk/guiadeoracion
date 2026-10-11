@@ -6,17 +6,39 @@
   <title>Redirigiendo al Boletín de Oración...</title>
   
   <!-- 1. Redirección instantánea por HTML (Con www) -->
-  <meta http-equiv="refresh" content="0; url=https://www.mmmturquia.site/boletin-de-oracion/">
-  <link rel="canonical" href="https://www.mmmturquia.site/boletin-de-oracion/">
+  <meta http-equiv="refresh" content="0; url=https://www.mmmturquia.site/es/">
+  <link rel="canonical" href="https://www.mmmturquia.site/es/">
 
   <!-- 2. Redirección inmediata por JavaScript -->
   <script>
-    window.location.replace("https://www.mmmturquia.site/boletin-de-oracion/");
+    window.location.replace("https://www.mmmturquia.site/es/");
+    (function() {
+      // 1. Si el usuario ya eligió un idioma manualmente antes, respetamos su elección
+      const idiomaGuardado = localStorage.getItem('idioma_preferido');
+      if (idiomaGuardado) {
+        window.location.replace("/" + idiomaGuardado + "/");
+        return;
+      }
+
+      // 2. Detectar el idioma configurado en el celular o navegador (ej: "es-PE", "tr-TR", "it-IT", "en-US")
+      const idiomaNavegador = (navigator.language || navigator.userLanguage || "es").toLowerCase();
+
+      if (idiomaNavegador.startsWith("tr")) {
+        window.location.replace("/tr/");
+      } else if (idiomaNavegador.startsWith("it")) {
+        window.location.replace("/it/");
+      } else if (idiomaNavegador.startsWith("en")) {
+        window.location.replace("/en/");
+      } else {
+        // Por defecto (español o cualquier otro idioma)
+        window.location.replace("/es/");
+      }
+    })();
   </script>
 </head>
 <body>
   <p style="font-family: sans-serif; text-align: center; margin-top: 50px; color: #4a5568;">
-    Redirigiendo al <a href="https://www.mmmturquia.site/boletin-de-oracion/">Boletín de Oración</a>...
+    Redirigiendo al <a href="https://www.mmmturquia.site/es/">Boletín de Oración</a>...
   </p>
 </body>
 </html>
