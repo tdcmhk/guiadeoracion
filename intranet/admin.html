@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel Administrador — MMM Turquía</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <style>
+    :root { --primary: #1a365d; --secondary: #0e9594; --bg: #f1f5f9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #1e293b; }
+    .top-bar {
+      background: var(--primary); color: #fff; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
+    }
+    .top-bar h1 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+    .container { max-width: 960px; margin: 24px auto; padding: 0 15px; }
+
+    /* Pestañas del Admin */
+    .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-btn {
+      flex: 1; padding: 12px; border: none; border-radius: 10px; background: #fff;
+      color: #475569; font-weight: 700; font-size: 0.92rem; cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .tab-btn.active { background: var(--secondary); color: #fff; }
+
+    .card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+
+    /* Lista de Usuarios */
+    .user-item {
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+      gap: 12px; padding: 14px; border-bottom: 1px solid #e2e8f0;
+    }
+    .user-info h4 { margin: 0 0 4px 0; color: var(--primary); font-size: 0.98rem; }
+    .user-info p { margin: 0; font-size: 0.82rem; color: #64748b; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .badge.pending { background: #fef3c7; color: #b45309; }
+    .badge.approved { background: #dcfce7; color: #15803d; }
+
+    .btn-action {
+      padding: 8px 16px; border: none; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer;
+    }
+    .btn-approve { background: #16a34a; color: #fff; }
+    .btn-revoke { background: #fee2e2; color: #b91c1c; }
+
+    /* Editor de Bloques */
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 5px; text-transform: uppercase; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; font-size: 0.9rem;
+    }
+    .btn-save-block {
+      background: var(--primary); color: #fff; border: none; padding: 13px 24px;
+      border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; width: 100%;
+    }
+    .btn-save-block:hover { background: var(--secondary); }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <h1><span class="material-symbols-outlined">shield_person</span> Panel Pastoral Admin</h1>
+    <div style="display:flex; gap:12px; align-items:center;">
+      <a href="/intranet/boletin-de-oracion/" style="color:#fff; text-decoration:none; font-size:0.85rem; background:rgba(255,255,255,0.15); padding:6px 12px; border-radius:16px;">Ver Boletín</a>
+    </div>
+  </header>
+
+  <main class="container" id="adminContent" style="display: none;">
+
+    <div class="admin-tabs">
+      <button class="tab-btn active" id="tabBtnUsers" onclick="mostrarTab('usuarios')">
+        <span class="material-symbols-outlined">group</span> Aprobar Intercesores
+      </button>
+      <button class="tab-btn" id="tabBtnBlocks" onclick="mostrarTab('bloques')">
+        <span class="material-symbols-outlined">edit_note</span> Editar Boletín (9 Bloques)
+      </button>
+    </div>
+
+    <!-- PESTAÑA 1: GESTIÓN DE USUARIOS -->
+    <section id="secUsuarios" class="card">
+      <h3 style="margin-top:0; color:var(--primary);">Solicitudes y Usuarios Registrados</h3>
+      <div id="listaUsuarios">Cargando intercesores...</div>
+    </section>
+
+    <!-- PESTAÑA 2: EDITOR PROTEGIDO DE LOS 9 BLOQUES -->
+    <section id="secBloques" class="card" style="display: none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+        <h3 style="margin:0; color:var(--primary);">Editor de Bloques del Boletín</h3>
+      </div>
+
+      <div class="form-group">
+        <label>Selecciona el Bloque que deseas editar:</label>
+        <select id="selectBloque" onchange="cargarBloqueEnEditor()">
+          <option value="seccion-1">BLOQUE 1</option>
+          <option value="seccion-2">BLOQUE 2</option>
+          <option value="seccion-3">BLOQUE 3</option>
+          <option value="seccion-4">BLOQUE 4</option>
+          <option value="seccion-5">BLOQUE 5</option>
+          <option value="seccion-6">BLOQUE 6</option>
+          <option value="seccion-7">BLOQUE 7</option>
+          <option value="seccion-8">BLOQUE 8</option>
+          <option value="seccion-9">BLOQUE 9</option>
+        </select>
+      </div>
+
+      <form id="formBloque">
+        <div class="form-group">
+          <label>Título del Bloque</label>
+          <input type="text" id="blkTitulo" placeholder="Ej: Mujeres dispersas en Turquía: llamadas a una vida santa" required>
+        </div>
+
+        <div class="form-group">
+          <label>Imagen del Bloque (Ruta)</label>
+          <input type="text" id="blkImagen" placeholder="images/imageweb2.webp" required>
+        </div>
+
+        <div class="form-group">
+          <label>Texto del Versículo Bíblico</label>
+          <textarea id="blkVersiculo" rows="2" placeholder="«Sino, como aquel que os llamó es santo...»" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Cita Bíblica</label>
+          <input type="text" id="blkCita" placeholder="— 1 Pedro 1:15" required>
+        </div>
+
+        <div class="form-group">
+          <label>Contexto e Historia</label>
+          <textarea id="blkContexto" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>El Desafío Actual</label>
+          <textarea id="blkDesafio" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Motivos de Oración (Escribe uno por línea con formato Título: Descripción)</label>
+          <textarea id="blkMotivos" rows="5" placeholder="Santidad: Oremos para que las mujeres latinas...&#10;Regeneración: Pidamos que la Palabra transforme..." required></textarea>
+        </div>
+
+        <button type="submit" id="btnGuardarBlk" class="btn-save-block">💾 Guardar Cambios en este Bloque</button>
+        <p id="msgGuardadoBlk" style="display:none; color:#15803d; text-align:center; font-weight:700; margin-top:10px;">
+          ✅ ¡Bloque actualizado en la Bóveda de Firebase!
+        </p>
+      </form>
+    </section>
+
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBeuFR_MvuAWKan95TEhKvyap51n189tcM",
+      authDomain: "intranet-movilizacion-turquia.firebaseapp.com",
+      projectId: "intranet-movilizacion-turquia",
+      storageBucket: "intranet-movilizacion-turquia.firebasestorage.app",
+      messagingSenderId: "633633525264",
+      appId: "1:633633525264:web:93010e98058338f3580495"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ADMIN_EMAIL = "rvicentetapia@gmail.com";
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        signInWithPopup(auth, new GoogleAuthProvider());
+        return;
+      }
+      if (user.email.toLowerCase() !== ADMIN_EMAIL) {
+        alert("Acceso denegado. Esta página es exclusiva para el administrador general.");
+        window.location.replace("/intranet/");
+        return;
+      }
+
+      document.getElementById('adminContent').style.display = 'block';
+      escucharUsuariosEnVivo();
+      cargarBloqueEnEditor();
+    });
+
+    // Cambiar pestañas
+    window.mostrarTab = (tab) => {
+      document.getElementById('secUsuarios').style.display = tab === 'usuarios' ? 'block' : 'none';
+      document.getElementById('secBloques').style.display = tab === 'bloques' ? 'block' : 'none';
+      document.getElementById('tabBtnUsers').classList.toggle('active', tab === 'usuarios');
+      document.getElementById('tabBtnBlocks').classList.toggle('active', tab === 'bloques');
+    };
+
+    // 1. Listar y Aprobar / Bloquear Usuarios en Tiempo Real
+    function escucharUsuariosEnVivo() {
+      const contenedor = document.getElementById('listaUsuarios');
+      onSnapshot(collection(db, "usuarios"), (snapshot) => {
+        if (snapshot.empty) {
+          contenedor.innerHTML = "<p>No hay usuarios registrados aún.</p>";
+          return;
+        }
+        let html = "";
+        snapshot.forEach((docSnap) => {
+          const u = docSnap.data();
+          const uid = docSnap.id;
+          const aprobado = u.aprobado === true;
+          html += `
+            <div class="user-item">
+              <div class="user-info">
+                <h4>${u.nombre || ''} ${u.apellido || ''} <span class="badge ${aprobado ? 'approved' : 'pending'}">${aprobado ? 'Aprobado' : 'Pendiente'}</span></h4>
+                <p>📧 ${u.email || ''} | 📱 ${u.telefono || 'Sin tel'} | 🌎 ${u.pais || ''} | ⛪ ${u.iglesia || ''}</p>
+              </div>
+              <div>
+                ${aprobado 
+                  ? `<button class="btn-action btn-revoke" onclick="cambiarEstadoUsuario('${uid}', false)">Pausar Acceso</button>`
+                  : `<button class="btn-action btn-approve" onclick="cambiarEstadoUsuario('${uid}', true)">✅ Aprobar Acceso</button>`
+                }
+              </div>
+            </div>
+          `;
+        });
+        contenedor.innerHTML = html;
+      });
+    }
+
+    window.cambiarEstadoUsuario = async (uid, nuevoEstado) => {
+      await updateDoc(doc(db, "usuarios", uid), { aprobado: nuevoEstado });
+    };
+
+    // 2. Cargar y Guardar Bloques del Boletín
+    window.cargarBloqueEnEditor = async () => {
+      const bloqueId = document.getElementById('selectBloque').value;
+      const snap = await getDoc(doc(db, "boletin_bloques", bloqueId));
+      if (snap.exists()) {
+        const d = snap.data();
+        document.getElementById('blkTitulo').value = d.titulo || "";
+        document.getElementById('blkImagen').value = d.imagen || "images/imageweb1.webp";
+        document.getElementById('blkVersiculo').value = d.versiculo || "";
+        document.getElementById('blkCita').value = d.cita || "";
+        document.getElementById('blkContexto').value = d.contexto || "";
+        document.getElementById('blkDesafio').value = d.desafio || "";
+        document.getElementById('blkMotivos').value = (d.motivos || []).join("\n");
+      } else {
+        document.getElementById('formBloque').reset();
+      }
+    };
+
+    document.getElementById('formBloque').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const bloqueId = document.getElementById('selectBloque').value;
+      const btn = document.getElementById('btnGuardarBlk');
+      const msg = document.getElementById('msgGuardadoBlk');
+      btn.textContent = "Guardando...";
+
+      const lineasMotivos = document.getElementById('blkMotivos').value
+        .split("\n")
+        .map(l => l.trim())
+        .filter(l => l.length > 0);
+
+      await setDoc(doc(db, "boletin_bloques", bloqueId), {
+        titulo: document.getElementById('blkTitulo').value.trim(),
+        imagen: document.getElementById('blkImagen').value.trim(),
+        versiculo: document.getElementById('blkVersiculo').value.trim(),
+        cita: document.getElementById('blkCita').value.trim(),
+        contexto: document.getElementById('blkContexto').value.trim(),
+        desafio: document.getElementById('blkDesafio').value.trim(),
+        motivos: lineasMotivos,
+        ultimaEdicion: new Date()
+      });
+
+      btn.textContent = "💾 Guardar Cambios en este Bloque";
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 3000);
+    });
+  </script>
+</body>
+</html>

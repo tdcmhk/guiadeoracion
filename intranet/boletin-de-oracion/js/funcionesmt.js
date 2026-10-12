@@ -772,3 +772,43 @@ if (formWsp) {
   });
 }
 
+/* ==========================================================================
+   FIREBASE ADMIN
+   ========================================================================== */
+
+// Función que descarga los bloques protegidos desde la bóveda de Firebase
+  async function cargarBloquesDesdeBoveda() {
+    for (let i = 1; i <= 9; i++) {
+      const bloqueId = `seccion-${i}`;
+      const card = document.getElementById(bloqueId);
+      if (!card) continue;
+
+      const snap = await getDoc(doc(db, "boletin_bloques", bloqueId));
+      if (snap.exists()) {
+        const d = snap.data();
+        const titleEl = card.querySelector('.day-title');
+        const imgEl = card.querySelector('.photo-container img');
+        const verseEl = card.querySelector('.verse-box');
+        const parrafos = card.querySelectorAll('.day-content > p');
+        const listaEl = card.querySelector('.prayer-list');
+
+        if (titleEl && d.titulo) titleEl.textContent = d.titulo;
+        if (imgEl && d.imagen) imgEl.src = d.imagen;
+        if (verseEl && d.versiculo) {
+          verseEl.innerHTML = `«${d.versiculo}»<br><strong>${d.cita || ''}</strong>`;
+        }
+        if (parrafos[0] && d.contexto) parrafos[0].textContent = d.contexto;
+        if (parrafos[1] && d.desafio) parrafos[1].textContent = d.desafio;
+
+        if (listaEl && d.motivos && d.motivos.length > 0) {
+          listaEl.innerHTML = d.motivos.map(linea => {
+            const partes = linea.split(':');
+            if (partes.length > 1) {
+              return `<li class="prayer-item"><strong>${partes[0]}:</strong> ${partes.slice(1).join(':')}</li>`;
+            }
+            return `<li class="prayer-item">${linea}</li>`;
+          }).join('');
+        }
+      }
+    }
+  }
