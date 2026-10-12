@@ -1412,6 +1412,9 @@
 <!-- ==========================================================================
      SCRIPT FIREBASE: GUARDIÁN + REACCIONES DE ORACIÓN POR BLOQUE
      ========================================================================== -->
+<!-- ==========================================================================
+     SCRIPT FIREBASE: GUARDIÁN + BÓVEDA DE BLOQUES + REACCIONES DE ORACIÓN
+     ========================================================================== -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1441,11 +1444,63 @@
   const db = getFirestore(app);
 
   let currentUser = null;
-  let misOrados = [];    // IDs de bloques por los que el usuario ya oró
-  let misGuardados = []; // Objetos de bloques guardados para su Dashboard
+  let misOrados = [];
+  let misGuardados = [];
 
-  // 1. Inyectar automáticamente los botones al final de cada Bloque (.day-card)
-function inyectarBotonesEnBloques() {
+  // 1. LEER LOS BLOQUES DESDE FIREBASE Y OCULTAR LOS DESMARCADOS
+  async function cargarBloquesDesdeBoveda() {
+    for (let i = 1; i <= 9; i++) {
+      const bloqueId = `seccion-${i}`;
+      const card = document.getElementById(bloqueId);
+      const linkMenu = document.querySelector(`.dropdown-menu a[href="#${bloqueId}"]`);
+      if (!card) continue;
+
+      try {
+        const snap = await getDoc(doc(db, "boletin_bloques", bloqueId));
+        if (snap.exists()) {
+          const d = snap.data();
+
+          // SI EN EL ADMIN DESMARCASTE "MOSTRAR ESTE BLOQUE": Se elimina del Boletín y del Menú
+          if (d.activo === false) {
+            card.style.display = 'none';
+            card.classList.remove('motivo-extra', 'visible');
+            card.remove();
+            if (linkMenu) linkMenu.style.display = 'none';
+            continue;
+          }
+
+          const titleEl = card.querySelector('.day-title');
+          const imgEl = card.querySelector('.photo-container img');
+          const verseEl = card.querySelector('.verse-box');
+          const parrafos = card.querySelectorAll('.day-content > p');
+          const listaEl = card.querySelector('.prayer-list');
+
+          if (titleEl && d.titulo) titleEl.textContent = d.titulo;
+          if (imgEl && d.imagen) imgEl.src = d.imagen;
+          if (verseEl && d.versiculo) {
+            verseEl.innerHTML = `«${d.versiculo}»<br><strong>${d.cita || ''}</strong>`;
+          }
+          if (parrafos[0] && d.contexto) parrafos[0].textContent = d.contexto;
+          if (parrafos[1] && d.desafio) parrafos[1].textContent = d.desafio;
+
+          if (listaEl && d.motivos && d.motivos.length > 0) {
+            listaEl.innerHTML = d.motivos.map(linea => {
+              const partes = linea.split(':');
+              if (partes.length > 1) {
+                return `<li class="prayer-item"><strong>${partes[0]}:</strong> ${partes.slice(1).join(':')}</li>`;
+              }
+              return `<li class="prayer-item">${linea}</li>`;
+            }).join('');
+          }
+        }
+      } catch (e) {
+        console.warn("Error leyendo bloque:", bloqueId, e);
+      }
+    }
+  }
+
+  // 2. CONECTAR LOS BOTONES DE ORAR Y GUARDAR EN CADA BLOQUE
+  function inyectarBotonesEnBloques() {
     document.querySelectorAll('.social-prayer-bar').forEach((bar) => {
       const btnPray = bar.querySelector('.btn-social-pray');
       const btnSave = bar.querySelector('.btn-social-save');
@@ -1455,7 +1510,6 @@ function inyectarBotonesEnBloques() {
       const tituloCompleto = btnPray.dataset.titulo || bloqueId;
       btnPray.dataset.listenerAdded = "true";
 
-      // Escuchar en vivo el contador global de este bloque
       onSnapshot(doc(db, "contadores_bloques", bloqueId), (snap) => {
         const total = snap.exists() ? (snap.data().total || 0) : 0;
         const countEl = document.getElementById(`count-pray-${bloqueId}`);
@@ -1469,7 +1523,6 @@ function inyectarBotonesEnBloques() {
     });
   }
 
-  // 2. Actualizar apariencia de los botones según lo que el usuario ya marcó
   function actualizarEstadoVisualBotones() {
     document.querySelectorAll('.btn-social-pray').forEach((btn) => {
       const id = btn.dataset.id;
@@ -1486,23 +1539,19 @@ function inyectarBotonesEnBloques() {
     });
   }
 
-  // 3. Acción al hacer clic en "🙏 Orar"
   async function toggleOrarBloque(bloqueId, titulo) {
     if (!currentUser) return;
     const userRef = doc(db, "usuarios", currentUser.uid);
     const countRef = doc(db, "contadores_bloques", bloqueId);
-
     const itemExistente = misOrados.find(item => item.id === bloqueId);
 
     if (itemExistente) {
-      // Si ya había orado y vuelve a tocar, desmarca
       await updateDoc(userRef, {
         bloquesOrados: arrayRemove(itemExistente),
         misOracionesCount: increment(-1)
       });
       await setDoc(countRef, { total: increment(-1) }, { merge: true });
     } else {
-      // Marca como orado y suma +1
       const nuevoItem = { id: bloqueId, titulo: titulo };
       await updateDoc(userRef, {
         bloquesOrados: arrayUnion(nuevoItem),
@@ -1512,7 +1561,6 @@ function inyectarBotonesEnBloques() {
     }
   }
 
-  // 4. Acción al hacer clic en "🔖 Guardar"
   async function toggleGuardarBloque(bloqueId, titulo) {
     if (!currentUser) return;
     const userRef = doc(db, "usuarios", currentUser.uid);
@@ -1526,7 +1574,7 @@ function inyectarBotonesEnBloques() {
     }
   }
 
-  // 5. Verificar sesión y sincronizar en tiempo real con el perfil del usuario
+  // 3. VERIFICAR SESIÓN Y EJECUTAR LA CARGA DE BLOQUES
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.replace("/intranet/");
@@ -1534,6 +1582,8 @@ function inyectarBotonesEnBloques() {
     }
     currentUser = user;
 
+    // 👇 AQUÍ SE LLAMA A LA FUNCIÓN QUE OCULTA LOS BLOQUES DESMARCADOS 👇
+    await cargarBloquesDesdeBoveda();
     inyectarBotonesEnBloques();
 
     const userRef = doc(db, "usuarios", user.uid);

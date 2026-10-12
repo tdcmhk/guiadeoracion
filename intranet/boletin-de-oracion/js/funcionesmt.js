@@ -552,29 +552,21 @@ if (btnScrollTop) {
 const btnToggleMotivos = document.getElementById('btnToggleMotivos');
 const textoToggle = document.getElementById('textoToggleMotivos');
 const iconoToggle = document.getElementById('iconoToggleMotivos');
-const diasExtras = document.querySelectorAll('.day-card.motivo-extra');
 
 let diasDesplegados = false;
 
-if (btnToggleMotivos && diasExtras.length > 0) {
+if (btnToggleMotivos) {
   btnToggleMotivos.addEventListener('click', () => {
     diasDesplegados = !diasDesplegados;
+    // Busca solo los bloques que siguen activos en la página
+    const diasExtrasActivos = document.querySelectorAll('.day-card.motivo-extra');
 
-    diasExtras.forEach(card => {
-      if (diasDesplegados) {
-        card.classList.add('visible');
-      } else {
-        card.classList.remove('visible');
-      }
+    diasExtrasActivos.forEach(card => {
+      card.classList.toggle('visible', diasDesplegados);
     });
 
-    if (diasDesplegados) {
-      textoToggle.textContent = 'Ver menos motivos';
-      iconoToggle.textContent = 'expand_less';
-    } else {
-      textoToggle.textContent = `Ver más motivos`;
-      iconoToggle.textContent = 'expand_more';
-    }
+    textoToggle.textContent = diasDesplegados ? 'Ver menos motivos' : 'Ver más motivos';
+    iconoToggle.textContent = diasDesplegados ? 'expand_less' : 'expand_more';
   });
 }
 
@@ -771,50 +763,3 @@ if (formWsp) {
     formWsp.reset();
   });
 }
-
-/* ==========================================================================
-   FIREBASE ADMIN
-   ========================================================================== */
-
-// Función que descarga los bloques protegidos desde la bóveda de Firebase
-  async function cargarBloquesDesdeBoveda() {
-    for (let i = 1; i <= 9; i++) {
-      const bloqueId = `seccion-${i}`;
-      const card = document.getElementById(bloqueId);
-      const linkMenu = document.querySelector(`.dropdown-menu a[href="#${bloqueId}"]`);
-      if (!card) continue;
-
-      const snap = await getDoc(doc(db, "boletin_bloques", bloqueId));
-      if (snap.exists()) {
-        const d = snap.data();
-        if (d.activo === false) {
-          card.remove(); 
-          if (linkMenu) linkMenu.style.display = 'none';
-          continue;
-        }
-        const titleEl = card.querySelector('.day-title');
-        const imgEl = card.querySelector('.photo-container img');
-        const verseEl = card.querySelector('.verse-box');
-        const parrafos = card.querySelectorAll('.day-content > p');
-        const listaEl = card.querySelector('.prayer-list');
-
-        if (titleEl && d.titulo) titleEl.textContent = d.titulo;
-        if (imgEl && d.imagen) imgEl.src = d.imagen;
-        if (verseEl && d.versiculo) {
-          verseEl.innerHTML = `«${d.versiculo}»<br><strong>${d.cita || ''}</strong>`;
-        }
-        if (parrafos[0] && d.contexto) parrafos[0].textContent = d.contexto;
-        if (parrafos[1] && d.desafio) parrafos[1].textContent = d.desafio;
-
-        if (listaEl && d.motivos && d.motivos.length > 0) {
-          listaEl.innerHTML = d.motivos.map(linea => {
-            const partes = linea.split(':');
-            if (partes.length > 1) {
-              return `<li class="prayer-item"><strong>${partes[0]}:</strong> ${partes.slice(1).join(':')}</li>`;
-            }
-            return `<li class="prayer-item">${linea}</li>`;
-          }).join('');
-        }
-      }
-    }
-  }
