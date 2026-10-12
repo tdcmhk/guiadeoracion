@@ -195,6 +195,7 @@
     };
 
     // 1. Listar y Aprobar / Bloquear Usuarios en Tiempo Real
+    // 1. Listar y Aprobar / Bloquear Usuarios en Tiempo Real (Sin mostrar correo)
     function escucharUsuariosEnVivo() {
       const contenedor = document.getElementById('listaUsuarios');
       onSnapshot(collection(db, "usuarios"), (snapshot) => {
@@ -207,11 +208,18 @@
           const u = docSnap.data();
           const uid = docSnap.id;
           const aprobado = u.aprobado === true;
+          const nombreCompleto = `${u.nombre || ''} ${u.apellido || ''}`.trim() || "Intercesor sin nombre";
+
           html += `
             <div class="user-item">
               <div class="user-info">
-                <h4>${u.nombre || ''} ${u.apellido || ''} <span class="badge ${aprobado ? 'approved' : 'pending'}">${aprobado ? 'Aprobado' : 'Pendiente'}</span></h4>
-                <p>📧 ${u.email || ''} | 📱 ${u.telefono || 'Sin tel'} | 🌎 ${u.pais || ''} | ⛪ ${u.iglesia || ''}</p>
+                <h4>
+                  ${nombreCompleto} 
+                  <span class="badge ${aprobado ? 'approved' : 'pending'}">
+                    ${aprobado ? 'Aprobado' : 'Pendiente'}
+                  </span>
+                </h4>
+                <p>📱 ${u.telefono || 'Sin tel'} &nbsp;|&nbsp; 🌎 ${u.pais || 'Sin país'} &nbsp;|&nbsp; ⛪ ${u.iglesia || 'Sin iglesia'}</p>
               </div>
               <div>
                 ${aprobado 
