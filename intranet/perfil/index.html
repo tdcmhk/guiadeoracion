@@ -183,7 +183,7 @@
         <span id="userRol" class="badge-rol">Intercesor</span>
       </div>
 
-      <form id="formPerfil" class="profile-form">
+      <!--<form id="formPerfil" class="profile-form">
         <label>Nombre</label>
         <input type="text" id="inpNombre" placeholder="Tu nombre" required>
 
@@ -203,7 +203,7 @@
         <p id="msgExito" style="display:none; color:#059669; text-align:center; font-weight:600; font-size:0.85rem; margin:0;">
           ✅ ¡Tus datos han sido guardados!
         </p>
-      </form>
+      </form>-->
     </section>
 
     <!-- COLUMNA DERECHA: DASHBOARD DE INTERCESIÓN Y FAVORITOS -->
@@ -293,7 +293,7 @@
         document.getElementById('userFoto').src = user.photoURL || d.foto;
       }
       document.getElementById('userSaludo').textContent = `${d.nombre || ''} ${d.apellido || ''}`.trim() || user.email;
-      document.getElementById('userRol').textContent = d.rol || "Intercesor Aprobado";
+      document.getElementById('userRol').textContent = d.rol || "Intercesor";
 
       document.getElementById('inpNombre').value = d.nombre || "";
       document.getElementById('inpApellido').value = d.apellido || "";
@@ -321,28 +321,33 @@
       return;
     }*/
 
-    // Mostrar lista de Motivos Guardados y Orados en el Dashboard
+    // Mostrar en el Perfil únicamente los Motivos de Oración de cada bloque guardado
       const contenedorMotivos = document.getElementById('listaMotivosGuardados');
       const guardados = d.motivosFavoritos || [];
-      const orados = d.bloquesOrados || [];
 
-      if (guardados.length > 0 || orados.length > 0) {
-        let html = '<div style="display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px;">';
-        
-        guardados.forEach(m => {
-          html += `
-            <a href="/intranet/boletin-de-oracion/#${m.id}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; text-decoration:none; color:#1e3a8a; font-weight:600; font-size:0.88rem;">
-              <span>🔖 ${m.titulo}</span>
-              <span class="material-symbols-outlined" style="font-size:18px;">open_in_new</span>
-            </a>`;
-        });
+      if (guardados.length > 0) {
+        let html = '<div style="display:flex; flex-direction:column; gap:14px; text-align:left; margin-top:12px;">';
 
-        orados.forEach(m => {
+        guardados.forEach((m) => {
+          const itemsHtml = (m.motivos && m.motivos.length > 0)
+            ? m.motivos.map(texto => `
+                <li style="background:#f8fafc; border-left:4px solid #0e9594; padding:10px 12px; margin-bottom:8px; border-radius:0 6px 6px 0; font-size:0.88rem; color:#334155; list-style:none;">
+                  ${texto}
+                </li>
+              `).join('')
+            : `<li style="font-size:0.85rem; color:#64748b; list-style:none;">Motivo guardado del ${m.titulo}</li>`;
+
           html += `
-            <a href="/intranet/boletin-de-oracion/#${m.id}" style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; text-decoration:none; color:#065f46; font-weight:600; font-size:0.88rem;">
-              <span>🙏 Orado: ${m.titulo}</span>
-              <span class="material-symbols-outlined" style="font-size:18px;">check_circle</span>
-            </a>`;
+            <div style="border:1px solid #e2e8f0; border-radius:12px; padding:14px; background:#ffffff; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #f1f5f9; padding-bottom:6px;">
+                <strong style="color:#1a365d; font-size:0.92rem;">🔖 ${m.titulo}</strong>
+                <span style="font-size:0.72rem; color:#94a3b8;">${m.fechaGuardado || ''}</span>
+              </div>
+              <ul style="padding:0; margin:0;">
+                ${itemsHtml}
+              </ul>
+            </div>
+          `;
         });
 
         html += '</div>';

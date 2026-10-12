@@ -286,21 +286,21 @@
   </div>
 
 <div class="meta-editorial">
-  <div class="meta-item">
+  <!--<div class="meta-item">
     <span class="material-symbols-outlined meta-icon">edit_note</span>
     <span>Escrito por los Pastores de MMMTurquía</span>
-  </div>
+  </div>-->
   <span class="meta-separator">•</span>
   <div class="meta-item">
     <span class="material-symbols-outlined meta-icon">history</span>
     <span>Última actualización: <span id="fechaModificacion">Cargando...</span></span>
   </div>
-  <!-- SELECTOR DE EDICIONES SEMANALES DEL BOLETÍN -->
+  <!-- SELECTOR DE EDICIONES SEMANALES DEL BOLETÍN 
 <div style="text-align: center; margin-bottom: 20px;">
   <select id="selectorEdicionPublica" style="padding: 7px 14px; border-radius: 20px; border: 1px solid #cbd5e1; background: #ffffff; color: #1a365d; font-size: 0.84rem; font-weight: 600; cursor: pointer;">
     <option value="">📅 Boletín de esta semana</option>
   </select>
-</div>
+</div>-->
 </div>
 
 <!-- ==========================================================================
@@ -1567,19 +1567,44 @@
     }
   }
 
+// 4. Acción al hacer clic en "🔖 Guardar": Guarda el título + los motivos de oración del bloque
   async function toggleGuardarBloque(bloqueId, titulo) {
     if (!currentUser) return;
     const userRef = doc(db, "usuarios", currentUser.uid);
     const itemExistente = misGuardados.find(item => item.id === bloqueId);
 
     if (itemExistente) {
+      // Si ya estaba guardado y lo vuelve a tocar, lo quita de su perfil
       await updateDoc(userRef, { motivosFavoritos: arrayRemove(itemExistente) });
     } else {
-      const nuevoItem = { id: bloqueId, titulo: titulo };
+      // Extraer el título real del bloque y únicamente sus motivos de oración (.prayer-item)
+      const card = document.getElementById(bloqueId);
+      let tituloReal = titulo;
+      let listaMotivos = [];
+
+      if (card) {
+        const numSpan = card.querySelector('.day-header span:first-child');
+        const titleSpan = card.querySelector('.day-title');
+        if (titleSpan) {
+          tituloReal = `${numSpan ? numSpan.textContent.trim() : ''} - ${titleSpan.textContent.trim()}`;
+        }
+
+        card.querySelectorAll('.prayer-item').forEach((li) => {
+          listaMotivos.push(li.innerHTML.trim());
+        });
+      }
+
+      const nuevoItem = {
+        id: bloqueId,
+        titulo: tituloReal,
+        motivos: listaMotivos,
+        fechaGuardado: new Date().toLocaleDateString('es-ES')
+      };
+
       await updateDoc(userRef, { motivosFavoritos: arrayUnion(nuevoItem) });
     }
   }
-
+  
   // 3. VERIFICAR SESIÓN Y EJECUTAR LA CARGA DE BLOQUES
   onAuthStateChanged(auth, async (user) => {
     if (!user) {
