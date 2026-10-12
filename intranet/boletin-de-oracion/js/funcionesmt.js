@@ -115,6 +115,16 @@ const slidesData = [
   },
   {
     category: "",
+    title: "Video Informativo",
+    description: "Conoce la Movilización Más Reciente",
+    subtag: "",
+    button: {
+      text: "▶ Ver Video",
+      link: "#video-seccion" // Te desplaza al videojavascript:void(0)
+    }
+  },
+  {
+    category: "",
     title: "Involúcrate",
     description: "Comparte la Movilización con tus Amigos",
     subtag: "",
@@ -131,16 +141,6 @@ const slidesData = [
     button: {
       text: "⭣ Instalar Aplicación",
       link: "javascript:void(0)"
-    }
-  },
-  {
-    category: "",
-    title: "Video Informativo",
-    description: "Conoce la Movilización Más Reciente",
-    subtag: "",
-    button: {
-      text: "▶ Ver Video",
-      link: "#video-seccion" // Te desplaza al videojavascript:void(0)
     }
   }
 ];
@@ -761,5 +761,16 @@ if (formWsp) {
     // Cerrar el popup y limpiar el formulario
     chatWidget.classList.remove('is-open');
     formWsp.reset();
+  });
+}
+
+/* ==========================================================================
+   REGISTRO DEL SERVICE WORKER (GUARDA VIDEOS E IMÁGENES EN CACHÉ DEL CELULAR)
+   ========================================================================== */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(() => console.log('⚡ Caché de videos e imágenes activada'))
+      .catch((err) => console.warn('Aviso SW:', err));
   });
 }
