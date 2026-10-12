@@ -105,6 +105,14 @@
         </select>
       </div>
 
+    <!-- INTERRUPTOR PARA MOSTRAR U OCULTAR EL BLOQUE -->
+        <div class="form-group" style="background: #f8fafc; padding: 12px 14px; border-radius: 8px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: space-between;">
+          <label for="blkActivo" style="margin: 0; cursor: pointer; font-size: 0.88rem; color: #1a365d;">
+            👁️ Mostrar este bloque en el Boletín (Desmarca para ocultarlo)
+          </label>
+          <input type="checkbox" id="blkActivo" checked style="width: 22px; height: 22px; cursor: pointer;">
+        </div>
+
       <form id="formBloque">
         <div class="form-group">
           <label>Título del Bloque</label>
@@ -251,8 +259,10 @@
         document.getElementById('blkContexto').value = d.contexto || "";
         document.getElementById('blkDesafio').value = d.desafio || "";
         document.getElementById('blkMotivos').value = (d.motivos || []).join("\n");
+        document.getElementById('blkActivo').checked = d.activo !== false; // Por defecto visible
       } else {
         document.getElementById('formBloque').reset();
+        document.getElementById('blkActivo').checked = true;
       }
     };
 
@@ -269,6 +279,7 @@
         .filter(l => l.length > 0);
 
       await setDoc(doc(db, "boletin_bloques", bloqueId), {
+         activo: document.getElementById('blkActivo').checked, 
         titulo: document.getElementById('blkTitulo').value.trim(),
         imagen: document.getElementById('blkImagen').value.trim(),
         versiculo: document.getElementById('blkVersiculo').value.trim(),

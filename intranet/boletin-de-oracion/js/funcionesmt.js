@@ -781,11 +781,17 @@ if (formWsp) {
     for (let i = 1; i <= 9; i++) {
       const bloqueId = `seccion-${i}`;
       const card = document.getElementById(bloqueId);
+      const linkMenu = document.querySelector(`.dropdown-menu a[href="#${bloqueId}"]`);
       if (!card) continue;
 
       const snap = await getDoc(doc(db, "boletin_bloques", bloqueId));
       if (snap.exists()) {
         const d = snap.data();
+        if (d.activo === false) {
+          card.remove(); 
+          if (linkMenu) linkMenu.style.display = 'none';
+          continue;
+        }
         const titleEl = card.querySelector('.day-title');
         const imgEl = card.querySelector('.photo-container img');
         const verseEl = card.querySelector('.verse-box');
