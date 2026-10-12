@@ -1,4 +1,5 @@
 
+    
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -133,4 +134,7 @@
     window.cerrarSesion = () => {
       signOut(auth).then(() => window.location.replace("/intranet/"));
     };
+
+    // Guardar nombre en memoria rápida del teléfono para que no diga "Cargando perfil..."
+localStorage.setItem('cache_nombre_usuario', `${d.nombre || ''} ${d.apellido || ''}`.trim());
  
