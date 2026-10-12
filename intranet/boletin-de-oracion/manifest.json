@@ -1,12 +1,12 @@
 {
-  "id": "/intranet/boletin-de-oracion/",
+  "id": "boletin-oracion-turquia",
   "name": "Boletín de Oración Turquía",
   "short_name": "MMM Turquía",
-  "description": "Únete a nosotros en clamor por la movilización en Turquía.",
-  "start_url": "/intranet/boletin-de-oracion/",
-  "scope": "/",
-  "display": "standalone",
-  "display_override": ["standalone", "fullscreen"],
+  "description": "Boletín de intercesión por la obra en Turquía.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
   "background_color": "#1a365d",
   "theme_color": "#1a365d",
   "icons": [
