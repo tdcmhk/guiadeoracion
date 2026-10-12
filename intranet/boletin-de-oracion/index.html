@@ -1505,21 +1505,35 @@
     }
   }
 
-  // 2. CONECTAR LOS BOTONES DE ORAR Y GUARDAR EN CADA BLOQUE
+// 2. CONECTAR LOS BOTONES DE ORAR Y GUARDAR EN CADA BLOQUE (Corrigiendo IDs automáticamente)
   function inyectarBotonesEnBloques() {
-    document.querySelectorAll('.social-prayer-bar').forEach((bar) => {
+    document.querySelectorAll('.day-card').forEach((card, index) => {
+      const bloqueId = card.id || `seccion-${index + 1}`;
+      const bar = card.querySelector('.social-prayer-bar');
+      if (!bar) return;
+
       const btnPray = bar.querySelector('.btn-social-pray');
       const btnSave = bar.querySelector('.btn-social-save');
+      const pillCount = bar.querySelector('.social-count-pill');
+
       if (!btnPray || btnPray.dataset.listenerAdded) return;
 
-      const bloqueId = btnPray.dataset.id;
-      const tituloCompleto = btnPray.dataset.titulo || bloqueId;
+      // Asegurar que cada bloque tenga su propio ID único (seccion-1, seccion-2, etc.)
+      btnPray.dataset.id = bloqueId;
+      if (btnSave) btnSave.dataset.id = bloqueId;
+      if (pillCount) pillCount.id = `count-pray-${bloqueId}`;
+
+      const numSpan = card.querySelector('.day-header span:first-child');
+      const titleSpan = card.querySelector('.day-title');
+      const tituloCompleto = `${numSpan ? numSpan.textContent.trim() : 'Bloque'} - ${titleSpan ? titleSpan.textContent.trim() : ''}`;
+
+      btnPray.dataset.titulo = tituloCompleto;
+      if (btnSave) btnSave.dataset.titulo = tituloCompleto;
       btnPray.dataset.listenerAdded = "true";
 
       onSnapshot(doc(db, "contadores_bloques", bloqueId), (snap) => {
         const total = snap.exists() ? (snap.data().total || 0) : 0;
-        const countEl = document.getElementById(`count-pray-${bloqueId}`);
-        if (countEl) countEl.textContent = total;
+        if (pillCount) pillCount.textContent = total;
       });
 
       btnPray.addEventListener('click', () => toggleOrarBloque(bloqueId, tituloCompleto));
@@ -1529,19 +1543,35 @@
     });
   }
 
+  // Cambiar de color el botón y su icono cuando está activo
   function actualizarEstadoVisualBotones() {
     document.querySelectorAll('.btn-social-pray').forEach((btn) => {
       const id = btn.dataset.id;
       const yaOro = misOrados.some(item => item.id === id);
       btn.classList.toggle('active', yaOro);
-      btn.querySelector('.txt-pray').textContent = yaOro ? '¡He orado!' : 'Orar por este motivo';
+      btn.classList.toggle('prayed', yaOro);
+
+      // Cambiar color directamente para que resalte siempre
+      btn.style.backgroundColor = yaOro ? '#10b981' : '';
+      btn.style.borderColor = yaOro ? '#059669' : '';
+      btn.style.color = yaOro ? '#ffffff' : '';
+      const svgIcon = btn.querySelector('.material-icono-svg-ora');
+      const countPill = btn.querySelector('.social-count-pill');
+      if (svgIcon) svgIcon.style.color = yaOro ? '#ffffff' : '';
+      if (countPill) countPill.style.color = yaOro ? '#ffffff' : '';
     });
 
     document.querySelectorAll('.btn-social-save').forEach((btn) => {
       const id = btn.dataset.id;
       const yaGuardo = misGuardados.some(item => item.id === id);
       btn.classList.toggle('active', yaGuardo);
-      btn.querySelector('.txt-save').textContent = yaGuardo ? 'Guardado en mi perfil' : 'Guardar en mi perfil';
+      btn.classList.toggle('saved', yaGuardo);
+
+      // Cambiar color a azul intenso cuando está guardado
+      btn.style.backgroundColor = yaGuardo ? '#2563eb' : '';
+      btn.style.borderColor = yaGuardo ? '#1d4ed8' : '';
+      const iconSpan = btn.querySelector('.material-symbols-outlined');
+      if (iconSpan) iconSpan.style.color = yaGuardo ? '#ffffff' : '';
     });
   }
 
