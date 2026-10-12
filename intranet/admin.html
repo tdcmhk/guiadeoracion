@@ -17,7 +17,6 @@
     .top-bar h1 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
     .container { max-width: 960px; margin: 24px auto; padding: 0 15px; }
 
-    /* Pestañas del Admin */
     .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
     .tab-btn {
       flex: 1; padding: 12px; border: none; border-radius: 10px; background: #fff;
@@ -28,7 +27,31 @@
 
     .card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
 
-    /* Lista de Usuarios */
+    /* Caja de Gestión de Ediciones Semanales */
+    .edition-box {
+      background: #f0fdfa;
+      border: 1.5px solid #99f6e4;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .edition-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .btn-new-edition {
+      background: var(--primary); color: #fff; border: none; padding: 10px 14px;
+      border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer;
+    }
+    .btn-publish-edition {
+      background: #eab308; color: #1e293b; border: none; padding: 10px 14px;
+      border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer;
+    }
+
+    /* Usuarios */
     .user-item {
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
       gap: 12px; padding: 14px; border-bottom: 1px solid #e2e8f0;
@@ -39,13 +62,11 @@
     .badge.pending { background: #fef3c7; color: #b45309; }
     .badge.approved { background: #dcfce7; color: #15803d; }
 
-    .btn-action {
-      padding: 8px 16px; border: none; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer;
-    }
+    .btn-action { padding: 8px 16px; border: none; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
     .btn-approve { background: #16a34a; color: #fff; }
     .btn-revoke { background: #fee2e2; color: #b91c1c; }
 
-    /* Editor de Bloques */
+    /* Formulario */
     .form-group { margin-bottom: 14px; }
     .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #475569; margin-bottom: 5px; text-transform: uppercase; }
     .form-group input, .form-group select, .form-group textarea {
@@ -62,9 +83,7 @@
 
   <header class="top-bar">
     <h1><span class="material-symbols-outlined">shield_person</span> Panel Pastoral Admin</h1>
-    <div style="display:flex; gap:12px; align-items:center;">
-      <a href="/intranet/boletin-de-oracion/" style="color:#fff; text-decoration:none; font-size:0.85rem; background:rgba(255,255,255,0.15); padding:6px 12px; border-radius:16px;">Ver Boletín</a>
-    </div>
+    <a href="/intranet/boletin-de-oracion/" style="color:#fff; text-decoration:none; font-size:0.85rem; background:rgba(255,255,255,0.15); padding:6px 12px; border-radius:16px;">Ver Boletín</a>
   </header>
 
   <main class="container" id="adminContent" style="display: none;">
@@ -74,7 +93,7 @@
         <span class="material-symbols-outlined">group</span> Aprobar Intercesores
       </button>
       <button class="tab-btn" id="tabBtnBlocks" onclick="mostrarTab('bloques')">
-        <span class="material-symbols-outlined">edit_note</span> Editar Boletín (9 Bloques)
+        <span class="material-symbols-outlined">calendar_month</span> Ediciones y Bloques
       </button>
     </div>
 
@@ -84,14 +103,34 @@
       <div id="listaUsuarios">Cargando intercesores...</div>
     </section>
 
-    <!-- PESTAÑA 2: EDITOR PROTEGIDO DE LOS 9 BLOQUES -->
+    <!-- PESTAÑA 2: EDICIONES SEMANALES + EDITOR DE LOS 9 BLOQUES -->
     <section id="secBloques" class="card" style="display: none;">
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
-        <h3 style="margin:0; color:var(--primary);">Editor de Bloques del Boletín</h3>
+
+      <!-- 1. SELECTOR DE EDICIÓN SEMANAL -->
+      <div class="edition-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <label style="font-size:0.82rem; font-weight:800; color:#0f766e; text-transform:uppercase;">
+            📅 Edición Semanal / Mensual seleccionada:
+          </label>
+          <span id="badgeEdicionActiva" style="font-size:0.78rem; font-weight:700; color:#15803d;"></span>
+        </div>
+
+        <div class="edition-row">
+          <select id="selectEdicion" onchange="cambiarEdicionSeleccionada()" style="flex:1; min-width:220px; padding:10px; border-radius:8px; border:1px solid #0e9594; font-weight:700;">
+          </select>
+          <button type="button" class="btn-new-edition" onclick="crearNuevaEdicion()">+ Nueva Semana</button>
+          <button type="button" class="btn-publish-edition" onclick="publicarComoEdicionPrincipal()">⭐ Hacer Principal</button>
+        </div>
+
+        <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+          <label>Nombre visible de esta edición (Ej: Octubre 2026 - Semana 2: Estudio de 1 Pedro)</label>
+          <input type="text" id="edicionNombre" placeholder="Nombre de la semana o mes">
+        </div>
       </div>
 
+      <!-- 2. SELECTOR DEL BLOQUE (1 AL 9) DENTRO DE ESTA SEMANA -->
       <div class="form-group">
-        <label>Selecciona el Bloque que deseas editar:</label>
+        <label>Selecciona el Bloque de esta edición que deseas editar:</label>
         <select id="selectBloque" onchange="cargarBloqueEnEditor()">
           <option value="seccion-1">BLOQUE 1</option>
           <option value="seccion-2">BLOQUE 2</option>
@@ -105,53 +144,53 @@
         </select>
       </div>
 
-    <!-- INTERRUPTOR PARA MOSTRAR U OCULTAR EL BLOQUE -->
-        <div class="form-group" style="background: #f8fafc; padding: 12px 14px; border-radius: 8px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: space-between;">
-          <label for="blkActivo" style="margin: 0; cursor: pointer; font-size: 0.88rem; color: #1a365d;">
-            👁️ Mostrar este bloque en el Boletín (Desmarca para ocultarlo)
-          </label>
-          <input type="checkbox" id="blkActivo" checked style="width: 22px; height: 22px; cursor: pointer;">
-        </div>
+      <!-- INTERRUPTOR PARA MOSTRAR U OCULTAR EL BLOQUE -->
+      <div class="form-group" style="background: #f8fafc; padding: 12px 14px; border-radius: 8px; border: 1px solid #cbd5e1; display: flex; align-items: center; justify-content: space-between;">
+        <label for="blkActivo" style="margin: 0; cursor: pointer; font-size: 0.88rem; color: #1a365d;">
+          👁️ Mostrar este bloque en el Boletín (Desmarca para ocultarlo)
+        </label>
+        <input type="checkbox" id="blkActivo" checked style="width: 22px; height: 22px; cursor: pointer;">
+      </div>
 
       <form id="formBloque">
         <div class="form-group">
           <label>Título del Bloque</label>
-          <input type="text" id="blkTitulo" placeholder="Ej: Mujeres dispersas en Turquía: llamadas a una vida santa" >
+          <input type="text" id="blkTitulo" placeholder="Ej: Mujeres dispersas en Turquía: llamadas a una vida santa">
         </div>
 
         <div class="form-group">
           <label>Imagen del Bloque (Ruta)</label>
-          <input type="text" id="blkImagen" placeholder="images/imageweb2.webp" >
+          <input type="text" id="blkImagen" placeholder="images/imageweb2.webp">
         </div>
 
         <div class="form-group">
           <label>Texto del Versículo Bíblico</label>
-          <textarea id="blkVersiculo" rows="2" placeholder="«Sino, como aquel que os llamó es santo...»" ></textarea>
+          <textarea id="blkVersiculo" rows="2" placeholder="«Sino, como aquel que os llamó es santo...»"></textarea>
         </div>
 
         <div class="form-group">
           <label>Cita Bíblica</label>
-          <input type="text" id="blkCita" placeholder="— 1 Pedro 1:15" >
+          <input type="text" id="blkCita" placeholder="— 1 Pedro 1:15">
         </div>
 
         <div class="form-group">
           <label>Contexto e Historia</label>
-          <textarea id="blkContexto" rows="3" ></textarea>
+          <textarea id="blkContexto" rows="3"></textarea>
         </div>
 
         <div class="form-group">
           <label>El Desafío Actual</label>
-          <textarea id="blkDesafio" rows="3" ></textarea>
+          <textarea id="blkDesafio" rows="3"></textarea>
         </div>
 
         <div class="form-group">
-          <label>Motivos de Oración (Escribe uno por línea con formato Título: Descripción)</label>
-          <textarea id="blkMotivos" rows="5" placeholder="Santidad: Oremos para que las mujeres latinas...&#10;Regeneración: Pidamos que la Palabra transforme..." ></textarea>
+          <label>Motivos de Oración (Uno por línea con formato Título: Descripción)</label>
+          <textarea id="blkMotivos" rows="5" placeholder="Santidad: Oremos para que las mujeres latinas...&#10;Regeneración: Pidamos que la Palabra transforme..."></textarea>
         </div>
 
-        <button type="submit" id="btnGuardarBlk" class="btn-save-block">💾 Guardar Cambios en este Bloque</button>
+        <button type="submit" id="btnGuardarBlk" class="btn-save-block">💾 Guardar este Bloque en la Edición Seleccionada</button>
         <p id="msgGuardadoBlk" style="display:none; color:#15803d; text-align:center; font-weight:700; margin-top:10px;">
-          ✅ ¡Bloque actualizado en la Bóveda de Firebase!
+          ✅ ¡Bloque guardado correctamente en esta edición!
         </p>
       </form>
     </section>
@@ -161,7 +200,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBeuFR_MvuAWKan95TEhKvyap51n189tcM",
@@ -175,26 +214,27 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
     const ADMIN_EMAIL = "rvicentetapia@gmail.com";
 
-    onAuthStateChanged(auth, (user) => {
+    let edicionActualGlobal = "edicion-actual";
+    let datosEdicionEnMemoria = {};
+
+    onAuthStateChanged(auth, async (user) => {
       if (!user) {
         signInWithPopup(auth, new GoogleAuthProvider());
         return;
       }
       if (user.email.toLowerCase() !== ADMIN_EMAIL) {
-        alert("Acceso denegado. Esta página es exclusiva para el administrador general.");
+        alert("Acceso exclusivo para el administrador general.");
         window.location.replace("/intranet/");
         return;
       }
 
       document.getElementById('adminContent').style.display = 'block';
       escucharUsuariosEnVivo();
-      cargarBloqueEnEditor();
+      await inicializarEdiciones();
     });
 
-    // Cambiar pestañas
     window.mostrarTab = (tab) => {
       document.getElementById('secUsuarios').style.display = tab === 'usuarios' ? 'block' : 'none';
       document.getElementById('secBloques').style.display = tab === 'bloques' ? 'block' : 'none';
@@ -202,8 +242,7 @@
       document.getElementById('tabBtnBlocks').classList.toggle('active', tab === 'bloques');
     };
 
-    // 1. Listar y Aprobar / Bloquear Usuarios en Tiempo Real
-    // 1. Listar y Aprobar / Bloquear Usuarios en Tiempo Real (Sin mostrar correo)
+    // 1. GESTIÓN DE USUARIOS
     function escucharUsuariosEnVivo() {
       const contenedor = document.getElementById('listaUsuarios');
       onSnapshot(collection(db, "usuarios"), (snapshot) => {
@@ -217,16 +256,10 @@
           const uid = docSnap.id;
           const aprobado = u.aprobado === true;
           const nombreCompleto = `${u.nombre || ''} ${u.apellido || ''}`.trim() || "Intercesor sin nombre";
-
           html += `
             <div class="user-item">
               <div class="user-info">
-                <h4>
-                  ${nombreCompleto} 
-                  <span class="badge ${aprobado ? 'approved' : 'pending'}">
-                    ${aprobado ? 'Aprobado' : 'Pendiente'}
-                  </span>
-                </h4>
+                <h4>${nombreCompleto} <span class="badge ${aprobado ? 'approved' : 'pending'}">${aprobado ? 'Aprobado' : 'Pendiente'}</span></h4>
                 <p>📱 ${u.telefono || 'Sin tel'} &nbsp;|&nbsp; 🌎 ${u.pais || 'Sin país'} &nbsp;|&nbsp; ⛪ ${u.iglesia || 'Sin iglesia'}</p>
               </div>
               <div>
@@ -246,12 +279,88 @@
       await updateDoc(doc(db, "usuarios", uid), { aprobado: nuevoEstado });
     };
 
-    // 2. Cargar y Guardar Bloques del Boletín
+    // 2. GESTIÓN DE EDICIONES SEMANALES
+    async function inicializarEdiciones() {
+      const selectEd = document.getElementById('selectEdicion');
+      selectEd.innerHTML = "";
+
+      // Leer cuál es la edición principal activa hoy
+      const configSnap = await getDoc(doc(db, "configuracion_global", "boletin"));
+      if (configSnap.exists() && configSnap.data().edicionActivaId) {
+        edicionActualGlobal = configSnap.data().edicionActivaId;
+      }
+
+      // Listar todas las ediciones guardadas
+      const edicionesSnap = await getDocs(collection(db, "ediciones_boletin"));
+      if (edicionesSnap.empty) {
+        // Si no hay ninguna aún, creamos la primera por defecto
+        await setDoc(doc(db, "ediciones_boletin", "2026-octubre-sem2"), {
+          nombre: "Octubre 2026 - Semana 2 (1 Pedro)",
+          fechaCreacion: new Date(),
+          bloques: {}
+        });
+        await setDoc(doc(db, "configuracion_global", "boletin"), { edicionActivaId: "2026-octubre-sem2" });
+        edicionActualGlobal = "2026-octubre-sem2";
+        return inicializarEdiciones();
+      }
+
+      edicionesSnap.forEach((docSnap) => {
+        const opt = document.createElement('option');
+        opt.value = docSnap.id;
+        const esActiva = docSnap.id === edicionActualGlobal;
+        opt.textContent = `${esActiva ? '⭐ [ACTIVA] ' : ''}${docSnap.data().nombre || docSnap.id}`;
+        selectEd.appendChild(opt);
+      });
+
+      selectEd.value = edicionActualGlobal;
+      await cambiarEdicionSeleccionada();
+    }
+
+    window.cambiarEdicionSeleccionada = async () => {
+      const edicionId = document.getElementById('selectEdicion').value;
+      const snap = await getDoc(doc(db, "ediciones_boletin", edicionId));
+      datosEdicionEnMemoria = snap.exists() ? snap.data() : { nombre: edicionId, bloques: {} };
+
+      document.getElementById('edicionNombre').value = datosEdicionEnMemoria.nombre || edicionId;
+      const badge = document.getElementById('badgeEdicionActiva');
+      badge.textContent = (edicionId === edicionActualGlobal) ? "⭐ Esta es la edición que ven todos hoy" : "📁 Edición guardada en historial";
+
+      cargarBloqueEnEditor();
+    };
+
+    window.crearNuevaEdicion = async () => {
+      const codigo = prompt("Escribe un código corto sin espacios para la nueva semana (ej: 2026-octubre-sem3):");
+      if (!codigo) return;
+      const idLimpio = codigo.trim().toLowerCase().replace(/\s+/g, '-');
+      const titulo = prompt("Escribe el título visible de esta semana (ej: Octubre 2026 - Semana 3):", codigo);
+
+      // Copiamos los bloques de la edición actual como plantilla base para que sea más rápido editar
+      await setDoc(doc(db, "ediciones_boletin", idLimpio), {
+        nombre: titulo || idLimpio,
+        fechaCreacion: new Date(),
+        bloques: datosEdicionEnMemoria.bloques || {}
+      });
+
+      await inicializarEdiciones();
+      document.getElementById('selectEdicion').value = idLimpio;
+      await cambiarEdicionSeleccionada();
+    };
+
+    window.publicarComoEdicionPrincipal = async () => {
+      const edicionId = document.getElementById('selectEdicion').value;
+      await setDoc(doc(db, "configuracion_global", "boletin"), { edicionActivaId: edicionId }, { merge: true });
+      edicionActualGlobal = edicionId;
+      await inicializarEdiciones();
+      alert("✅ ¡Listo! Ahora todos los intercesores verán la edición: " + document.getElementById('edicionNombre').value);
+    };
+
+    // 3. CARGAR Y GUARDAR CADA BLOQUE DENTRO DE LA EDICIÓN SELECCIONADA
     window.cargarBloqueEnEditor = async () => {
       const bloqueId = document.getElementById('selectBloque').value;
-      const snap = await getDoc(doc(db, "boletin_bloques", bloqueId));
-      if (snap.exists()) {
-        const d = snap.data();
+      const d = (datosEdicionEnMemoria.bloques && datosEdicionEnMemoria.bloques[bloqueId]) || null;
+
+      if (d) {
+        document.getElementById('blkActivo').checked = d.activo !== false;
         document.getElementById('blkTitulo').value = d.titulo || "";
         document.getElementById('blkImagen').value = d.imagen || "images/imageweb1.webp";
         document.getElementById('blkVersiculo').value = d.versiculo || "";
@@ -259,7 +368,6 @@
         document.getElementById('blkContexto').value = d.contexto || "";
         document.getElementById('blkDesafio').value = d.desafio || "";
         document.getElementById('blkMotivos').value = (d.motivos || []).join("\n");
-        document.getElementById('blkActivo').checked = d.activo !== false; // Por defecto visible
       } else {
         document.getElementById('formBloque').reset();
         document.getElementById('blkActivo').checked = true;
@@ -268,6 +376,7 @@
 
     document.getElementById('formBloque').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const edicionId = document.getElementById('selectEdicion').value;
       const bloqueId = document.getElementById('selectBloque').value;
       const btn = document.getElementById('btnGuardarBlk');
       const msg = document.getElementById('msgGuardadoBlk');
@@ -278,8 +387,8 @@
         .map(l => l.trim())
         .filter(l => l.length > 0);
 
-      await setDoc(doc(db, "boletin_bloques", bloqueId), {
-         activo: document.getElementById('blkActivo').checked, 
+      const bloqueData = {
+        activo: document.getElementById('blkActivo').checked,
         titulo: document.getElementById('blkTitulo').value.trim(),
         imagen: document.getElementById('blkImagen').value.trim(),
         versiculo: document.getElementById('blkVersiculo').value.trim(),
@@ -288,9 +397,21 @@
         desafio: document.getElementById('blkDesafio').value.trim(),
         motivos: lineasMotivos,
         ultimaEdicion: new Date()
-      });
+      };
 
-      btn.textContent = "💾 Guardar Cambios en este Bloque";
+      if (!datosEdicionEnMemoria.bloques) datosEdicionEnMemoria.bloques = {};
+      datosEdicionEnMemoria.bloques[bloqueId] = bloqueData;
+      datosEdicionEnMemoria.nombre = document.getElementById('edicionNombre').value.trim();
+
+      // Guardar en la edición semanal seleccionada
+      await setDoc(doc(db, "ediciones_boletin", edicionId), datosEdicionEnMemoria, { merge: true });
+
+      // Si además es la edición activa, sincronizar también con boletin_bloques para compatibilidad inmediata
+      if (edicionId === edicionActualGlobal) {
+        await setDoc(doc(db, "boletin_bloques", bloqueId), bloqueData);
+      }
+
+      btn.textContent = "💾 Guardar este Bloque en la Edición Seleccionada";
       msg.style.display = "block";
       setTimeout(() => msg.style.display = "none", 3000);
     });
