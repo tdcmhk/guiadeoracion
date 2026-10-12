@@ -99,7 +99,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ==========================================================================
-   2. CONFIGURACIÓN Y DATOS DEL CARRUSEL
+   2. @CONFIGURACIÓN Y DATOS DEL CARRUSEL
    ========================================================================== */
 
 const slidesData = [
@@ -154,7 +154,7 @@ let carouselTimer = null;
 
 
 /* ==========================================================================
-   3. FUNCIONES DE CONTROL DEL CARRUSEL
+   3. @FUNCIONES DE CONTROL DEL CARRUSEL
    ========================================================================== */
 
 /*//Reiniciar el temporizador de forma segura según el slide activo
@@ -300,7 +300,7 @@ window.setSlide = function (index) {
 
 
 /* ==========================================================================
-   4. SOPORTE PARA DESLIZAR CON EL DEDO (SWIPE TÁCTIL)
+   4. @SOPORTE PARA DESLIZAR CON EL DEDO (SWIPE TÁCTIL)
    ========================================================================== */
 
 let touchStartX = 0;
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* ==========================================================================
-   5. MODO NOCTURNO (THEME TOGGLE)
+   5. @MODO NOCTURNO (THEME TOGGLE)
    ========================================================================== */
 
 const themeToggleBtn = document.getElementById('themeToggle');
@@ -373,7 +373,7 @@ if (themeToggleBtn) {
 
 
 /* ==========================================================================
-   6. MENÚ DESPLEGABLE Y ACCIONES DE COMPARTIR
+   6. @MENÚ DESPLEGABLE Y ACCIONES DE COMPARTIR
    ========================================================================== */
 
 // Abrir / cerrar el menú desplegable actual
@@ -417,7 +417,7 @@ function shareToFacebook() {
 
 
 /* ==========================================================================
-   SISTEMA UNIVERSAL DE INSTALACIÓN PWA (3 BOTONES)
+   @SISTEMA UNIVERSAL DE INSTALACIÓN PWA (3 BOTONES)
    ========================================================================== */
 
 let deferredPrompt = null;
@@ -495,7 +495,7 @@ if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.
 }
 
 /* ==========================================================================
-   MOSTRAR FECHA DE ÚLTIMA MODIFICACIÓN
+   @MOSTRAR FECHA DE ÚLTIMA MODIFICACIÓN
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', async () => {
   const elementoFecha = document.getElementById('fechaModificacion');
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 /* ==========================================================================
-   CONTROL DEL BOTÓN FLOTANTE "VOLVER ARRIBA"
+   @CONTROL DEL BOTÓN FLOTANTE "VOLVER ARRIBA"
    ========================================================================== */
 
 const btnScrollTop = document.getElementById('btnScrollTop');
@@ -547,7 +547,7 @@ if (btnScrollTop) {
 }
 
 /* ==========================================================================
-   ACORDEÓN PARA .day-card
+   @ACORDEÓN PARA .day-card
    ========================================================================== */
 const btnToggleMotivos = document.getElementById('btnToggleMotivos');
 const textoToggle = document.getElementById('textoToggleMotivos');
@@ -571,7 +571,7 @@ if (btnToggleMotivos) {
 }
 
 /* ==========================================================================
-   CONECTAR MENÚ DE SECCIONES CON EL BOTÓN "VER MÁS MOTIVOS"
+   @CONECTAR MENÚ DE SECCIONES CON EL BOTÓN "VER MÁS MOTIVOS"
    ========================================================================== */
 document.querySelectorAll('.dropdown-menu a[href^="#seccion-"]').forEach(enlace => {
   enlace.addEventListener('click', function (e) {
@@ -603,7 +603,7 @@ document.querySelectorAll('.dropdown-menu a[href^="#seccion-"]').forEach(enlace 
 });
 
 /* ==========================================================================
-   CONTADOR DE ORACIONES CON REINICIO AUTOMÁTICO CADA SEMANA
+   @CONTADOR DE ORACIONES CON REINICIO AUTOMÁTICO CADA SEMANA
    ========================================================================== */
 
 // 1. Función para calcular el año y número de semana actual (ej: "2026-W40")
@@ -716,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   INTERACCIÓN DEL CHAT HACIA WHATSAPP
+   @INTERACCIÓN DEL CHAT HACIA WHATSAPP
    ========================================================================== */
 const chatWidget = document.querySelector('.chat-widget-container');
 const btnTrigger = document.getElementById('chatTriggerBtn');
@@ -765,12 +765,27 @@ if (formWsp) {
 }
 
 /* ==========================================================================
-   REGISTRO DEL SERVICE WORKER (GUARDA VIDEOS E IMÁGENES EN CACHÉ DEL CELULAR)
+   @REGISTRO DEL SERVICE WORKER (GUARDA VIDEOS E IMÁGENES EN CACHÉ DEL CELULAR)
    ========================================================================== */
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js')
       .then(() => console.log('⚡ Caché de videos e imágenes activada'))
       .catch((err) => console.warn('Aviso SW:', err));
+  });
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then((reg) => {
+    // Si hay una versión nueva esperando, refrescar para aplicarla
+    reg.onupdatefound = () => {
+      const nuevoSW = reg.installing;
+      nuevoSW.onstatechange = () => {
+        if (nuevoSW.state === 'installed' && navigator.serviceWorker.controller) {
+          console.log('🚀 Nueva versión disponible. Actualizando...');
+          window.location.reload();
+        }
+      };
+    };
   });
 }

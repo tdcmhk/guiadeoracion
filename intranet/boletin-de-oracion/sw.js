@@ -1,3 +1,6 @@
+// Cada vez que hagas cambios importantes en tu web, cambia este numerito:
+// const CACHE_NAME = 'mmm-turquia-cache-v2'; <-- Antes decía v1
+
 const CACHE_NAME = 'mmm-turquia-cache-v1';
 
 // Archivos que queremos guardar en la memoria del celular desde la primera visita
@@ -53,4 +56,22 @@ self.addEventListener('fetch', (event) => {
       })
     );
   }
+});
+
+// Cuando hay una nueva versión, borra la caché vieja del celular automáticamente
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            console.log('🧹 Borrando caché antigua:', cache);
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+  // Toma el control inmediato de la app en el celular
+  return self.clients.claim();
 });
