@@ -1513,8 +1513,7 @@
     }
   }
 
-// 2. CONECTAR LOS BOTONES DE ORAR Y GUARDAR EN CADA BLOQUE (Corrigiendo IDs automáticamente)
-  function inyectarBotonesEnBloques() {
+function inyectarBotonesEnBloques() {
     document.querySelectorAll('.day-card').forEach((card, index) => {
       const bloqueId = card.id || `seccion-${index + 1}`;
       const bar = card.querySelector('.social-prayer-bar');
@@ -1526,7 +1525,6 @@
 
       if (!btnPray || btnPray.dataset.listenerAdded) return;
 
-      // Asegurar que cada bloque tenga su propio ID único (seccion-1, seccion-2, etc.)
       btnPray.dataset.id = bloqueId;
       if (btnSave) btnSave.dataset.id = bloqueId;
       if (pillCount) pillCount.id = `count-pray-${bloqueId}`;
@@ -1539,6 +1537,76 @@
       if (btnSave) btnSave.dataset.titulo = tituloCompleto;
       btnPray.dataset.listenerAdded = "true";
 
+      // 1. Agregar el botón de comentario a la barra si no existe
+      if (!bar.querySelector('.btn-social-comment')) {
+        const btnComment = document.createElement('button');
+        btnComment.type = "button";
+        btnComment.className = "btn-social-comment";
+        btnComment.innerHTML = `
+          <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+          <span class="txt-comment-count" id="count-comm-${bloqueId}">0</span>
+        `;
+        bar.appendChild(btnComment);
+
+        // 2. Crear la caja desplegable de comentarios debajo de la barra
+        const commentsBox = document.createElement('div');
+        commentsBox.className = "comments-container";
+        commentsBox.id = `box-comm-${bloqueId}`;
+        commentsBox.innerHTML = `
+          <form class="comment-form" onsubmit="enviarComentario(event, '${bloqueId}')">
+            <input type="text" class="comment-input" placeholder="Escribe un mensaje de aliento o confirmación..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-${bloqueId}">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
+        `;
+        card.querySelector('.day-content').appendChild(commentsBox);
+
+        // Abrir / Cerrar comentarios al hacer clic
+        btnComment.addEventListener('click', () => {
+          commentsBox.classList.toggle('open');
+        });
+
+        // Escuchar comentarios en tiempo real desde Firebase
+        const q = query(
+          collection(db, "comentarios_bloques"),
+          where("bloqueId", "==", bloqueId),
+          orderBy("fecha", "asc")
+        );
+
+        onSnapshot(q, (snapshot) => {
+          const countEl = document.getElementById(`count-comm-${bloqueId}`);
+          if (countEl) countEl.textContent = snapshot.size;
+
+          const listEl = document.getElementById(`list-comm-${bloqueId}`);
+          if (!listEl) return;
+
+          if (snapshot.empty) {
+            listEl.innerHTML = `<div style="font-size:0.8rem; color:#94a3b8; text-align:center; padding:6px 0;">Sé el primero en dejar un mensaje o motivo de aliento.</div>`;
+            return;
+          }
+
+          let html = "";
+          snapshot.forEach((docSnap) => {
+            const c = docSnap.data();
+            html += `
+              <div class="comment-card">
+                <div class="comment-author">
+                  <span>${c.autorNombre} ${c.autorIglesia ? `(${c.autorIglesia})` : ''}</span>
+                  <span class="comment-date">${c.fechaTexto || ''}</span>
+                </div>
+                <p class="comment-text">${c.texto}</p>
+              </div>
+            `;
+          });
+          listEl.innerHTML = html;
+        });
+      }
+
       onSnapshot(doc(db, "contadores_bloques", bloqueId), (snap) => {
         const total = snap.exists() ? (snap.data().total || 0) : 0;
         if (pillCount) pillCount.textContent = total;
@@ -1550,6 +1618,43 @@
       }
     });
   }
+
+  // Función para guardar el comentario en Firebase Firestore
+  window.enviarComentario = async (e, bloqueId) => {
+    e.preventDefault();
+    if (!currentUser) return;
+
+    const form = e.target;
+    const input = form.querySelector('.comment-input');
+    const texto = input.value.trim();
+    if (!texto) return;
+
+    const userSnap = await getDoc(doc(db, "usuarios", currentUser.uid));
+    const userData = userSnap.exists() ? userSnap.data() : {};
+
+    const autorNombre = `${userData.nombre || ''} ${userData.apellido || ''}`.trim() || currentUser.displayName || "Intercesor";
+    const autorIglesia = userData.iglesia && userData.iglesia !== "Completar en Mi Perfil" ? userData.iglesia : (userData.pais || "");
+
+    input.disabled = true;
+
+    try {
+      await addDoc(collection(db, "comentarios_bloques"), {
+        bloqueId: bloqueId,
+        uid: currentUser.uid,
+        autorNombre: autorNombre,
+        autorIglesia: autorIglesia,
+        texto: texto,
+        fecha: new Date(),
+        fechaTexto: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+      });
+      input.value = "";
+    } catch (err) {
+      alert("No se pudo publicar el comentario: " + err.message);
+    } finally {
+      input.disabled = false;
+      input.focus();
+    }
+  };
 
   // Cambiar de color el botón y su icono cuando está activo
   function actualizarEstadoVisualBotones() {
@@ -1670,6 +1775,11 @@
   window.cerrarSesionIntranet = () => {
     signOut(auth).then(() => window.location.replace("/intranet/"));
   };
+
+  import { 
+  getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, increment, onSnapshot,
+  collection, addDoc, query, where, orderBy 
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 </script>
 
 </body>
