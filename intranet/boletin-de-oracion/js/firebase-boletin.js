@@ -133,8 +133,7 @@ function inyectarBotonesEnBloques() {
       try {
         const q = query(
           collection(db, "comentarios_bloques"),
-          where("bloqueId", "==", bloqueId),
-          orderBy("fecha", "asc")
+          where("bloqueId", "==", bloqueId)
         );
 
         onSnapshot(q, (snapshot) => {
@@ -149,20 +148,33 @@ function inyectarBotonesEnBloques() {
             return;
           }
 
-          let html = "";
+          // Convertir a lista y ordenar por fecha (de más antiguo a más reciente)
+          const comentarios = [];
           snapshot.forEach((docSnap) => {
-            const c = docSnap.data();
+            comentarios.push(docSnap.data());
+          });
+
+          comentarios.sort((a, b) => {
+            const fechaA = a.fecha?.toDate ? a.fecha.toDate() : new Date(a.fecha || 0);
+            const fechaB = b.fecha?.toDate ? b.fecha.toDate() : new Date(b.fecha || 0);
+            return fechaA - fechaB;
+          });
+
+          let html = "";
+          comentarios.forEach((c) => {
             html += `
-              <div class="comment-card">
-                <div class="comment-author">
-                  <span>${c.autorNombre} ${c.autorIglesia ? `(${c.autorIglesia})` : ''}</span>
-                  <span class="comment-date">${c.fechaTexto || ''}</span>
+              <div class="comment-card" style="background:#ffffff; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
+                <div class="comment-author" style="font-weight:700; color:#1a365d; font-size:0.82rem; display:flex; justify-content:space-between;">
+                  <span>${c.autorNombre || 'Intercesor'} ${c.autorIglesia ? `(${c.autorIglesia})` : ''}</span>
+                  <span class="comment-date" style="font-size:0.72rem; color:#94a3b8; font-weight:normal;">${c.fechaTexto || ''}</span>
                 </div>
-                <p class="comment-text">${c.texto}</p>
+                <p class="comment-text" style="margin:4px 0 0 0; color:#334155; font-size:0.85rem; line-height:1.4;">${c.texto}</p>
               </div>
             `;
           });
           listEl.innerHTML = html;
+        }, (error) => {
+          console.error("Error al escuchar comentarios:", error);
         });
       } catch (errQ) {
         console.warn("Aviso comentarios query:", errQ);
