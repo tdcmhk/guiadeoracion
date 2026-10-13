@@ -48,28 +48,11 @@
 
 <body>
 
-<!-- ========================================================================
-       SPLASH SCREEN / PANTALLA DE BIENVENIDA CINEMATOGRÁFICA
-       ======================================================================== -->
-  <div id="pageLoader" class="splash-cinematic">
-    <!-- Video de fondo corto y ligero de Turquía -->
-    <video autoplay loop muted playsinline preload="auto" class="splash-video-bg">
-      <source src="videos/videohead3.webm" type="video/webm">
-    </video>
-    
-    <!-- Filtro oscuro de contraste -->
-    <div class="splash-overlay"></div>
-
-    <!-- Contenido central de bienvenida -->
-    <div class="splash-content">
-      <img src="images/Logowebmt1.png" alt="MMM Turquía" class="splash-logo">
-      <h2 class="splash-title">MOVILIZACIÓN TURQUÍA</h2>
-      <p class="splash-verse">«Pídeme, y te daré por herencia las naciones...»</p>
-      
-      <!-- Barra de progreso sutil y elegante -->
-      <div class="splash-progress-bar">
-        <div class="splash-progress-fill"></div>
-      </div>
+<!-- PANTALLA DE CARGA (PRELOADER) -->
+  <div id="pageLoader" class="page-loader">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <p class="loader-text">Cargando Boletín...</p>
     </div>
   </div>
 

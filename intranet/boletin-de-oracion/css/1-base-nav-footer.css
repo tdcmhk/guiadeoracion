@@ -62,112 +62,68 @@ body {
 @import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
 
 /* ==========================================================================
-   PANTALLA DE BIENVENIDA CINEMATOGRÁFICA (SPLASH SCREEN)
+   @PANTALLA DE CARGA (PRELOADER)
    ========================================================================== */
-.splash-cinematic {
+
+.page-loader {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 999999;
+  background-color: #1a365d; /* Fondo Azul Bósforo elegante */
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background-color: #0f172a;
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+  z-index: 99999; /* Por encima de todo el contenido */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-/* Ocultar suavemente cuando carga */
-.splash-cinematic.loader-hidden {
+/* Estado cuando la página termina de cargar */
+.page-loader.loader-hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-/* Video de fondo en pantalla completa */
-.splash-video-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-  filter: brightness(0.65) saturate(1.2);
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
-/* Filtro elegante Bósforo */
-.splash-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle, rgba(15, 23, 42, 0.5) 0%, rgba(10, 25, 47, 0.88) 100%);
-  z-index: 1;
-}
-
-/* Contenido centrado */
-.splash-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 20px;
-  max-width: 420px;
-  animation: splashFadeIn 1s ease-out;
-}
-
-@keyframes splashFadeIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.splash-logo {
+/* Rueda de carga (Spinner circular con dos tonos) */
+.spinner {
+  width: 48px;
   height: 48px;
-  width: auto;
-  margin-bottom: 14px;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  border: 4px solid rgba(255, 255, 255, 0.2);     /* Aro de base translúcido */
+  border-top-color: #0e9594;                      /* Segmento activo Turquesa İznik */
+  border-right-color: #ffffff;                    /* Destello blanco */
+  border-radius: 50%;
+  animation: spinLoader 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
 }
 
-.splash-title {
-  margin: 0 0 8px 0;
-  color: #ffffff;
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.7);
-}
-
-.splash-verse {
-  margin: 0 0 24px 0;
-  font-size: 0.88rem;
+.loader-text {
   color: #e2e8f0;
-  font-style: italic;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  margin: 0;
+  font-weight: 500;
+  opacity: 0.9;
 }
 
-/* Barra de carga fina y moderna */
-.splash-progress-bar {
-  width: 160px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.splash-progress-fill {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, #0e9594, #e5a93b);
-  border-radius: 4px;
-  animation: progressPulse 1.8s infinite ease-in-out;
-}
-
-@keyframes progressPulse {
-  0% { transform: translateX(-100%); }
-  50% { transform: translateX(0%); }
-  100% { transform: translateX(100%); }
+/* Animación de rotación continua */
+@keyframes spinLoader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 
