@@ -157,7 +157,7 @@ let carouselTimer = null;
    3. @FUNCIONES DE CONTROL DEL CARRUSEL
    ========================================================================== */
 
-/*//Reiniciar el temporizador de forma segura según el slide activo
+//Reiniciar el temporizador de forma segura según el slide activo
 function resetCarouselTimer(duration = SLIDE_IMAGE_DURATION) {
   if (carouselTimer) {
     clearInterval(carouselTimer);
@@ -173,10 +173,10 @@ function startCarouselTimer(duration = 12000) {
   carouselTimer = setInterval(() => {
     showSlide(currentSlide + 1);
   }, duration);
-}*/
+}
 
 
-// Temporizador DESACTIVADO: El carrusel no avanza automáticamente
+/*// Temporizador DESACTIVADO: El carrusel no avanza automáticamente
 function resetCarouselTimer(duration = SLIDE_IMAGE_DURATION) {
   if (carouselTimer) {
     clearInterval(carouselTimer);
@@ -191,7 +191,7 @@ function startCarouselTimer(duration = 10000) {
     carouselTimer = null;
   }
   // No creamos ningún setInterval
-}
+}*/
 
 function stopCarouselTimer() {
   if (carouselTimer) {
