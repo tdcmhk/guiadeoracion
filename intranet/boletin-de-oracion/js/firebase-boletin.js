@@ -180,8 +180,8 @@ function inyectarBotonesEnBloques() {
           listEl.innerHTML = `<div style="font-size:0.8rem; color:#dc2626; text-align:center;">Aviso de permisos: Revisa Firestore Rules (${err.code})</div>`;
         }
       });
-    } catch (e) {
-        console.warn("Excepción al configurar comentarios:", e);
+    }  catch (errQ) {
+        console.warn("Aviso comentarios query:", errQ);
       }
     }
   });
