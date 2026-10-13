@@ -406,11 +406,11 @@
           </li>-->
         </ul>
 
-        <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+        <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
           <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
@@ -419,8 +419,27 @@
 
           <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-1">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-1">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-1">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-1')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-1">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -523,21 +542,40 @@
           </li>-->
         </ul>
 
-            <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+           <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-2" data-titulo="Bloque 2">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-2">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-2" data-titulo="Bloque 2">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-2">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-2">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-2">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-2')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-2">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
           </div>
         </div>
@@ -650,21 +688,40 @@
           </li>-->
         </ul>
 
-        <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+          <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-3" data-titulo="Bloque 3">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-3">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-3" data-titulo="Bloque 3">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-3">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-3">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-3">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-3')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-3">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -774,21 +831,40 @@
           </li>-->
         </ul>
 
-        <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+          <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-4" data-titulo="Bloque 4">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-4">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-4" data-titulo="Bloque 4">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-4">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-4">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-4">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-4')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-4">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -875,21 +951,40 @@
           </li>
         </ul>
 
-        <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+          <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-5" data-titulo="Bloque 5">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-5">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-5" data-titulo="Bloque 5">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-5">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-5">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-5">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-5')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-5">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -964,21 +1059,40 @@
           </li>
         </ul>
 
-        <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+          <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-6" data-titulo="Bloque 6">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-6">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-6" data-titulo="Bloque 6">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-6">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-6">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-6">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-6')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-6">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1065,21 +1179,40 @@
           Que esta experiencia confirme su llamado y siga desarrollando sus dones al servicio de Dios.
            </li>-->
         </ul>
-      <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+        <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-7" data-titulo="Bloque 7">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-7">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-7" data-titulo="Bloque 7">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-7">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-7">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-7">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-7')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-7">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1160,21 +1293,40 @@
             Que la iglesia intercesora mantenga un vallado de oración constante alrededor de cada persona y familia visitada.
           </li>-->
         </ul>
-       <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+         <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-8" data-titulo="Bloque 8">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-8">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-8" data-titulo="Bloque 8">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-8">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-8">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-8">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-8')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-8">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1255,21 +1407,40 @@
           </li>
         </ul>
 
-       <!-- BARRA SOCIAL DE ORACIÓN Y GUARDADO -->
+         <!-- @BARRA SOCIAL DE ORACIÓN, GUARDADO Y COMENTARIOS -->
         <div class="social-prayer-bar">
-          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-pray" data-id="seccion-9" data-titulo="Bloque 9">
             <div class="material-icon">
-              <svg class="material-icono-svg-ora" >
+              <svg class="material-icono-svg-ora">
                 <use href="icons/iconos.svg#iconoracion"></use>
               </svg>
             </div> 
-            <span class="social-count-pill" id="count-pray-seccion-1">0</span>
+            <span class="social-count-pill" id="count-pray-seccion-9">0</span>
           </button>
 
-          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-1" data-titulo="Bloque 1: Gracia, Sabiduría y Dirección">
+          <button type="button" class="btn-social-action btn-social-save" data-id="seccion-9" data-titulo="Bloque 9">
             <span class="material-symbols-outlined">bookmark</span>
-            
           </button>
+
+          <!-- NUEVO BOTÓN DE COMENTARIO -->
+          <button type="button" class="btn-social-action btn-social-comment" data-id="seccion-9">
+            <span class="material-symbols-outlined" style="font-size:18px;">chat_bubble</span>
+            <span class="social-count-pill" id="count-comm-seccion-9">0</span>
+          </button>
+        </div>
+
+        <!-- NUEVA CAJA DESPLEGABLE DE COMENTARIOS DE ESTE BLOQUE -->
+        <div class="comments-container" id="box-comm-seccion-9">
+          <form class="comment-form" onsubmit="enviarComentario(event, 'seccion-9')">
+            <input type="text" class="comment-input" placeholder="Escribe una palabra de ánimo o confirmación de oración..." required>
+            <button type="submit" class="btn-comment-send">
+              <span>Enviar</span>
+              <span class="material-symbols-outlined" style="font-size:16px;">send</span>
+            </button>
+          </form>
+          <div class="comments-list" id="list-comm-seccion-9">
+            <div style="font-size:0.8rem; color:#94a3b8; text-align:center;">Cargando comentarios...</div>
+          </div>
         </div>
       </div>
     </div>
