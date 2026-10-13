@@ -129,58 +129,54 @@ function inyectarBotonesEnBloques() {
         boxComm.classList.toggle('open');
       });
 
-      // Escuchar comentarios en tiempo real para este bloque
-    try {
-      const q = query(
-        collection(db, "comentarios_bloques"),
-        where("bloqueId", "==", bloqueId)
-      );
+      // Escuchar comentarios de este bloque en Firebase
+      try {
+        const q = query(
+          collection(db, "comentarios_bloques"),
+          where("bloqueId", "==", bloqueId)
+        );
 
-      onSnapshot(q, (snapshot) => {
-        const countCommEl = document.getElementById(`count-comm-${bloqueId}`);
-        const listEl = document.getElementById(`list-comm-${bloqueId}`);
+        onSnapshot(q, (snapshot) => {
+          const countCommEl = document.getElementById(`count-comm-${bloqueId}`);
+          if (countCommEl) countCommEl.textContent = snapshot.size;
 
-        if (countCommEl) countCommEl.textContent = snapshot.size;
-        if (!listEl) return;
+          const listEl = document.getElementById(`list-comm-${bloqueId}`);
+          if (!listEl) return;
 
-        if (snapshot.empty) {
-          listEl.innerHTML = `<div style="font-size:0.8rem; color:#94a3b8; text-align:center; padding:8px 0;">Sé el primero en dejar un mensaje o confirmación de oración.</div>`;
-          return;
-        }
+          if (snapshot.empty) {
+            listEl.innerHTML = `<div style="font-size:0.8rem; color:#94a3b8; text-align:center; padding:6px 0;">Sé el primero en dejar un mensaje o confirmación de oración.</div>`;
+            return;
+          }
 
-        const comentarios = [];
-        snapshot.forEach((docSnap) => {
-          comentarios.push(docSnap.data());
-        });
+          // Convertir a lista y ordenar por fecha (de más antiguo a más reciente)
+          const comentarios = [];
+          snapshot.forEach((docSnap) => {
+            comentarios.push(docSnap.data());
+          });
 
-        // Ordenar de más antiguo a más reciente
-        comentarios.sort((a, b) => {
-          const tA = a.fecha?.seconds || (new Date(a.fecha || 0).getTime() / 1000);
-          const tB = b.fecha?.seconds || (new Date(b.fecha || 0).getTime() / 1000);
-          return tA - tB;
-        });
+          comentarios.sort((a, b) => {
+            const fechaA = a.fecha?.toDate ? a.fecha.toDate() : new Date(a.fecha || 0);
+            const fechaB = b.fecha?.toDate ? b.fecha.toDate() : new Date(b.fecha || 0);
+            return fechaA - fechaB;
+          });
 
-        let html = "";
-        comentarios.forEach((c) => {
-          html += `
-            <div class="comment-card" style="background:#ffffff; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
-              <div class="comment-author" style="font-weight:700; color:#1a365d; font-size:0.82rem; display:flex; justify-content:space-between;">
-                <span>${c.autorNombre || 'Intercesor'} ${c.autorIglesia ? `(${c.autorIglesia})` : ''}</span>
-                <span class="comment-date" style="font-size:0.72rem; color:#94a3b8; font-weight:normal;">${c.fechaTexto || ''}</span>
+          let html = "";
+          comentarios.forEach((c) => {
+            html += `
+              <div class="comment-card" style="background:#ffffff; padding:10px 12px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:8px;">
+                <div class="comment-author" style="font-weight:700; color:#1a365d; font-size:0.82rem; display:flex; justify-content:space-between;">
+                  <span>${c.autorNombre || 'Intercesor'} ${c.autorIglesia ? `(${c.autorIglesia})` : ''}</span>
+                  <span class="comment-date" style="font-size:0.72rem; color:#94a3b8; font-weight:normal;">${c.fechaTexto || ''}</span>
+                </div>
+                <p class="comment-text" style="margin:4px 0 0 0; color:#334155; font-size:0.85rem; line-height:1.4;">${c.texto}</p>
               </div>
-              <p class="comment-text" style="margin:4px 0 0 0; color:#334155; font-size:0.85rem; line-height:1.4;">${c.texto || ''}</p>
-            </div>
-          `;
+            `;
+          });
+          listEl.innerHTML = html;
+        }, (error) => {
+          console.error("Error al escuchar comentarios:", error);
         });
-        listEl.innerHTML = html;
-      }, (err) => {
-        console.error("Error en lectura de comentarios para " + bloqueId + ":", err);
-        const listEl = document.getElementById(`list-comm-${bloqueId}`);
-        if (listEl) {
-          listEl.innerHTML = `<div style="font-size:0.8rem; color:#dc2626; text-align:center;">Aviso de permisos: Revisa Firestore Rules (${err.code})</div>`;
-        }
-      });
-    }  catch (errQ) {
+      } catch (errQ) {
         console.warn("Aviso comentarios query:", errQ);
       }
     }
