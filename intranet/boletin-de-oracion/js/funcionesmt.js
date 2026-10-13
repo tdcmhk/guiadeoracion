@@ -147,8 +147,8 @@ const slidesData = [
 
 
 // Duraciones individuales por slide
-const SLIDE_IMAGE_DURATION = 12000; // 10 segundos para diapositivas con fotos
-const SLIDE_VIDEO_DURATION = 12000; // 14 segundos para la diapositiva con video de 14s
+const SLIDE_IMAGE_DURATION = 7000; // 10 segundos para diapositivas con fotos
+const SLIDE_VIDEO_DURATION = 7000; // 14 segundos para la diapositiva con video de 14s
 
 let carouselTimer = null;
 
@@ -167,7 +167,7 @@ function resetCarouselTimer(duration = SLIDE_IMAGE_DURATION) {
   }, duration);
 }
 
-function startCarouselTimer(duration = 12000) {
+function startCarouselTimer(duration = 7000) {
   if (carouselTimer) clearInterval(carouselTimer);
 
   carouselTimer = setInterval(() => {
