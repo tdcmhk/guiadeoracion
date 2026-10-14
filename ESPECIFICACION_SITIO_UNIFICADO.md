@@ -27,7 +27,7 @@ Todas las páginas públicas se sirven en la raíz o rutas limpias sin subcarpet
 * **Páginas Secundarias en Turco:**
   * `/hakkimizda.html` (Quiénes somos / Conócenos). 
   * `/iletisim.html` (Formulario de contacto pastoral directo).
-
+  * Trabaja con nosotros (enlace a la intranet)
 
 ---
 
