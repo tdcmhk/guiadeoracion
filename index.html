@@ -1,44 +1,1405 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta name="robots" content="noindex, nofollow">
   <meta charset="UTF-8">
-  <title>Redirigiendo al Boletín de Oración...</title>
-  
-  <!-- 1. Redirección instantánea por HTML (Con www) -->
-  <meta http-equiv="refresh" content="0; url=https://www.mmmturquia.site/es/">
-  <link rel="canonical" href="https://www.mmmturquia.site/es/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MMM Turquía — Plataforma de Misión y Esperanza</title>
+  <meta name="description" content="Plataforma de difusión misionera, radio online 24/7 de alabanza y contacto para la obra de Dios en Turquía.">
 
-  <!-- 2. Redirección inmediata por JavaScript -->
-  <script>
-    window.location.replace("https://www.mmmturquia.site/es/");
-    (function() {
-      // 1. Si el usuario ya eligió un idioma manualmente antes, respetamos su elección
-      const idiomaGuardado = localStorage.getItem('idioma_preferido');
-      if (idiomaGuardado) {
-        window.location.replace("/" + idiomaGuardado + "/");
-        return;
+  <!-- Metadatos Móviles -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#1a365d">
+
+  <!-- Open Graph para Redes Sociales y WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MMM Turquía — Misión y Esperanza">
+  <meta property="og:description" content="Difusión de la obra en Turquía, radio online 24/7 de alabanzas y contacto pastoral.">
+  <meta property="og:image" content="https://tdcmhk.b-cdn.net/coverlinkredeswp.webp">
+
+  <!-- Tipografía Google Material Symbols & Fuentes -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #1a365d;       /* Azul Bósforo profundo */
+      --primary-light: #234e85;
+      --secondary: #0e9594;     /* Turquesa de İznik */
+      --secondary-dark: #097372;
+      --accent: #c1272d;        /* Rojo bandera */
+      --gold: #e5a93b;          /* Oro bizantino cálido */
+      --gold-light: #fef3c7;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ======================================================================
+       1. NAVBAR UNIFICADO PÚBLICO
+       ====================================================================== */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      background-color: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--accent);
+      padding: 10px 16px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      gap: 10px;
+    }
+
+    .nav-logo {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-brand-title {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: #334155;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--secondary);
+    }
+
+    /* Controles Nav Derecha */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Selector de Idiomas */
+    .lang-selector {
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 4px;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      padding: 5px 9px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 6px rgba(26, 54, 93, 0.25);
+    }
+
+    /* Botón Directo al Formulario de Contacto (Cero enlaces a intranet) */
+    .btn-contact-access {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      color: #ffffff !important;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.84rem;
+      padding: 8px 18px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(14, 149, 148, 0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-contact-access:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(14, 149, 148, 0.35);
+    }
+
+    /* ======================================================================
+       2. HERO CAROUSEL CON VIDEO Y CAPA OVERLAY
+       ====================================================================== */
+    .hero-header {
+      position: relative;
+      width: 100%;
+      min-height: 84vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 70px 20px;
+      background: #091322;
+    }
+
+    .carousel-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .carousel-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .carousel-slide.active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    .slide-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .iframe-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(180deg, rgba(9, 19, 34, 0.5) 0%, rgba(9, 19, 34, 0.72) 50%, rgba(9, 19, 34, 0.94) 100%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #ffffff;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(229, 169, 59, 0.2);
+      border: 1px solid var(--gold);
+      color: #fde047;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-content h1 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      margin: 0 0 16px 0;
+      line-height: 1.15;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.8);
+    }
+
+    .hero-content p {
+      font-size: clamp(1rem, 2.6vw, 1.22rem);
+      color: #e2e8f0;
+      margin: 0 auto 30px auto;
+      max-width: 680px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero {
+      padding: 13px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+
+    .btn-hero.btn-primary {
+      background: #ffffff;
+      color: var(--primary) !important;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .btn-hero.btn-primary:hover {
+      background: #f1f5f9;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .btn-hero.btn-outline {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.5);
+      color: #ffffff !important;
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-hero.btn-outline:hover {
+      background: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+    }
+
+    .carousel-dots {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      background: var(--gold);
+      transform: scale(1.35);
+    }
+
+    /* ======================================================================
+       3. SECCIÓN PROYECTO Y VISIÓN
+       ====================================================================== */
+    .container {
+      max-width: 1100px;
+      margin: 48px auto;
+      padding: 0 16px;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 38px auto;
+    }
+
+    .section-header h2 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: clamp(1.7rem, 4vw, 2.3rem);
+      color: var(--primary);
+      margin: 0 0 12px 0;
+    }
+
+    .section-header p {
+      font-size: 0.98rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 28px 22px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.07);
+    }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .card-icon span { font-size: 28px; }
+
+    .info-card h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.2rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .info-card p {
+      margin: 0 0 20px 0;
+      font-size: 0.9rem;
+      color: #475569;
+      line-height: 1.55;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: gap 0.2s;
+    }
+
+    .card-link:hover {
+      text-decoration: underline;
+      gap: 9px;
+    }
+
+    /* ======================================================================
+       4. SECCIÓN RADIO ONLINE 24/7 (EXCLUSIVA, SIN TV)
+       ====================================================================== */
+    .radio-player-card {
+      background: linear-gradient(135deg, #0b1526 0%, #1a365d 70%, #0e9594 100%);
+      color: #ffffff;
+      border-radius: 24px;
+      padding: 38px 30px;
+      margin-bottom: 56px;
+      box-shadow: 0 12px 35px rgba(11, 21, 38, 0.35);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .radio-player-card::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(14, 149, 148, 0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .radio-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .radio-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(22, 163, 74, 0.25);
+      border: 1px solid #22c55e;
+      color: #86efac;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #22c55e;
+      border-radius: 50%;
+      animation: livePulse 1.4s infinite;
+    }
+
+    @keyframes livePulse {
+      0% { transform: scale(0.9); opacity: 1; }
+      50% { transform: scale(1.4); opacity: 0.4; }
+      100% { transform: scale(0.9); opacity: 1; }
+    }
+
+    .radio-channel-chip {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .radio-main-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .radio-main-grid {
+        grid-template-columns: 1fr;
       }
+    }
 
-      // 2. Detectar el idioma configurado en el celular o navegador (ej: "es-PE", "tr-TR", "it-IT", "en-US")
-      const idiomaNavegador = (navigator.language || navigator.userLanguage || "es").toLowerCase();
+    .radio-main-grid h3 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+      margin: 0 0 10px 0;
+      color: #ffffff;
+    }
 
-      if (idiomaNavegador.startsWith("tr")) {
-        window.location.replace("/tr/");
-      } else if (idiomaNavegador.startsWith("it")) {
-        window.location.replace("/it/");
-      } else if (idiomaNavegador.startsWith("en")) {
-        window.location.replace("/en/");
-      } else {
-        // Por defecto (español o cualquier otro idioma)
-        window.location.replace("/es/");
+    .radio-main-grid p {
+      margin: 0 0 20px 0;
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      max-width: 600px;
+    }
+
+    /* Controles de Reproducción */
+    .radio-controls-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-play-radio {
+      background: var(--gold);
+      color: #0f172a !important;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(229, 169, 59, 0.4);
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-play-radio:hover {
+      background: #f59e0b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(229, 169, 59, 0.5);
+    }
+
+    .btn-play-radio.playing {
+      background: #ef4444;
+      color: #ffffff !important;
+      box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+    }
+
+    /* Ecualizador animado */
+    .audio-visualizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 28px;
+      padding: 0 6px;
+    }
+
+    .visualizer-bar {
+      width: 4px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: height 0.2s ease;
+    }
+
+    .audio-visualizer.active .visualizer-bar:nth-child(1) { animation: soundWave 0.8s infinite ease-in-out alternate; }
+    .audio-visualizer.active .visualizer-bar:nth-child(2) { animation: soundWave 1.1s infinite ease-in-out alternate; animation-delay: 0.2s; }
+    .audio-visualizer.active .visualizer-bar:nth-child(3) { animation: soundWave 0.7s infinite ease-in-out alternate; animation-delay: 0.4s; }
+    .audio-visualizer.active .visualizer-bar:nth-child(4) { animation: soundWave 1.3s infinite ease-in-out alternate; animation-delay: 0.1s; }
+    .audio-visualizer.active .visualizer-bar:nth-child(5) { animation: soundWave 0.9s infinite ease-in-out alternate; animation-delay: 0.3s; }
+
+    @keyframes soundWave {
+      0% { height: 4px; }
+      100% { height: 26px; }
+    }
+
+    .radio-status-text {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .radio-volume-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .radio-volume-slider {
+      width: 80px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    /* Icono Decorativo Grande */
+    .radio-decor-icon {
+      font-size: 80px;
+      color: rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ======================================================================
+       5. FORMULARIO DE CONTACTO Y SOLICITUD (ZONA PÚBLICA EXCLUSIVA)
+       ====================================================================== */
+    .contact-section {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 44px 32px;
+      margin-bottom: 56px;
+      box-shadow: 0 8px 30px rgba(15, 23, 42, 0.04);
+      position: relative;
+    }
+
+    .contact-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      color: var(--secondary-dark);
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .contact-header {
+      margin-bottom: 30px;
+    }
+
+    .contact-header h2 {
+      font-family: 'Marcellus', Georgia, serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      color: var(--primary);
+      margin: 0 0 10px 0;
+    }
+
+    .contact-header p {
+      font-size: 0.96rem;
+      color: var(--muted);
+      max-width: 780px;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .contact-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .contact-form-grid {
+        grid-template-columns: 1fr;
       }
-    })();
-  </script>
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #334155;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: var(--text);
+      background: #f8fafc;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      background: #ffffff;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(14, 149, 148, 0.15);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .form-actions {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      color: #ffffff;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.96rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(14, 149, 148, 0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(14, 149, 148, 0.35);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-wa-direct {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25d366;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 12px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+      transition: transform 0.2s;
+    }
+
+    .btn-wa-direct:hover {
+      transform: translateY(-2px);
+    }
+
+    .form-feedback {
+      grid-column: 1 / -1;
+      display: none;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      align-items: center;
+      gap: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .form-feedback.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .privacy-notice {
+      grid-column: 1 / -1;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ======================================================================
+       6. FOOTER GLOBAL UNIFICADO (SIN ENLACES A INTRANET)
+       ====================================================================== */
+    .main-footer {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 48px 20px 28px 20px;
+      border-top: 4px solid var(--secondary);
+      text-align: center;
+    }
+
+    .footer-container {
+      max-width: 1050px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .footer-logo {
+      height: 42px;
+      width: auto;
+    }
+
+    .footer-text {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      max-width: 520px;
+      margin: 0;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-links a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #1e293b;
+      width: 100%;
+      padding-top: 20px;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+  </style>
 </head>
 <body>
-  <p style="font-family: sans-serif; text-align: center; margin-top: 50px; color: #4a5568;">
-    Redirigiendo al <a href="https://www.mmmturquia.site/es/">Boletín de Oración</a>...
-  </p>
+
+  <!-- ======================================================================
+       1. BARRA DE NAVEGACIÓN PÚBLICA CON SELECTOR DE IDIOMAS (SIN INTRANET)
+       ====================================================================== -->
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <a href="/" class="nav-brand">
+        <!-- Logo oficial -->
+        <img src="intranet/boletin-de-oracion/images/Logowebmt1.png" alt="MMM Turquía" class="nav-logo" onerror="this.style.display='none'; document.getElementById('altBrandName').style.display='block';">
+        <span id="altBrandName" class="nav-brand-title" style="display: none;">MMM Turquía</span>
+      </a>
+
+      <div class="nav-links" style="display: none; @media(min-width: 860px){display:flex;}">
+        <a href="#vision" class="nav-link" data-i18n="nav_mission">Nuestra Visión</a>
+        <a href="#radio" class="nav-link" data-i18n="nav_radio">Radio 24/7</a>
+        <a href="#contacto" class="nav-link" data-i18n="nav_contact">Contacto</a>
+      </div>
+
+      <div class="nav-right">
+        <!-- Selector de Idiomas Inteligente (ES / TR / EN / IT) -->
+        <div class="lang-selector">
+          <button type="button" class="lang-btn active" data-lang="es">ES</button>
+          <button type="button" class="lang-btn" data-lang="tr">TR</button>
+          <button type="button" class="lang-btn" data-lang="en">EN</button>
+          <button type="button" class="lang-btn" data-lang="it">IT</button>
+        </div>
+
+        <!-- Botón a Contacto y Solicitud (Sustituye cualquier acceso a intranet) -->
+        <a href="#contacto" class="btn-contact-access">
+          <span class="material-symbols-outlined" style="font-size: 18px;">mail</span>
+          <span data-i18n="btn_contact_nav">Contáctanos</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======================================================================
+       2. HERO CAROUSEL ADAPTATIVO CON VIDEO Y CAPA PROTECTORA
+       ====================================================================== -->
+  <header class="hero-header">
+    <div class="carousel-container" id="heroCarousel">
+      <!-- Slide 1 (Video de fondo con capas protectoras) -->
+      <div class="carousel-slide active">
+        <video autoplay loop muted playsinline preload="auto" class="slide-media">
+          <source src="intranet/boletin-de-oracion/videos/videohead3.webm" type="video/webm">
+        </video>
+        <div class="iframe-overlay"></div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="carousel-slide">
+        <video loop muted playsinline preload="none" class="slide-media">
+          <source src="intranet/boletin-de-oracion/videos/videohead6.webm" type="video/webm">
+        </video>
+        <div class="iframe-overlay"></div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="carousel-slide">
+        <video loop muted playsinline preload="none" class="slide-media">
+          <source src="intranet/boletin-de-oracion/videos/videohead5.webm" type="video/webm">
+        </video>
+        <div class="iframe-overlay"></div>
+      </div>
+    </div>
+
+    <!-- Contenido Textual sobre el Video -->
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="material-symbols-outlined" style="font-size: 16px;">explore</span>
+        <span data-i18n="hero_tag">Movilización Transcultural</span>
+      </div>
+
+      <h1 data-i18n="hero_title">Obra de Dios en Turquía</h1>
+      <p data-i18n="hero_subtitle">Sembrando esperanza, oración y amor en la cuna de la Iglesia</p>
+
+      <div class="hero-buttons">
+        <a href="#contacto" class="btn-hero btn-primary">
+          <span class="material-symbols-outlined">send</span>
+          <span data-i18n="btn_hero_contact">Dejar Solicitud / Conócenos</span>
+        </a>
+        <a href="#vision" class="btn-hero btn-outline">
+          <span class="material-symbols-outlined">info</span>
+          <span data-i18n="btn_learn_more">Conoce Más</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Puntos de Navegación del Carrusel -->
+    <div class="carousel-dots">
+      <span class="dot active" onclick="setSlide(0)"></span>
+      <span class="dot" onclick="setSlide(1)"></span>
+      <span class="dot" onclick="setSlide(2)"></span>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       3. CONTENIDO DEL PROYECTO Y VISIÓN
+       ====================================================================== -->
+  <main class="container" id="vision">
+
+    <div class="section-header">
+      <h2 data-i18n="sec_mission_title">La Cuna de la Iglesia Primitiva</h2>
+      <p data-i18n="sec_mission_desc">
+        Turquía alberga las 7 iglesias de Apocalipsis y los viajes de Pablo y Pedro. Hoy levantamos un vallado de oración y testimonio vivo por esta tierra histórica.
+      </p>
+    </div>
+
+    <!-- Grid de 3 Tarjetas Clave -->
+    <div class="cards-grid">
+      <!-- Tarjeta 1: Red de Intercesión -->
+      <div class="info-card">
+        <div>
+          <div class="card-icon">
+            <span class="material-symbols-outlined">folded_hands</span>
+          </div>
+          <h3 data-i18n="card_prayer_title">Red de Intercesión</h3>
+          <p data-i18n="card_prayer_desc">
+            Motivos de clamor por ciudades históricas, familias y obreros en el campo, respaldados por un círculo reservado de oración.
+          </p>
+        </div>
+        <a href="#contacto" class="card-link">
+          <span data-i18n="btn_request_info">Solicitar Información</span>
+          <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+        </a>
+      </div>
+
+      <!-- Tarjeta 2: Expediciones de Servicio -->
+      <div class="info-card">
+        <div>
+          <div class="card-icon" style="background:#fef3c7; border-color:#fde68a; color:#b45309;">
+            <span class="material-symbols-outlined">flight_takeoff</span>
+          </div>
+          <h3 data-i18n="card_expeditions_title">Expediciones de Servicio</h3>
+          <p data-i18n="card_expeditions_desc">
+            Orientación para creyentes y pastores con carga misionera interesados en viajes de servicio y respaldo ministerial.
+          </p>
+        </div>
+        <a href="#contacto" class="card-link" style="color:#b45309;">
+          <span data-i18n="btn_request_info">Solicitar Información</span>
+          <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+        </a>
+      </div>
+
+      <!-- Tarjeta 3: Quiénes Somos -->
+      <div class="info-card">
+        <div>
+          <div class="card-icon" style="background:#f3e8ff; border-color:#e9d5ff; color:#9333ea;">
+            <span class="material-symbols-outlined">diversity_3</span>
+          </div>
+          <h3 data-i18n="card_about_title">Quiénes Somos</h3>
+          <p data-i18n="card_about_desc">
+            Equipo cristiano comprometido con la difusión del Evangelio mediante amor fraternal, discipulado y servicio desinteresado.
+          </p>
+        </div>
+        <a href="#contacto" class="card-link" style="color:#9333ea;">
+          <span data-i18n="btn_request_info">Solicitar Información</span>
+          <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         4. SECCIÓN RADIO ONLINE 24/7 (EXCLUSIVA, SIN TV)
+         ====================================================================== -->
+    <section class="radio-player-card" id="radio">
+      <div class="radio-header-bar">
+        <div class="radio-live-badge">
+          <span class="live-dot"></span>
+          <span data-i18n="radio_badge_live">EN VIVO 24/7</span>
+        </div>
+        <div class="radio-channel-chip">
+          <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">music_note</span>
+          <span data-i18n="radio_channel_tag">Canal Oficial de Alabanzas & Fe</span>
+        </div>
+      </div>
+
+      <div class="radio-main-grid">
+        <div>
+          <h3 data-i18n="sec_radio_title">Radio Esperanza Turquía</h3>
+          <p data-i18n="sec_radio_desc">
+            Transmisión continua de alabanzas de fe, lectura de la Palabra de Dios y mensajes de paz para el pueblo turco y la iglesia global.
+          </p>
+
+          <div class="radio-controls-wrapper">
+            <!-- Botón de Reproducción -->
+            <button type="button" class="btn-play-radio" id="radioPlayBtn">
+              <span class="material-symbols-outlined" id="radioIcon">play_circle</span>
+              <span id="radioPlayBtnText" data-i18n="btn_listen_live">▶ Reproducir Radio</span>
+            </button>
+
+            <!-- Ecualizador Animado -->
+            <div class="audio-visualizer" id="radioVisualizer">
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+              <div class="visualizer-bar"></div>
+            </div>
+
+            <!-- Control de Volumen -->
+            <div class="radio-volume-control">
+              <span class="material-symbols-outlined" style="font-size: 18px; color: #cbd5e1;" id="volumeIcon">volume_up</span>
+              <input type="range" class="radio-volume-slider" id="radioVolume" min="0" max="1" step="0.05" value="0.85" title="Volumen">
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <span class="radio-status-text" id="radioStatus">
+              <span class="material-symbols-outlined" style="font-size: 16px;">radio</span>
+              <span data-i18n="radio_status_ready">Lista para reproducir</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="radio-decor-icon">
+          <span class="material-symbols-outlined" style="font-size: 100px;">radio</span>
+        </div>
+      </div>
+
+      <!-- Elemento de Audio Nativo -->
+      <audio id="mainRadioStream" preload="none">
+        <!-- Servidor Icecast de música de fe / instrumental bíblico continuo -->
+        <source src="https://stream.zeno.fm/4eef331f49hvv" type="audio/mpeg">
+        <source src="https://stream.zeno.fm/f3wvbbq8g2zuv" type="audio/mpeg">
+      </audio>
+    </section>
+
+    <!-- ======================================================================
+         5. FORMULARIO DE CONTACTO Y SOLICITUD (CANAL ÚNICO DE ACCESO)
+         ====================================================================== -->
+    <section class="contact-section" id="contacto">
+      <div class="contact-header">
+        <div class="contact-badge">
+          <span class="material-symbols-outlined" style="font-size: 15px;">contact_mail</span>
+          <span data-i18n="contact_badge">Contacto Exclusivo</span>
+        </div>
+        <h2 data-i18n="sec_contact_title">Conéctate con Nosotros y Déjanos tu Solicitud</h2>
+        <p data-i18n="sec_contact_desc">
+          El acceso a la red de intercesión y materiales específicos es coordinado de forma directa. Si deseas conocernos más, recibir información pastoral o sumarte a nuestro grupo de WhatsApp, déjanos tus datos a continuación:
+        </p>
+      </div>
+
+      <!-- Notificación de Envío Exitoso -->
+      <div class="form-feedback" id="formSuccessAlert">
+        <span class="material-symbols-outlined" style="font-size: 24px;">check_circle</span>
+        <span data-i18n="form_success_alert">
+          ¡Muchas gracias! Tu solicitud ha sido registrada correctamente. Nuestro equipo pastoral se pondrá en contacto contigo a la brevedad vía WhatsApp o correo electrónico.
+        </span>
+      </div>
+
+      <form id="contactRequestForm">
+        <div class="contact-form-grid">
+          <!-- Nombre Completo -->
+          <div class="form-group">
+            <label class="form-label" for="inputName">
+              <span class="material-symbols-outlined" style="font-size: 18px;">person</span>
+              <span data-i18n="form_name_label">Nombre Completo</span> *
+            </label>
+            <input type="text" id="inputName" name="nombre" class="form-input" required data-i18n-ph="form_name_ph" placeholder="Ej. Daniel Salazar">
+          </div>
+
+          <!-- Correo Electrónico -->
+          <div class="form-group">
+            <label class="form-label" for="inputEmail">
+              <span class="material-symbols-outlined" style="font-size: 18px;">mail</span>
+              <span data-i18n="form_email_label">Correo Electrónico</span> *
+            </label>
+            <input type="email" id="inputEmail" name="email" class="form-input" required data-i18n-ph="form_email_ph" placeholder="tu-correo@ejemplo.com">
+          </div>
+
+          <!-- Teléfono / WhatsApp -->
+          <div class="form-group">
+            <label class="form-label" for="inputWhatsapp">
+              <span class="material-symbols-outlined" style="font-size: 18px;">phone</span>
+              <span data-i18n="form_whatsapp_label">WhatsApp / Teléfono Móvil</span> *
+            </label>
+            <input type="tel" id="inputWhatsapp" name="whatsapp" class="form-input" required data-i18n-ph="form_whatsapp_ph" placeholder="+1 234 567 8900">
+          </div>
+
+          <!-- País / Ciudad e Iglesia -->
+          <div class="form-group">
+            <label class="form-label" for="inputCountry">
+              <span class="material-symbols-outlined" style="font-size: 18px;">church</span>
+              <span data-i18n="form_country_label">País, Ciudad e Iglesia / Comunidad</span>
+            </label>
+            <input type="text" id="inputCountry" name="pais_iglesia" class="form-input" data-i18n-ph="form_country_ph" placeholder="Ej. Lima, Perú — Iglesia Central">
+          </div>
+
+          <!-- Motivo de la Solicitud -->
+          <div class="form-group full-width">
+            <label class="form-label" for="selectReason">
+              <span class="material-symbols-outlined" style="font-size: 18px;">help_center</span>
+              <span data-i18n="form_reason_label">¿En qué te gustaría participar o conocer más?</span>
+            </label>
+            <select id="selectReason" name="motivo" class="form-select">
+              <option value="oracion" data-i18n="form_reason_opt_prayer">Deseo unirme al grupo de WhatsApp / Intercesión</option>
+              <option value="informacion" data-i18n="form_reason_opt_info">Quiero conocer más sobre la obra en Turquía</option>
+              <option value="pastoral" data-i18n="form_reason_opt_pastoral">Consulta pastoral o petición personal</option>
+              <option value="expedicion" data-i18n="form_reason_opt_expedition">Interés en expedición misionera y servicio</option>
+            </select>
+          </div>
+
+          <!-- Mensaje / Solicitud Detallada -->
+          <div class="form-group full-width">
+            <label class="form-label" for="textareaMessage">
+              <span class="material-symbols-outlined" style="font-size: 18px;">edit_note</span>
+              <span data-i18n="form_message_label">Mensaje o Solicitud Detallada</span>
+            </label>
+            <textarea id="textareaMessage" name="mensaje" class="form-textarea" data-i18n-ph="form_message_ph" placeholder="Cuéntanos sobre tu interés, cómo supiste de nosotros o tu motivo de oración..."></textarea>
+          </div>
+
+          <!-- Botones de Acción -->
+          <div class="form-actions">
+            <button type="submit" class="btn-submit" id="btnSubmitForm">
+              <span class="material-symbols-outlined">send</span>
+              <span data-i18n="btn_submit_form">Enviar mi Solicitud</span>
+            </button>
+
+            <!-- Acceso Directo por WhatsApp sin comprometer enlaces a la intranet -->
+            <a href="https://wa.me/51983204456?text=Hola,%20deseo%20conocer%20m%C3%A1s%20sobre%20la%20obra%20en%20Turqu%C3%ADa" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="btn-wa-direct">
+              <span class="material-symbols-outlined">chat</span>
+              <span data-i18n="form_direct_wa">O comunícate directamente por WhatsApp</span>
+            </a>
+          </div>
+
+          <div class="privacy-notice">
+            <span class="material-symbols-outlined" style="font-size: 16px;">lock</span>
+            <span data-i18n="form_privacy_note">Tus datos son confidenciales y serán tratados con estricta reserva pastoral.</span>
+          </div>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       6. FOOTER GLOBAL UNIFICADO (SIN ENLACES A INTRANET)
+       ====================================================================== -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <img src="intranet/boletin-de-oracion/images/Logowebmt2.png" alt="MMM Turquía" class="footer-logo" onerror="this.style.display='none';">
+      <p class="footer-text" data-i18n="footer_desc">
+        Plataforma de difusión misionera y edificación cristiana en Turquía.
+      </p>
+      <div class="footer-links">
+        <a href="#vision" data-i18n="nav_about">Quiénes Somos</a>
+        <a href="#radio" data-i18n="nav_radio">Radio 24/7</a>
+        <a href="#contacto" data-i18n="nav_contact">Contacto y Solicitud</a>
+        <a href="https://wa.me/51983204456" target="_blank" rel="noopener noreferrer">WhatsApp Pastoral</a>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Movilización Turquía — <span data-i18n="footer_rights">Todos los derechos reservados.</span></p>
+        <p style="font-style: italic; opacity: 0.8;" data-i18n="footer_privacy">
+          Uso exclusivo para la edificación y movilización cristiana.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT DEL MOTOR DE IDIOMAS Y FUNCIONALIDAD COMPLETA -->
+  <script type="module" src="/assets/js/lang.js"></script>
+  <script>
+    // ======================================================================
+    // 1. CONTROL DEL CARRUSEL HERO
+    // ======================================================================
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.dot');
+
+    window.setSlide = function(index) {
+      if (slides.length === 0) return;
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+
+      const prevVideo = slides[currentSlide].querySelector('video');
+      if (prevVideo) prevVideo.pause();
+
+      currentSlide = (index + slides.length) % slides.length;
+
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+
+      const nextVideo = slides[currentSlide].querySelector('video');
+      if (nextVideo) nextVideo.play().catch(() => {});
+    };
+
+    setInterval(() => {
+      setSlide(currentSlide + 1);
+    }, 10000);
+
+    // ======================================================================
+    // 2. REPRODUCTOR DE RADIO ONLINE 24/7 (HTML5 AUDIO + MEDIA SESSION)
+    // ======================================================================
+    const radioAudio = document.getElementById('mainRadioStream');
+    const radioPlayBtn = document.getElementById('radioPlayBtn');
+    const radioIcon = document.getElementById('radioIcon');
+    const radioPlayBtnText = document.getElementById('radioPlayBtnText');
+    const radioVisualizer = document.getElementById('radioVisualizer');
+    const radioStatus = document.getElementById('radioStatus');
+    const radioVolume = document.getElementById('radioVolume');
+    const volumeIcon = document.getElementById('volumeIcon');
+
+    let isRadioPlaying = false;
+
+    function updateMediaSession() {
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: 'Radio Esperanza Turquía',
+          artist: 'Alabanzas & Lectura Bíblica',
+          album: 'Transmisión Continua 24/7',
+          artwork: [
+            { src: 'https://tdcmhk.b-cdn.net/coverlinkredeswp.webp', sizes: '512x512', type: 'image/webp' }
+          ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => toggleRadio(true));
+        navigator.mediaSession.setActionHandler('pause', () => toggleRadio(false));
+      }
+    }
+
+    function toggleRadio(forcePlay) {
+      const shouldPlay = forcePlay !== undefined ? forcePlay : !isRadioPlaying;
+
+      if (shouldPlay) {
+        radioAudio.play().then(() => {
+          isRadioPlaying = true;
+          radioPlayBtn.classList.add('playing');
+          radioIcon.textContent = 'pause_circle';
+          radioPlayBtnText.textContent = '⏸ Pausar Radio';
+          radioVisualizer.classList.add('active');
+          radioStatus.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px; color:#22c55e;">graphic_eq</span> <span style="color:#86efac;">Transmitiendo en vivo — Alabanzas y Esperanza</span>';
+          updateMediaSession();
+        }).catch((err) => {
+          console.warn('Audio play error, reintentando:', err);
+          // Reintentar o feedback
+          radioStatus.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px; color:#f59e0b;">refresh</span> Conectando al servidor de audio...';
+        });
+      } else {
+        radioAudio.pause();
+        isRadioPlaying = false;
+        radioPlayBtn.classList.remove('playing');
+        radioIcon.textContent = 'play_circle';
+        radioPlayBtnText.textContent = '▶ Reproducir Radio';
+        radioVisualizer.classList.remove('active');
+        radioStatus.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;">radio</span> Transmisión pausada';
+      }
+    }
+
+    if (radioPlayBtn) {
+      radioPlayBtn.addEventListener('click', () => toggleRadio());
+    }
+
+    if (radioVolume) {
+      radioVolume.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        radioAudio.volume = val;
+        if (val === 0) {
+          volumeIcon.textContent = 'volume_off';
+        } else if (val < 0.5) {
+          volumeIcon.textContent = 'volume_down';
+        } else {
+          volumeIcon.textContent = 'volume_up';
+        }
+      });
+    }
+
+    // ======================================================================
+    // 3. FORMULARIO DE CONTACTO Y SOLICITUD (ALMACENAMIENTO + CONFIRMACIÓN)
+    // ======================================================================
+    const contactForm = document.getElementById('contactRequestForm');
+    const formSuccessAlert = document.getElementById('formSuccessAlert');
+    const btnSubmitForm = document.getElementById('btnSubmitForm');
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const formData = {
+          nombre: document.getElementById('inputName').value.trim(),
+          email: document.getElementById('inputEmail').value.trim(),
+          whatsapp: document.getElementById('inputWhatsapp').value.trim(),
+          pais_iglesia: document.getElementById('inputCountry').value.trim(),
+          motivo: document.getElementById('selectReason').value,
+          mensaje: document.getElementById('textareaMessage').value.trim(),
+          fecha: new Date().toISOString()
+        };
+
+        // Guardar solicitud en localStorage para respaldo seguro
+        try {
+          const prev = JSON.parse(localStorage.getItem('solicitudes_contacto') || '[]');
+          prev.push(formData);
+          localStorage.setItem('solicitudes_contacto', JSON.stringify(prev));
+        } catch (err) {
+          console.error('Error guardando solicitud local:', err);
+        }
+
+        // Feedback al usuario
+        btnSubmitForm.disabled = true;
+        btnSubmitForm.innerHTML = '<span class="material-symbols-outlined">done</span> Solicitud Enviada';
+
+        formSuccessAlert.classList.add('show');
+        formSuccessAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        contactForm.reset();
+
+        setTimeout(() => {
+          btnSubmitForm.disabled = false;
+          btnSubmitForm.innerHTML = '<span class="material-symbols-outlined">send</span> <span data-i18n="btn_submit_form">Enviar mi Solicitud</span>';
+        }, 5000);
+      });
+    }
+  </script>
+
 </body>
 </html>
