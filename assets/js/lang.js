@@ -21,7 +21,7 @@ export const translations = {
 
     // Hero Carousel
     hero_tag: "Movilización Transcultural",
-    hero_title: "Obra de Dios en Turquía",
+    hero_title: "Radio Esperanza Viva",
     hero_subtitle: "Sembrando esperanza, oración y amor en la cuna de la Iglesia",
     btn_hero_contact: "Dejar Solicitud / Conócenos",
     btn_learn_more: "Conoce Más",
