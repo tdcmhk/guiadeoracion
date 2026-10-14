@@ -17,21 +17,17 @@ Todas las páginas públicas se sirven en la raíz o rutas limpias sin subcarpet
   * Guarda la preferencia en `localStorage.getItem('user_lang')`.
   * Detecta el idioma del dispositivo al primer ingreso (`navigator.language`).
   * Actualiza los nodos HTML marcados con `data-i18n` sin recargar la página.
-* **Hero Carousel con Video Adaptativo de Fondo (Bunny Stream):**
-  * Videos de ambientación servidos vía CDN con parámetros de iframe: `autoplay=true&loop=true&muted=true&controls=false&preload=true`.
-  * Capa protectora `.iframe-overlay` transparente para interceptar gestos táctiles (swipe) y clics sin interferir con el reproductor.
 * **Secciones Clave:**
-  * Resumen del proyecto misionero y visión en Turquía.
-  * Avance público del boletín y llamados a la acción (CTA) destacados: *"Únete a la Intercesión"*, *"Acceso Intranet"*.
   * Sección institucional *"Quiénes Somos"*.
 * **Footer Global Unificado:** Logotipos y recursos servidos desde Bunny Storage/Pull Zone, enlaces a redes sociales y notas legales.
 
-#### 2. Sección Pública de Evangelización en Turco (`/tr/` o filtro `TR` en Home)
+#### 2. Sección Pública de Evangelización en Turco (`/tr/` o filtro `TR` en Home) (ver:ESPECIFICACION_HOME_RADIO)
 * **Radio Online 24/7 & TV Streaming:** Reproductor continuo con integración `navigator.mediaSession` para controles en pantalla de bloqueo en móviles.
 * **App de Radio (PWA):** Enlace y modal para instalar la radio en el celular de forma independiente.
 * **Páginas Secundarias en Turco:**
-  * `/hakkimizda.html` (Quiénes somos / Conócenos).
+  * `/hakkimizda.html` (Quiénes somos / Conócenos). 
   * `/iletisim.html` (Formulario de contacto pastoral directo).
+
 
 ---
 
@@ -52,6 +48,12 @@ Protegida contra motores de búsqueda (`noindex, nofollow`) y con validación en
 * Escucha reactiva (`onSnapshot`): al momento en que el administrador aprueba la cuenta en Firebase, la pantalla redirige automáticamente al contenido completo sin recargar.
 
 #### 3. Home de la Intranet (`/intranet/home.html`)
+* **Hero Carousel con Video Adaptativo de Fondo (Bunny Stream):**
+  * Videos de ambientación servidos vía CDN con parámetros de iframe: `autoplay=true&loop=true&muted=true&controls=false&preload=true`.
+  * Capa protectora `.iframe-overlay` transparente para interceptar gestos táctiles (swipe) y clics sin interferir con el reproductor.
+  * **Secciones Clave:**
+  * Resumen del proyecto misionero y visión en Turquía.
+  * Avance público del boletín y llamados a la acción (CTA) destacados: *"Únete a la Intercesión"*,
 * Dashboard central para intercesores y pastores autorizados.
 * Avisos pastorales recientes y noticias del campo misionero.
 * Accesos rápidos a los 4 módulos privados:
@@ -60,6 +62,7 @@ Protegida contra motores de búsqueda (`noindex, nofollow`) y con validación en
   3. **Expediciones y Viajes** (`/intranet/expedicion/`)
   4. **Donaciones y Proyectos** (`/intranet/donar/`)
   5. **Perfil de Usuario** (`/intranet/perfil/`)
+  6. **Radio Online**
 
 #### 4. Boletín de Oración Protegido (`/intranet/boletin-de-oracion/index.html`)
 * Bóveda de bloques cargados dinámicamente desde Firestore (`boletin_bloques` / `ediciones_boletin`).

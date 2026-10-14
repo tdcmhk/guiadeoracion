@@ -3,393 +3,826 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MMM Turquía — Plataforma de Misión y Esperanza</title>
-  <meta name="description" content="Plataforma de difusión misionera, radio online 24/7 de alabanza y contacto para la obra de Dios en Turquía.">
+  <title>MMM Turquía — Radio Esperanza 24/7 & Misión</title>
+  <meta name="description" content="Radio online 24/7 de alabanzas, Palabra de Dios y oración por la obra en Turquía y las 7 Iglesias del Bósforo. Fonoteca a la carta, guía de programación y contacto.">
 
-  <!-- Metadatos Móviles -->
+  <!-- Metadatos Móviles / PWA -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#1a365d">
+  <meta name="theme-color" content="#0d1b2a">
 
   <!-- Open Graph para Redes Sociales y WhatsApp -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="MMM Turquía — Misión y Esperanza">
-  <meta property="og:description" content="Difusión de la obra en Turquía, radio online 24/7 de alabanzas y contacto pastoral.">
+  <meta property="og:title" content="Radio Esperanza Turquía — Transmisión 24/7">
+  <meta property="og:description" content="Escucha en vivo alabanzas, mensajes de esperanza y programación cristiana en español y turco desde la cuna de la iglesia histórica.">
   <meta property="og:image" content="https://tdcmhk.b-cdn.net/coverlinkredeswp.webp">
 
-  <!-- Tipografía Google Material Symbols & Fuentes -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <!-- Google Fonts: Marcellus + Plus Jakarta Sans + Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-
+  <!-- Hoja de Estilos Externa Separada -->
+  <link rel="stylesheet" href="./assets/css/radio-home.css">
 </head>
-<body>
 
+<body>
   <!-- ======================================================================
-       1. BARRA DE NAVEGACIÓN PÚBLICA CON SELECTOR DE IDIOMAS (SIN INTRANET)
+       1. BARRA DE NAVEGACIÓN SUPERIOR (NAVBAR)
        ====================================================================== -->
-  <nav class="sticky-nav">
-    <div class="nav-container">
-      <a href="/" class="nav-brand">
-        <!-- Logo oficial 
-        <img src="intranet/boletin-de-oracion/images/Logowebmt1.png" alt="MMM Turquía" class="nav-logo" onerror="this.style.display='none'; document.getElementById('altBrandName').style.display='block';">
-        <span id="altBrandName" class="nav-brand-title" style="display: none;">MMM Turquía</span>-->
+  <header class="radio-header">
+    <nav class="nav-container">
+      <!-- Logotipo y Nombre -->
+      <a href="./index.html" class="nav-brand" aria-label="Inicio Radio Esperanza Turquía">
+        <div class="brand-emblem">
+          <span class="material-symbols-outlined emblem-icon">radio</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">MMM TURQUÍA</span>
+          <span class="brand-subtitle" data-i18n="radio_brand_sub">Radio Esperanza 24/7</span>
+        </div>
       </a>
 
-      <div class="nav-right">
-        <!-- Selector de Idiomas Inteligente (ES / TR / EN / IT) -->
-        <div class="lang-selector">
-          <button type="button" class="lang-btn active" data-lang="es">ES</button>
-          <button type="button" class="lang-btn" data-lang="tr">TR</button>
-          <button type="button" class="lang-btn" data-lang="en">EN</button>
-          <button type="button" class="lang-btn" data-lang="it">IT</button>
-        </div>
-
-        <!-- Botón a Contacto y Solicitud (Sustituye cualquier acceso a intranet) 
-        <a href="#contacto" class="btn-contact-access">
-          <span class="material-symbols-outlined" style="font-size: 18px;">mail</span>
-          <span data-i18n="btn_contact_nav">Contáctanos</span>
-        </a>-->
-      </div>
-    </div>
-  </nav>
-
-  <!-- ======================================================================
-       2. HERO CAROUSEL ADAPTATIVO CON VIDEO Y CAPA PROTECTORA
-       ====================================================================== 
-  <header class="hero-header">
-    <div class="carousel-container" id="heroCarousel">
-      <!-- Slide 1 (Video de fondo con capas protectoras) 
-      <div class="carousel-slide active">
-        <video autoplay loop muted playsinline preload="auto" class="slide-media">
-          <source src="intranet/boletin-de-oracion/videos/videohead3.webm" type="video/webm">
-        </video>
-        <div class="iframe-overlay"></div>
+      <!-- Insignia "En Vivo Ahora" en el Navbar -->
+      <div class="nav-live-indicator">
+        <span class="live-dot pulse-animation"></span>
+        <span class="live-text" data-i18n="radio_badge_live">EN VIVO 24/7</span>
       </div>
 
-      <!-- Slide 2 
-      <div class="carousel-slide">
-        <video loop muted playsinline preload="none" class="slide-media">
-          <source src="intranet/boletin-de-oracion/videos/videohead6.webm" type="video/webm">
-        </video>
-        <div class="iframe-overlay"></div>
-      </div>
+      <!-- Enlaces y Menú de Acción -->
+      <div class="nav-actions">
+        <ul class="nav-menu">
+          <li><a href="#radio-player-section" class="nav-link active" data-i18n="nav_radio">Radio 24/7</a></li>
+          <li><a href="#programacion-section" class="nav-link" data-i18n="nav_schedule">Programación</a></li>
+          <li><a href="#podcast-section" class="nav-link" data-i18n="nav_podcasts">A la Carta</a></li>
+          <li><a href="#contacto-section" class="nav-link" data-i18n="nav_contact">Contacto</a></li>
+        </ul>
 
-      <!-- Slide 3 
-      <div class="carousel-slide">
-        <video loop muted playsinline preload="none" class="slide-media">
-          <source src="intranet/boletin-de-oracion/videos/videohead5.webm" type="video/webm">
-        </video>
-        <div class="iframe-overlay"></div>
-      </div>
-    </div>
-
-     <!--Contenido Textual sobre el Video
-    <div class="hero-content">
-      <!--<div class="hero-badge">
-        <span class="material-symbols-outlined" style="font-size: 16px;">explore</span>
-        <span data-i18n="hero_tag">Movilización Transcultural</span>
-      </div>
-
-      <h1 data-i18n="hero_title">Radio Esperanza Viva</h1>
-      <p data-i18n="hero_subtitle">Sembrando esperanza, oración y amor</p>
-
-      <!--<div class="hero-buttons">
-        <a href="#contacto" class="btn-hero btn-primary">
-          <span class="material-symbols-outlined">send</span>
-          <span data-i18n="btn_hero_contact">Dejar Solicitud / Conócenos</span>
-        </a>
-        <a href="#vision" class="btn-hero btn-outline">
-          <span class="material-symbols-outlined">info</span>
-          <span data-i18n="btn_learn_more">Conoce Más</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Puntos de Navegación del Carrusel
-    <div class="carousel-dots">
-      <span class="dot active" onclick="setSlide(0)"></span>
-      <span class="dot" onclick="setSlide(1)"></span>
-      <span class="dot" onclick="setSlide(2)"></span>
-    </div>
-  </header>-->
-
-  <!-- ======================================================================
-       3. CONTENIDO DEL PROYECTO Y VISIÓN
-       ====================================================================== 
-  <main class="container" id="vision">-->
-
-    <!--<div class="section-header">
-      <h2 data-i18n="sec_mission_title">La Cuna de la Iglesia Primitiva</h2>
-      <p data-i18n="sec_mission_desc">
-        Turquía alberga las 7 iglesias de Apocalipsis y los viajes de Pablo y Pedro. Hoy levantamos un vallado de oración y testimonio vivo por esta tierra histórica.
-      </p>
-    </div>-->
-
-    <!-- Grid de 3 Tarjetas Clave -->
-    <!--<div class="cards-grid">
-      <!-- Tarjeta 1: Red de Intercesión 
-      <div class="info-card">
-        <div>
-          <div class="card-icon">
-            <span class="material-symbols-outlined">folded_hands</span>
-          </div>
-          <h3 data-i18n="card_prayer_title">Red de Intercesión</h3>
-          <p data-i18n="card_prayer_desc">
-            Motivos de clamor por ciudades históricas, familias y obreros en el campo, respaldados por un círculo reservado de oración.
-          </p>
-        </div>
-        <a href="#contacto" class="card-link">
-          <span data-i18n="btn_request_info">Solicitar Información</span>
-          <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
-        </a>
-      </div>
-
-      <!-- Tarjeta 2: Expediciones de Servicio 
-      <div class="info-card">
-        <div>
-          <div class="card-icon" style="background:#fef3c7; border-color:#fde68a; color:#b45309;">
-            <span class="material-symbols-outlined">flight_takeoff</span>
-          </div>
-          <h3 data-i18n="card_expeditions_title">Expediciones de Servicio</h3>
-          <p data-i18n="card_expeditions_desc">
-            Orientación para creyentes y pastores con carga misionera interesados en viajes de servicio y respaldo ministerial.
-          </p>
-        </div>
-        <a href="#contacto" class="card-link" style="color:#b45309;">
-          <span data-i18n="btn_request_info">Solicitar Información</span>
-          <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
-        </a>
-      </div>
-
-      <!-- Tarjeta 3: Quiénes Somos 
-      <div class="info-card">
-        <div>
-          <div class="card-icon" style="background:#f3e8ff; border-color:#e9d5ff; color:#9333ea;">
-            <span class="material-symbols-outlined">diversity_3</span>
-          </div>
-          <h3 data-i18n="card_about_title">Quiénes Somos</h3>
-          <p data-i18n="card_about_desc">
-            Equipo cristiano comprometido con la difusión del Evangelio mediante amor fraternal, discipulado y servicio desinteresado.
-          </p>
-        </div>
-        <a href="#contacto" class="card-link" style="color:#9333ea;">
-          <span data-i18n="btn_request_info">Solicitar Información</span>
-          <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
-        </a>
-      </div>
-    </div>-->
-
-    <!-- ======================================================================
-         4. SECCIÓN RADIO ONLINE 24/7 (EXCLUSIVA, SIN TV)
-         ====================================================================== -->
-    <section class="radio-player-card" id="radio">
-      <div class="radio-header-bar">
-        <div class="radio-live-badge">
-          <span class="live-dot"></span>
-          <span data-i18n="radio_badge_live">EN VIVO 24/7</span>
-        </div>
-        <div class="radio-channel-chip">
-          <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle; margin-right: 4px;">music_note</span>
-          <span data-i18n="radio_channel_tag">Canal Oficial de Alabanzas & Fe</span>
-        </div>
-      </div>
-
-      <div class="radio-main-grid">
-        <div>
-          <h3 data-i18n="sec_radio_title">Radio Esperanza Turquía</h3>
-          <p data-i18n="sec_radio_desc">
-            Transmisión continua de alabanzas de fe, lectura de la Palabra de Dios y mensajes de paz para el pueblo turco y la iglesia global.
-          </p>
-
-          <div class="radio-controls-wrapper">
-            <!-- Botón de Reproducción -->
-            <button type="button" class="btn-play-radio" id="radioPlayBtn">
-              <span class="material-symbols-outlined" id="radioIcon">play_circle</span>
-              <span id="radioPlayBtnText" data-i18n="btn_listen_live">▶ Reproducir Radio</span>
+        <!-- Selector de Idiomas -->
+        <div class="lang-selector-dropdown">
+          <button id="langDropdownBtn" class="lang-btn" aria-label="Cambiar idioma" aria-expanded="false">
+            <span class="material-symbols-outlined lang-icon">translate</span>
+            <span id="currentLangLabel">ES</span>
+            <span class="material-symbols-outlined chevron-icon">expand_more</span>
+          </button>
+          <div id="langMenu" class="lang-menu-dropdown hidden">
+            <button type="button" class="lang-option" data-lang="es">
+              <span class="flag">🇪🇸</span> <span>Español</span>
             </button>
-
-            <!-- Ecualizador Animado -->
-            <div class="audio-visualizer" id="radioVisualizer">
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-              <div class="visualizer-bar"></div>
-            </div>
-
-            <!-- Control de Volumen -->
-            <div class="radio-volume-control">
-              <span class="material-symbols-outlined" style="font-size: 18px; color: #cbd5e1;" id="volumeIcon">volume_up</span>
-              <input type="range" class="radio-volume-slider" id="radioVolume" min="0" max="1" step="0.05" value="0.85" title="Volumen">
-            </div>
-          </div>
-
-          <div style="margin-top: 14px;">
-            <span class="radio-status-text" id="radioStatus">
-              <span class="material-symbols-outlined" style="font-size: 16px;">radio</span>
-              <span data-i18n="radio_status_ready">Lista para reproducir</span>
-            </span>
+            <button type="button" class="lang-option" data-lang="tr">
+              <span class="flag">🇹🇷</span> <span>Türkçe</span>
+            </button>
+            <button type="button" class="lang-option" data-lang="en">
+              <span class="flag">🇬🇧</span> <span>English</span>
+            </button>
+            <button type="button" class="lang-option" data-lang="it">
+              <span class="flag">🇮🇹</span> <span>Italiano</span>
+            </button>
           </div>
         </div>
 
-        <div class="radio-decor-icon">
-          <span class="material-symbols-outlined" style="font-size: 100px;">radio</span>
+        <!-- Botón Contacto / WhatsApp -->
+        <a href="#contacto-section" class="btn-nav-action">
+          <span class="material-symbols-outlined">send</span>
+          <span data-i18n="btn_nav_contact">Conócenos</span>
+        </a>
+
+        <!-- Botón Hamburguesa Móvil -->
+        <button id="mobileMenuBtn" class="mobile-toggle-btn" aria-label="Abrir menú de navegación">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Menú Desplegable Móvil -->
+    <div id="mobileNavDrawer" class="mobile-nav-drawer hidden">
+      <ul class="mobile-nav-list">
+        <li><a href="#radio-player-section" class="mobile-nav-link" data-i18n="nav_radio">Radio 24/7</a></li>
+        <li><a href="#programacion-section" class="mobile-nav-link" data-i18n="nav_schedule">Programación</a></li>
+        <li><a href="#podcast-section" class="mobile-nav-link" data-i18n="nav_podcasts">A la Carta / Podcasts</a></li>
+        <li><a href="#contacto-section" class="mobile-nav-link" data-i18n="nav_contact">Contacto y Solicitud</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======================================================================
+         2. HERO RADIO: REPRODUCTOR PRINCIPAL "ON AIR" (ESTILO RADIOONLINED2)
+         ====================================================================== -->
+    <section id="radio-player-section" class="radio-hero-section">
+      <div class="radio-hero-bg-glow"></div>
+      
+      <div class="section-container">
+        <!-- Fila de Encabezado Superior del Hero -->
+        <div class="radio-hero-header">
+          <div class="live-pill-tag">
+            <span class="pulse-ring"></span>
+            <span class="pulse-point"></span>
+            <span class="live-tag-text" data-i18n="radio_live_status_header">🔴 TRANSMISIÓN EN DIRECTO 24/7</span>
+          </div>
+          <div class="listeners-badge" id="listenersCountBadge">
+            <span class="material-symbols-outlined">headphones</span>
+            <span data-i18n="listeners_label">Oyentes conectados:</span> <strong id="currentListenersCount">128</strong>
+          </div>
+        </div>
+
+        <!-- Tarjeta Maestra del Reproductor (Estilo Radio Studio) -->
+        <div class="radio-console-card">
+          <div class="console-grid">
+            
+            <!-- Columna Izquierda: Carátula e Indicador de Onda -->
+            <div class="console-cover-col">
+              <div class="artwork-wrapper">
+                <img id="currentShowCover" 
+                     src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80" 
+                     alt="Carátula del programa actual al aire" 
+                     class="show-artwork" />
+                <div class="artwork-overlay">
+                  <div class="equalizer-bars" id="audioEqualizerBars">
+                    <span class="bar bar-1"></span>
+                    <span class="bar bar-2"></span>
+                    <span class="bar bar-3"></span>
+                    <span class="bar bar-4"></span>
+                    <span class="bar bar-5"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="audio-stream-quality">
+                <span class="badge-hq">HD AUDIO</span>
+                <span>128 Kbps • Estéreo</span>
+              </div>
+            </div>
+
+            <!-- Columna Central: Información del Programa al Aire y Controles -->
+            <div class="console-info-col">
+              <div class="station-meta-strip">
+                <span class="station-name-chip">ESTACIÓN PRINCIPAL</span>
+                <span class="schedule-slot-chip" id="currentShowSlot">10:00 - 12:00 UTC+3</span>
+              </div>
+
+              <!-- Título del Programa Actual -->
+              <h1 class="current-show-title" id="currentShowTitle">Alabanzas del Bósforo & Clamor</h1>
+              
+              <!-- Locutor / Pastor / Conductor -->
+              <p class="current-show-host">
+                <span class="material-symbols-outlined host-icon">mic</span>
+                <span data-i18n="host_label">Conduce:</span> <strong id="currentShowHost">Pr. Daniel Salazar & Equipo de Misión</strong>
+              </p>
+
+              <!-- Resumen o Tema del Segmento -->
+              <p class="current-show-desc" id="currentShowDesc">
+                Música de adoración y alabanza continua en español y turco, intercesión por las familias en Estambul, Ankara e Esmirna, y lectura meditada de los Salmos.
+              </p>
+
+              <!-- Barra de Progreso del Programa Actual -->
+              <div class="show-progress-container">
+                <div class="show-progress-labels">
+                  <span id="currentShowStartTime">10:00</span>
+                  <span class="progress-status-text" id="currentShowRemaining">Tiempo transcurrido: 45 min</span>
+                  <span id="currentShowEndTime">12:00</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" id="showProgressFill" style="width: 45%;"></div>
+                </div>
+              </div>
+
+              <!-- Consola de Botones y Mandos Principales -->
+              <div class="console-controls-row">
+                <!-- Botón Principal Play / Pause -->
+                <button id="masterPlayBtn" class="btn-master-play" aria-label="Reproducir o pausar transmisión en vivo">
+                  <span class="material-symbols-outlined play-icon" id="masterPlayIcon">play_arrow</span>
+                  <span class="play-btn-text" id="masterPlayText" data-i18n="btn_listen_live">Escuchar en Vivo</span>
+                </button>
+
+                <!-- Control de Volumen Deslizante -->
+                <div class="volume-control-box">
+                  <button id="muteToggleBtn" class="btn-mute" aria-label="Silenciar o reactivar audio">
+                    <span class="material-symbols-outlined" id="volumeIcon">volume_up</span>
+                  </button>
+                  <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.8" aria-label="Control de volumen">
+                  <span id="volumeValueLabel" class="volume-value-text">80%</span>
+                </div>
+
+                <!-- Herramientas Rápidas: Compartir & App -->
+                <div class="stream-quick-actions">
+                  <button id="shareStreamBtn" class="btn-action-tool" title="Compartir radio en redes">
+                    <span class="material-symbols-outlined">share</span>
+                    <span data-i18n="btn_share">Compartir</span>
+                  </button>
+                  <button id="openPwaInstallBtn" class="btn-action-tool" title="Instalar App de Radio">
+                    <span class="material-symbols-outlined">install_mobile</span>
+                    <span data-i18n="btn_install_app">Instalar App</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Elemento de Audio HTML5 Oculto -->
+              <audio id="liveRadioAudio" preload="none">
+                <!-- Stream de respaldo predeterminado: URL configurable -->
+                <source src="https://stream.zeno.fm/f3wvbbqmdg8uv" type="audio/mpeg">
+                Tu navegador no soporta el reproductor de audio HTML5.
+              </audio>
+
+              <!-- Notificación de Estado de Buffer / Conexión -->
+              <div id="streamStatusAlert" class="stream-status-bar">
+                <span class="material-symbols-outlined status-alert-icon">info</span>
+                <span id="streamStatusMessage" data-i18n="radio_status_ready">Haz clic en "Escuchar en Vivo" para iniciar la transmisión.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Fila de Accesos Rápidos: ¿Qué suena ahora? / Próximo programa -->
+        <div class="upcoming-teaser-card">
+          <div class="teaser-item">
+            <span class="teaser-label" data-i18n="next_show_label">A CONTINUACIÓN (12:00):</span>
+            <strong id="nextShowTitleTeaser">Voz de Esperanza — Cartas de Asia Menor</strong>
+            <span class="teaser-host">con Pr. David Ortiz</span>
+          </div>
+          <a href="#programacion-section" class="teaser-link">
+            <span data-i18n="view_full_schedule">Ver Programación Completa</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
         </div>
       </div>
-
-      <!-- Elemento de Audio Nativo -->
-      <audio id="mainRadioStream" preload="none">
-        <!-- Servidor Icecast de música de fe / instrumental bíblico continuo -->
-        <source src="https://stream.zeno.fm/4eef331f49hvv" type="audio/mpeg">
-        <source src="https://stream.zeno.fm/f3wvbbq8g2zuv" type="audio/mpeg">
-      </audio>
     </section>
 
     <!-- ======================================================================
-         5. FORMULARIO DE CONTACTO Y SOLICITUD (CANAL ÚNICO DE ACCESO)
-         ====================================================================== 
-    <section class="contact-section" id="contacto">
-      <div class="contact-header">
-        <div class="contact-badge">
-          <span class="material-symbols-outlined" style="font-size: 15px;">contact_mail</span>
-          <span data-i18n="contact_badge">Contacto Exclusivo</span>
+         3. MÓDULO DE PROGRAMACIÓN: QUÉ TRANSMITIMOS HOY Y LA SEMANA
+         ====================================================================== -->
+    <section id="programacion-section" class="schedule-section">
+      <div class="section-container">
+        
+        <!-- Título de Sección -->
+        <div class="section-title-wrapper text-center">
+          <span class="section-badge" data-i18n="schedule_badge">GUÍA AL AIRE</span>
+          <h2 class="section-heading" data-i18n="schedule_title">Programación de la Radio</h2>
+          <p class="section-subheading" data-i18n="schedule_desc">
+            Conoce los horarios de nuestros programas de estudio, adoración, intercesión y mensajes diarios transmitidos desde Turquía para las naciones.
+          </p>
         </div>
-        <h2 data-i18n="sec_contact_title">Conéctate con Nosotros y Déjanos tu Solicitud</h2>
-        <p data-i18n="sec_contact_desc">
-          El acceso a la red de intercesión y materiales específicos es coordinado de forma directa. Si deseas conocernos más, recibir información pastoral o sumarte a nuestro grupo de WhatsApp, déjanos tus datos a continuación:
-        </p>
-      </div>
 
-      <!-- Notificación de Envío Exitoso
-      <div class="form-feedback" id="formSuccessAlert">
-        <span class="material-symbols-outlined" style="font-size: 24px;">check_circle</span>
-        <span data-i18n="form_success_alert">
-          ¡Muchas gracias! Tu solicitud ha sido registrada correctamente. Nuestro equipo pastoral se pondrá en contacto contigo a la brevedad vía WhatsApp o correo electrónico.
-        </span>
-      </div>
-
-      <form id="contactRequestForm">
-        <div class="contact-form-grid">
-          <!-- Nombre Completo 
-          <div class="form-group">
-            <label class="form-label" for="inputName">
-              <span class="material-symbols-outlined" style="font-size: 18px;">person</span>
-              <span data-i18n="form_name_label">Nombre Completo</span> *
-            </label>
-            <input type="text" id="inputName" name="nombre" class="form-input" required data-i18n-ph="form_name_ph" placeholder="Ej. Daniel Salazar">
-          </div>
-
-          <!-- Correo Electrónico 
-          <div class="form-group">
-            <label class="form-label" for="inputEmail">
-              <span class="material-symbols-outlined" style="font-size: 18px;">mail</span>
-              <span data-i18n="form_email_label">Correo Electrónico</span> *
-            </label>
-            <input type="email" id="inputEmail" name="email" class="form-input" required data-i18n-ph="form_email_ph" placeholder="tu-correo@ejemplo.com">
-          </div>
-
-          <!-- Teléfono / WhatsApp 
-          <div class="form-group">
-            <label class="form-label" for="inputWhatsapp">
-              <span class="material-symbols-outlined" style="font-size: 18px;">phone</span>
-              <span data-i18n="form_whatsapp_label">WhatsApp / Teléfono Móvil</span> *
-            </label>
-            <input type="tel" id="inputWhatsapp" name="whatsapp" class="form-input" required data-i18n-ph="form_whatsapp_ph" placeholder="+1 234 567 8900">
-          </div>
-
-          <!-- País / Ciudad e Iglesia 
-          <div class="form-group">
-            <label class="form-label" for="inputCountry">
-              <span class="material-symbols-outlined" style="font-size: 18px;">church</span>
-              <span data-i18n="form_country_label">País, Ciudad e Iglesia / Comunidad</span>
-            </label>
-            <input type="text" id="inputCountry" name="pais_iglesia" class="form-input" data-i18n-ph="form_country_ph" placeholder="Ej. Lima, Perú — Iglesia Central">
-          </div>
-
-          <!-- Motivo de la Solicitud 
-          <div class="form-group full-width">
-            <label class="form-label" for="selectReason">
-              <span class="material-symbols-outlined" style="font-size: 18px;">help_center</span>
-              <span data-i18n="form_reason_label">¿En qué te gustaría participar o conocer más?</span>
-            </label>
-            <select id="selectReason" name="motivo" class="form-select">
-              <option value="oracion" data-i18n="form_reason_opt_prayer">Deseo unirme al grupo de WhatsApp / Intercesión</option>
-              <option value="informacion" data-i18n="form_reason_opt_info">Quiero conocer más sobre la obra en Turquía</option>
-              <option value="pastoral" data-i18n="form_reason_opt_pastoral">Consulta pastoral o petición personal</option>
-              <option value="expedicion" data-i18n="form_reason_opt_expedition">Interés en expedición misionera y servicio</option>
-            </select>
-          </div>
-
-          <!-- Mensaje / Solicitud Detallada 
-          <div class="form-group full-width">
-            <label class="form-label" for="textareaMessage">
-              <span class="material-symbols-outlined" style="font-size: 18px;">edit_note</span>
-              <span data-i18n="form_message_label">Mensaje o Solicitud Detallada</span>
-            </label>
-            <textarea id="textareaMessage" name="mensaje" class="form-textarea" data-i18n-ph="form_message_ph" placeholder="Cuéntanos sobre tu interés, cómo supiste de nosotros o tu motivo de oración..."></textarea>
-          </div>
-
-          <!-- Botones de Acción 
-          <div class="form-actions">
-            <button type="submit" class="btn-submit" id="btnSubmitForm">
-              <span class="material-symbols-outlined">send</span>
-              <span data-i18n="btn_submit_form">Enviar mi Solicitud</span>
+        <!-- Filtros de Días de la Semana -->
+        <div class="schedule-days-tabs">
+          <div class="tabs-scroll-wrapper" id="daysTabsContainer">
+            <button class="day-tab-btn active" data-day="today">
+              <span class="day-name" data-i18n="day_today">Hoy</span>
+              <span class="day-date" id="tabDateToday">Miércoles</span>
             </button>
-
-            <!-- Acceso Directo por WhatsApp sin comprometer enlaces a la intranet 
-            <a href="https://wa.me/51983204456?text=Hola,%20deseo%20conocer%20m%C3%A1s%20sobre%20la%20obra%20en%20Turqu%C3%ADa" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="btn-wa-direct">
-              <span class="material-symbols-outlined">chat</span>
-              <span data-i18n="form_direct_wa">O comunícate directamente por WhatsApp</span>
-            </a>
-          </div>
-
-          <div class="privacy-notice">
-            <span class="material-symbols-outlined" style="font-size: 16px;">lock</span>
-            <span data-i18n="form_privacy_note">Tus datos son confidenciales y serán tratados con estricta reserva pastoral.</span>
+            <button class="day-tab-btn" data-day="tomorrow">
+              <span class="day-name" data-i18n="day_tomorrow">Mañana</span>
+              <span class="day-date" id="tabDateTomorrow">Jueves</span>
+            </button>
+            <button class="day-tab-btn" data-day="monday">Lunes</button>
+            <button class="day-tab-btn" data-day="tuesday">Martes</button>
+            <button class="day-tab-btn" data-day="wednesday">Miércoles</button>
+            <button class="day-tab-btn" data-day="thursday">Jueves</button>
+            <button class="day-tab-btn" data-day="friday">Viernes</button>
+            <button class="day-tab-btn" data-day="saturday">Sábado</button>
+            <button class="day-tab-btn" data-day="sunday">Domingo</button>
           </div>
         </div>
-      </form>
-    </section>-->
 
+        <!-- Filtros por Categorías -->
+        <div class="schedule-categories-filter">
+          <button class="cat-pill-btn active" data-filter="all" data-i18n="filter_all">Todos</button>
+          <button class="cat-pill-btn" data-filter="adoracion" data-i18n="filter_worship">Alabanza y Adoración</button>
+          <button class="cat-pill-btn" data-filter="biblia" data-i18n="filter_bible">Estudio Bíblico</button>
+          <button class="cat-pill-btn" data-filter="oracion" data-i18n="filter_prayer">Oración e Intercesión</button>
+          <button class="cat-pill-btn" data-filter="mision" data-i18n="filter_mission">Testimonios Misioneros</button>
+        </div>
+
+        <!-- Lista Cronológica de Programas (Timeline) -->
+        <div class="schedule-timeline-grid" id="scheduleTimelineList">
+          
+          <!-- Programa 1 -->
+          <div class="program-card completed">
+            <div class="time-col">
+              <span class="time-range">06:00 - 08:00</span>
+              <span class="status-tag status-ended" data-i18n="status_ended">Finalizado</span>
+            </div>
+            <div class="content-col">
+              <div class="program-tags">
+                <span class="badge-cat">Estudio Bíblico</span>
+              </div>
+              <h3 class="program-name">Amanecer con la Palabra</h3>
+              <p class="program-brief">Lectura devocional comentada de los Evangelios y oración de inicio de jornada.</p>
+              <div class="program-speaker">
+                <span class="material-symbols-outlined">person</span> Pastor Gabriel Méndez
+              </div>
+            </div>
+          </div>
+
+          <!-- Programa 2 (En Curso / Destacado) -->
+          <div class="program-card on-air">
+            <div class="time-col">
+              <span class="time-range">10:00 - 12:00</span>
+              <span class="status-tag status-live" data-i18n="status_live">AL AIRE AHORA</span>
+            </div>
+            <div class="content-col">
+              <div class="program-tags">
+                <span class="badge-cat">Alabanza & Oración</span>
+                <span class="badge-live-pulse">🔴 EN TRANSMISIÓN</span>
+              </div>
+              <h3 class="program-name">Alabanzas del Bósforo & Clamor</h3>
+              <p class="program-brief">Música continua de adoración en español y turco, con clamor ferviente por las 7 Iglesias históricas.</p>
+              <div class="program-speaker">
+                <span class="material-symbols-outlined">person</span> Pr. Daniel Salazar & Equipo
+              </div>
+            </div>
+            <button class="btn-listen-card" onclick="document.getElementById('masterPlayBtn').click();">
+              <span class="material-symbols-outlined">volume_up</span>
+              <span data-i18n="btn_listen_card">Sintonizar</span>
+            </button>
+          </div>
+
+          <!-- Programa 3 (Próximo) -->
+          <div class="program-card upcoming">
+            <div class="time-col">
+              <span class="time-range">12:00 - 14:00</span>
+              <span class="status-tag status-next" data-i18n="status_next">Próximo</span>
+            </div>
+            <div class="content-col">
+              <div class="program-tags">
+                <span class="badge-cat">Testimonios Misioneros</span>
+              </div>
+              <h3 class="program-name">Voz de Esperanza — Cartas de Asia Menor</h3>
+              <p class="program-brief">Crónicas, testimonios reales de creyentes en Turquía y avances del Evangelio en el Bósforo.</p>
+              <div class="program-speaker">
+                <span class="material-symbols-outlined">person</span> Pr. David Ortiz
+              </div>
+            </div>
+          </div>
+
+          <!-- Programa 4 -->
+          <div class="program-card upcoming">
+            <div class="time-col">
+              <span class="time-range">14:00 - 17:00</span>
+              <span class="status-tag status-scheduled" data-i18n="status_scheduled">Programado</span>
+            </div>
+            <div class="content-col">
+              <div class="program-tags">
+                <span class="badge-cat">Música Cristiana</span>
+              </div>
+              <h3 class="program-name">Armonías del Reino</h3>
+              <p class="program-brief">Selección de himnos y cantos de adoración contemporánea de la iglesia en Oriente y Occidente.</p>
+              <div class="program-speaker">
+                <span class="material-symbols-outlined">person</span> Ministerio Musical
+              </div>
+            </div>
+          </div>
+
+          <!-- Programa 5 -->
+          <div class="program-card upcoming">
+            <div class="time-col">
+              <span class="time-range">17:00 - 19:00</span>
+              <span class="status-tag status-scheduled" data-i18n="status_scheduled">Programado</span>
+            </div>
+            <div class="content-col">
+              <div class="program-tags">
+                <span class="badge-cat">Intercesión</span>
+              </div>
+              <h3 class="program-name">Hora de Clamor por las 7 Iglesias</h3>
+              <p class="program-brief">Tiempo solemne de intercesión por Éfeso, Esmirna, Pérgamo, Tiatira, Sardis, Filadelfia y Laodicea.</p>
+              <div class="program-speaker">
+                <span class="material-symbols-outlined">person</span> Pastores del Presbiterio
+              </div>
+            </div>
+          </div>
+
+          <!-- Programa 6 -->
+          <div class="program-card upcoming">
+            <div class="time-col">
+              <span class="time-range">21:00 - 00:00</span>
+              <span class="status-tag status-scheduled" data-i18n="status_scheduled">Programado</span>
+            </div>
+            <div class="content-col">
+              <div class="program-tags">
+                <span class="badge-cat">Vigilia Nocturna</span>
+              </div>
+              <h3 class="program-name">Vigilia de Adoración y Paz</h3>
+              <p class="program-brief">Cierre del día con cánticos espirituales, lectura solemne de las Escrituras y bendición pastoral.</p>
+              <div class="program-speaker">
+                <span class="material-symbols-outlined">person</span> Equipo de Transmisión
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. BIBLIOTECA DE PROGRAMAS GRABADOS (A LA CARTA / PODCASTS)
+         ====================================================================== -->
+    <section id="podcast-section" class="podcast-section">
+      <div class="section-container">
+        
+        <!-- Encabezado de la Sección -->
+        <div class="section-title-wrapper text-center">
+          <span class="section-badge" data-i18n="podcast_badge">FONOTECA A LA CARTA</span>
+          <h2 class="section-heading" data-i18n="podcast_title">Biblioteca de Programas Grabados</h2>
+          <p class="section-subheading" data-i18n="podcast_desc">
+            Escucha en cualquier momento los estudios bíblicos, testimonios del campo y mensajes que ya han sido emitidos en nuestra radio.
+          </p>
+        </div>
+
+        <!-- Barra de Búsqueda y Filtro de Categorías -->
+        <div class="podcast-controls-wrapper">
+          <div class="search-input-box">
+            <span class="material-symbols-outlined search-icon">search</span>
+            <input type="text" id="podcastSearchInput" placeholder="Buscar por tema, pastor o palabra clave (ej. Efesios, Testimonio)..." data-i18n-ph="podcast_search_ph" class="search-field">
+            <button id="clearSearchBtn" class="clear-search-btn hidden" aria-label="Limpiar búsqueda">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+
+          <div class="podcast-filter-tags">
+            <button class="filter-chip active" data-category="all" data-i18n="filter_all">Todos</button>
+            <button class="filter-chip" data-category="estudio" data-i18n="filter_cat_estudio">Estudios Bíblicos</button>
+            <button class="filter-chip" data-category="testimonio" data-i18n="filter_cat_testimonio">Testimonios</button>
+            <button class="filter-chip" data-category="adoracion" data-i18n="filter_cat_adoracion">Alabanzas Turcas</button>
+            <button class="filter-chip" data-category="devocional" data-i18n="filter_cat_devocional">Devocionales</button>
+          </div>
+        </div>
+
+        <!-- Grid de Tarjetas de Episodios Grabados -->
+        <div class="podcast-episodes-grid" id="podcastCardsGrid">
+          
+          <!-- Episodio 1 -->
+          <article class="episode-card" data-category="estudio">
+            <div class="episode-cover-wrap">
+              <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80" alt="Episodio: El mensaje a la iglesia de Éfeso" class="episode-img">
+              <button class="btn-play-episode" data-audio-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" data-episode-title="El Mensaje a la Iglesia de Éfeso" data-episode-host="Pr. Daniel Salazar" data-episode-cover="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80">
+                <span class="material-symbols-outlined">play_arrow</span>
+              </button>
+              <span class="duration-badge">38 min</span>
+            </div>
+            <div class="episode-body">
+              <span class="episode-cat-pill">Estudios Bíblicos</span>
+              <h3 class="episode-title">El Mensaje a la Iglesia de Éfeso: El Primer Amor</h3>
+              <p class="episode-excerpt">Un recorrido histórico y espiritual por la carta enviada por Jesucristo en Apocalipsis y su relevancia para la fe viva hoy.</p>
+              <div class="episode-footer">
+                <span class="episode-date">12 Oct 2026</span>
+                <span class="episode-speaker">Pr. Daniel Salazar</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Episodio 2 -->
+          <article class="episode-card" data-category="testimonio">
+            <div class="episode-cover-wrap">
+              <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80" alt="Episodio: Caminando por las calles de Esmirna" class="episode-img">
+              <button class="btn-play-episode" data-audio-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" data-episode-title="Caminando por las Calles de Esmirna (İzmir)" data-episode-host="Pr. David Ortiz" data-episode-cover="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80">
+                <span class="material-symbols-outlined">play_arrow</span>
+              </button>
+              <span class="duration-badge">26 min</span>
+            </div>
+            <div class="episode-body">
+              <span class="episode-cat-pill">Testimonios</span>
+              <h3 class="episode-title">Caminando por las Calles de Esmirna (İzmir)</h3>
+              <p class="episode-excerpt">Testimonio inspirador sobre la perseverancia de los discípulos en una de las ciudades con presencia ininterrumpida de fe.</p>
+              <div class="episode-footer">
+                <span class="episode-date">10 Oct 2026</span>
+                <span class="episode-speaker">Pr. David Ortiz</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Episodio 3 -->
+          <article class="episode-card" data-category="adoracion">
+            <div class="episode-cover-wrap">
+              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Episodio: Alabanzas e Himnos en Lengua Turca" class="episode-img">
+              <button class="btn-play-episode" data-audio-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" data-episode-title="Alabanzas e Himnos en Lengua Turca (İlahi)" data-episode-host="Ministerio de Adoración" data-episode-cover="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80">
+                <span class="material-symbols-outlined">play_arrow</span>
+              </button>
+              <span class="duration-badge">45 min</span>
+            </div>
+            <div class="episode-body">
+              <span class="episode-cat-pill">Alabanzas Turcas</span>
+              <h3 class="episode-title">Alabanzas e Himnos en Lengua Turca (İlahi)</h3>
+              <p class="episode-excerpt">Cánticos de adoración tradicionales traducidos e interpretados con instrumentos autóctonos como el saz y el laúd.</p>
+              <div class="episode-footer">
+                <span class="episode-date">07 Oct 2026</span>
+                <span class="episode-speaker">Ministerio de Adoración</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Episodio 4 -->
+          <article class="episode-card" data-category="devocional">
+            <div class="episode-cover-wrap">
+              <img src="https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=600&q=80" alt="Episodio: El Clamor de Medianoche" class="episode-img">
+              <button class="btn-play-episode" data-audio-src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" data-episode-title="El Clamor de Medianoche por las Familias" data-episode-host="Pr. Gabriel Méndez" data-episode-cover="https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=600&q=80">
+                <span class="material-symbols-outlined">play_arrow</span>
+              </button>
+              <span class="duration-badge">31 min</span>
+            </div>
+            <div class="episode-body">
+              <span class="episode-cat-pill">Devocionales</span>
+              <h3 class="episode-title">El Clamor de Medianoche por las Familias</h3>
+              <p class="episode-excerpt">Petición intercesora guiada para guardar a los hogares en fe, bendición y consuelo en tiempos de prueba.</p>
+              <div class="episode-footer">
+                <span class="episode-date">04 Oct 2026</span>
+                <span class="episode-speaker">Pr. Gabriel Méndez</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. REPRODUCTOR FLOTANTE A LA CARTA (STICKY MINI-PLAYER)
+         ====================================================================== -->
+    <aside id="onDemandMiniPlayer" class="sticky-audio-bar hidden">
+      <div class="mini-player-container">
+        
+        <!-- Info del Audio en Reproducción -->
+        <div class="mini-track-info">
+          <img id="miniTrackCover" src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=150&q=80" alt="Miniatura de episodio grabado" class="mini-cover">
+          <div class="mini-meta">
+            <span class="mini-tag" data-i18n="mini_playing_label">REPRODUCIENDO GRABACIÓN</span>
+            <h4 id="miniTrackTitle" class="mini-title">El Mensaje a la Iglesia de Éfeso</h4>
+            <span id="miniTrackHost" class="mini-host">Pr. Daniel Salazar</span>
+          </div>
+        </div>
+
+        <!-- Mandos del Reproductor a la Carta -->
+        <div class="mini-player-controls">
+          <div class="mini-btns-row">
+            <button id="miniRewindBtn" class="btn-skip-15" title="Retroceder 15 segundos">
+              <span class="material-symbols-outlined">replay_10</span>
+            </button>
+            <button id="miniPlayBtn" class="btn-mini-play" aria-label="Reproducir o pausar episodio">
+              <span class="material-symbols-outlined" id="miniPlayIcon">play_arrow</span>
+            </button>
+            <button id="miniForwardBtn" class="btn-skip-15" title="Adelantar 15 segundos">
+              <span class="material-symbols-outlined">forward_10</span>
+            </button>
+          </div>
+
+          <!-- Barra de Progreso Deslizante -->
+          <div class="mini-timeline-row">
+            <span id="miniCurrentTime" class="time-label">0:00</span>
+            <input type="range" id="miniProgressSlider" class="timeline-slider" min="0" max="100" value="0">
+            <span id="miniTotalTime" class="time-label">0:00</span>
+          </div>
+        </div>
+
+        <!-- Volumen y Botón Cerrar Mini Player -->
+        <div class="mini-actions">
+          <button id="miniCloseBtn" class="btn-close-mini" title="Cerrar reproductor a la carta">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <!-- Audio Tag para Grabaciones -->
+        <audio id="onDemandAudioElement" preload="none"></audio>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         6. SECCIÓN NOTICIAS Y ACTUALIDAD (RESERVADA PARA DESPUÉS)
+         * Se mantiene estructurada según la especificación con toggle para activarla.
+         ====================================================================== -->
+    <section id="noticias-section" class="news-section section-reserved">
+      <div class="section-container">
+        
+        <div class="section-title-wrapper text-center">
+          <span class="section-badge" data-i18n="news_badge">ACTUALIDAD DEL CAMPO</span>
+          <h2 class="section-heading" data-i18n="news_title">Noticias y Crónicas de la Obra</h2>
+          <p class="section-subheading" data-i18n="news_desc">
+            Próximamente: Informes misioneros, testimonios y novedades sobre los viajes de bendición en Turquía.
+          </p>
+        </div>
+
+        <!-- Grid de Tarjetas de Noticias Preparado para cuando se activen -->
+        <div class="news-cards-grid">
+          <article class="news-card">
+            <div class="news-card-img-wrap">
+              <img src="https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=600&q=80" alt="Estambul Bósforo" class="news-img">
+              <span class="news-category-tag">Avance Misionero</span>
+            </div>
+            <div class="news-card-body">
+              <span class="news-date">Octubre 2026</span>
+              <h3 class="news-title">Nuevos puntos de clamor en la región del Mármara</h3>
+              <p class="news-summary">Fortalecimiento del vallado de oración en colaboración con familias de creyentes en Estambul y Bursa.</p>
+            </div>
+          </article>
+
+          <article class="news-card">
+            <div class="news-card-img-wrap">
+              <img src="https://images.unsplash.com/photo-1541432901042-2d8bd64b4a1b?auto=format&fit=crop&w=600&q=80" alt="Capadocia" class="news-img">
+              <span class="news-category-tag">Expediciones</span>
+            </div>
+            <div class="news-card-body">
+              <span class="news-date">Octubre 2026</span>
+              <h3 class="news-title">Visita pastoral a las comunidades de Anatolia Central</h3>
+              <p class="news-summary">Reuniones de edificación y entrega de Escrituras en ciudades con rico legado de los primeros mártires.</p>
+            </div>
+          </article>
+
+          <article class="news-card">
+            <div class="news-card-img-wrap">
+              <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=600&q=80" alt="Éfeso Ruinas" class="news-img">
+              <span class="news-category-tag">Historia & Fe</span>
+            </div>
+            <div class="news-card-body">
+              <span class="news-date">Septiembre 2026</span>
+              <h3 class="news-title">Transmisión especial desde las 7 Iglesias del Apocalipsis</h3>
+              <p class="news-summary">Revive los momentos más emotivos de la jornada de intercesión emitida en directo por nuestra radio.</p>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. FORMULARIO DE CONTACTO, SOLICITUDES Y WHATSAPP (CONÓCENOS)
+         * Sin enlace a la intranet, solo para dejar datos y solicitudes directas.
+         ====================================================================== -->
+    <section id="contacto-section" class="contact-section">
+      <div class="section-container">
+        
+        <div class="contact-box-wrapper">
+          <div class="contact-info-panel">
+            <span class="section-badge" data-i18n="contact_badge">CONTACTO EXCLUSIVO</span>
+            <h2 class="contact-panel-title" data-i18n="contact_title">Conéctate con Nosotros y Déjanos tu Solicitud</h2>
+            <p class="contact-panel-text" data-i18n="contact_desc">
+              El acceso a nuestros grupos de intercesión de WhatsApp y materiales específicos es reservado y coordinado de forma directa.
+            </p>
+            <p class="contact-panel-text" data-i18n="contact_desc_2">
+              Si deseas conocernos más, recibir información pastoral, solicitar oración o sumarte a la red de intercesión por Turquía, completa tus datos:
+            </p>
+
+            <div class="contact-highlights">
+              <div class="highlight-item">
+                <span class="material-symbols-outlined">mark_chat_unread</span>
+                <div>
+                  <strong>Grupo de Oración en WhatsApp</strong>
+                  <p>Coordinación pastoral y motivos diarios de clamor.</p>
+                </div>
+              </div>
+              <div class="highlight-item">
+                <span class="material-symbols-outlined">verified_user</span>
+                <div>
+                  <strong>Privacidad y Respaldo</strong>
+                  <p>Tus datos son tratados con estricta confidencialidad pastoral.</p>
+                </div>
+              </div>
+              <div class="highlight-item">
+                <span class="material-symbols-outlined">radio</span>
+                <div>
+                  <strong>Peticiones para la Radio</strong>
+                  <p>Menciona si deseas que oremos en vivo por tu familia o ciudad.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario de Envío Directo -->
+          <div class="contact-form-panel">
+            <form id="pastoralContactForm" class="contact-form" action="https://formsubmit.co/RVICENTETAPIA@gmail.com" method="POST">
+              <!-- Antispam y Redirección -->
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_subject" value="Nueva Solicitud de Contacto - Radio MMM Turquía">
+              <input type="hidden" name="_template" value="table">
+
+              <!-- Nombre Completo -->
+              <div class="form-group">
+                <label for="contactFullName" class="form-label" data-i18n="form_name_label">Nombre y Apellidos *</label>
+                <div class="input-icon-wrap">
+                  <span class="material-symbols-outlined">person</span>
+                  <input type="text" id="contactFullName" name="nombre" required placeholder="Ej. Daniel Salazar" data-i18n-ph="form_name_ph" class="form-control">
+                </div>
+              </div>
+
+              <!-- Correo Electrónico -->
+              <div class="form-group">
+                <label for="contactEmail" class="form-label" data-i18n="form_email_label">Correo Electrónico *</label>
+                <div class="input-icon-wrap">
+                  <span class="material-symbols-outlined">mail</span>
+                  <input type="email" id="contactEmail" name="email" required placeholder="tu-correo@ejemplo.com" data-i18n-ph="form_email_ph" class="form-control">
+                </div>
+              </div>
+
+              <!-- WhatsApp con Prefijo -->
+              <div class="form-group">
+                <label for="contactWhatsapp" class="form-label" data-i18n="form_whatsapp_label">WhatsApp con prefijo de país *</label>
+                <div class="input-icon-wrap">
+                  <span class="material-symbols-outlined">chat</span>
+                  <input type="tel" id="contactWhatsapp" name="whatsapp" required placeholder="+34 600 000 000 / +90 555 000 0000" data-i18n-ph="form_whatsapp_ph" class="form-control">
+                </div>
+              </div>
+
+              <!-- País, Ciudad e Iglesia -->
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label for="contactCountry" class="form-label" data-i18n="form_country_label">País y Ciudad *</label>
+                  <input type="text" id="contactCountry" name="pais_ciudad" required placeholder="Ej. Madrid, España / Lima, Perú" data-i18n-ph="form_country_ph" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="contactChurch" class="form-label" data-i18n="form_church_label">Iglesia / Congregación</label>
+                  <input type="text" id="contactChurch" name="iglesia" placeholder="Ej. MMM Central" data-i18n-ph="form_church_ph" class="form-control">
+                </div>
+              </div>
+
+              <!-- Motivo de la Solicitud -->
+              <div class="form-group">
+                <label for="contactReason" class="form-label" data-i18n="form_reason_label">¿Cómo te gustaría involucrarte? *</label>
+                <div class="input-icon-wrap">
+                  <span class="material-symbols-outlined">assignment</span>
+                  <select id="contactReason" name="motivo_solicitud" required class="form-control select-field">
+                    <option value="" disabled selected data-i18n="form_reason_default">Selecciona una opción...</option>
+                    <option value="whatsapp_intercesion" data-i18n="form_reason_opt1">Deseo unirme al grupo de WhatsApp y Red de Intercesión</option>
+                    <option value="conocer_mas" data-i18n="form_reason_opt2">Deseo conocer más sobre la obra en Turquía</option>
+                    <option value="peticion_oracion" data-i18n="form_reason_opt3">Petición de oración personal para la Radio</option>
+                    <option value="servicio_misionero" data-i18n="form_reason_opt4">Interés en apoyo o expediciones de servicio misionero</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Mensaje / Petición Libre -->
+              <div class="form-group">
+                <label for="contactMessage" class="form-label" data-i18n="form_message_label">Mensaje, testimonio o petición de oración</label>
+                <textarea id="contactMessage" name="mensaje" rows="4" placeholder="Escribe tu mensaje o motivo de clamor aquí..." data-i18n-ph="form_message_ph" class="form-control textarea-field"></textarea>
+              </div>
+
+              <!-- Botón de Envío -->
+              <button type="submit" id="submitContactBtn" class="btn-submit-form">
+                <span class="material-symbols-outlined">send</span>
+                <span data-i18n="btn_submit_contact">Enviar Solicitud al Equipo Pastoral</span>
+              </button>
+
+              <div id="formSuccessNotice" class="form-notice hidden">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span>¡Gracias por contactarnos! Tu solicitud ha sido registrada y nos pondremos en contacto contigo por WhatsApp o correo.</span>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
   </main>
 
   <!-- ======================================================================
-       6. FOOTER GLOBAL UNIFICADO (SIN ENLACES A INTRANET)
+       8. PIE DE PÁGINA (FOOTER)
        ====================================================================== -->
-  <footer class="main-footer">
-    <div class="footer-container">
-      <!--<img src="intranet/boletin-de-oracion/images/Logowebmt2.png" alt="MMM Turquía" class="footer-logo" onerror="this.style.display='none';">-->
-      <p class="footer-text" data-i18n="footer_desc">
-        Plataforma de difusión y edificación cristiana en Turquía.
-      </p>
-      <div class="footer-links">
-        <a href="#vision" data-i18n="nav_about">Quiénes Somos</a>
-        <a href="#radio" data-i18n="nav_radio">Radio 24/7</a>
-        <a href="#contacto" data-i18n="nav_contact">Contacto y Solicitud</a>
-        <!--<a href="https://wa.me/51983204456" target="_blank" rel="noopener noreferrer">WhatsApp Pastoral</a>-->
+  <footer class="radio-footer">
+    <div class="section-container footer-content">
+      <div class="footer-brand-col">
+        <div class="brand-emblem-small">
+          <span class="material-symbols-outlined">radio</span>
+        </div>
+        <div>
+          <h4 class="footer-title">MMM TURQUÍA</h4>
+          <p class="footer-tagline" data-i18n="footer_tagline">Radio Esperanza 24/7 & Testimonio en la Cuna de la Iglesia Histórica.</p>
+        </div>
       </div>
-      <div class="footer-bottom">
-        <p>© 2026 Radio — <span data-i18n="footer_rights">Todos los derechos reservados.</span></p>
-        <p style="font-style: italic; opacity: 0.8;" data-i18n="footer_privacy">
-          Uso exclusivo para la edificación.
-        </p>
+
+      <div class="footer-links-col">
+        <h5 class="footer-col-title" data-i18n="footer_nav_title">Navegación</h5>
+        <ul class="footer-links">
+          <li><a href="#radio-player-section" data-i18n="nav_radio">Radio 24/7</a></li>
+          <li><a href="#programacion-section" data-i18n="nav_schedule">Programación</a></li>
+          <li><a href="#podcast-section" data-i18n="nav_podcasts">A la Carta</a></li>
+          <li><a href="#contacto-section" data-i18n="nav_contact">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-social-col">
+        <h5 class="footer-col-title" data-i18n="footer_connect_title">Conectar</h5>
+        <p class="footer-social-text" data-i18n="footer_connect_desc">Sintoniza nuestras transmisiones y acompáñanos en oración continua.</p>
+        <div class="social-badges">
+          <a href="https://wa.me/?text=Escucha%20Radio%20Esperanza%20Turqu%C3%ADa%20en%20vivo" target="_blank" rel="noopener noreferrer" class="social-pill-btn" aria-label="Compartir en WhatsApp">
+            <span class="material-symbols-outlined">chat</span> WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <div class="section-container bottom-bar-inner">
+        <p>© 2026 MMM Turquía — Todos los derechos reservados. Radio y Misión.</p>
+        <p class="footer-quote">«El que tiene oído, oiga lo que el Espíritu dice a las iglesias» — Apocalipsis 2:7</p>
       </div>
     </div>
   </footer>
 
-  <!-- SCRIPT DEL MOTOR DE IDIOMAS Y FUNCIONALIDAD COMPLETA -->
-<script type="module" src="/assets/js/lang.js"></script>
-<!-- Lógica interactiva del sitio (Carrusel, Radio, Formulario) -->
-<script type="module" src="/assets/js/main.js"></script>
-
-
+  <!-- ======================================================================
+       9. CARGA MODULAR DE SCRIPTS JS SEPARADOS
+       ====================================================================== -->
+  <script type="module" src="./assets/js/lang.js"></script>
+  <script type="module" src="./assets/js/radio-schedule.js"></script>
+  <script type="module" src="./assets/js/radio-player.js"></script>
 </body>
 </html>
