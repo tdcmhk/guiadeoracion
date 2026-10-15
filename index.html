@@ -2,15 +2,20 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>MMM Turquía — Radio Esperanza 24/7 & Misión</title>
   <meta name="description" content="Radio online 24/7 de alabanzas, Palabra de Dios y oración por la obra en Turquía y las 7 Iglesias del Bósforo. Fonoteca a la carta, guía de programación y contacto.">
 
-  <!-- Metadatos Móviles / PWA -->
+  <!-- Metadatos Móviles / PWA & App Store / Play Store APK Readiness -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="./assets/icons/app-icon.svg">
+  <link rel="apple-touch-icon" href="./assets/icons/app-icon.svg">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0d1b2a">
+  <meta name="apple-mobile-web-app-title" content="Radio Esperanza">
+  <meta name="application-name" content="Radio Esperanza">
+  <meta name="theme-color" content="#070d19">
 
   <!-- Open Graph para Redes Sociales y WhatsApp -->
   <meta property="og:type" content="website">
@@ -83,6 +88,12 @@
           </div>
         </div>
 
+        <!-- Botón Instalar App (PWA) -->
+        <button id="headerInstallBtn" class="btn-header-install" title="Instalar App de Radio" data-i18n-title="pwa_install_btn_tip" aria-label="Instalar App de Radio">
+          <span class="material-symbols-outlined">install_mobile</span>
+          <span class="header-install-text" data-i18n="pwa_install_label">App</span>
+        </button>
+
         <!-- Botón Contacto / WhatsApp -->
         <a href="#contacto-section" class="btn-nav-action">
           <span class="material-symbols-outlined">send</span>
@@ -103,6 +114,12 @@
         <li><a href="#programacion-section" class="mobile-nav-link" data-i18n="nav_schedule">Programación</a></li>
         <li><a href="#podcast-section" class="mobile-nav-link" data-i18n="nav_podcasts">A la Carta / Podcasts</a></li>
         <li><a href="#contacto-section" class="mobile-nav-link" data-i18n="nav_contact">Contacto y Solicitud</a></li>
+        <li>
+          <button type="button" id="drawerInstallBtn" class="mobile-nav-link mobile-install-link">
+            <span class="material-symbols-outlined">install_mobile</span>
+            <span data-i18n="pwa_modal_title">Instalar Radio en Celular</span>
+          </button>
+        </li>
       </ul>
     </div>
   </header>
@@ -158,7 +175,7 @@
             <!-- Columna Central: Información del Programa al Aire y Controles -->
             <div class="console-info-col">
               <div class="station-meta-strip">
-                <span class="station-name-chip">ESTACIÓN PRINCIPAL</span>
+                <span class="station-name-chip" data-i18n="station_main_chip">ESTACIÓN PRINCIPAL</span>
                 <span class="schedule-slot-chip" id="currentShowSlot">10:00 - 12:00 UTC+3</span>
               </div>
 
@@ -276,13 +293,13 @@
               <span class="day-name" data-i18n="day_tomorrow">Mañana</span>
               <span class="day-date" id="tabDateTomorrow">Jueves</span>
             </button>
-            <button class="day-tab-btn" data-day="monday">Lunes</button>
-            <button class="day-tab-btn" data-day="tuesday">Martes</button>
-            <button class="day-tab-btn" data-day="wednesday">Miércoles</button>
-            <button class="day-tab-btn" data-day="thursday">Jueves</button>
-            <button class="day-tab-btn" data-day="friday">Viernes</button>
-            <button class="day-tab-btn" data-day="saturday">Sábado</button>
-            <button class="day-tab-btn" data-day="sunday">Domingo</button>
+            <button class="day-tab-btn" data-day="monday" data-i18n="day_monday">Lunes</button>
+            <button class="day-tab-btn" data-day="tuesday" data-i18n="day_tuesday">Martes</button>
+            <button class="day-tab-btn" data-day="wednesday" data-i18n="day_wednesday">Miércoles</button>
+            <button class="day-tab-btn" data-day="thursday" data-i18n="day_thursday">Jueves</button>
+            <button class="day-tab-btn" data-day="friday" data-i18n="day_friday">Viernes</button>
+            <button class="day-tab-btn" data-day="saturday" data-i18n="day_saturday">Sábado</button>
+            <button class="day-tab-btn" data-day="sunday" data-i18n="day_sunday">Domingo</button>
           </div>
         </div>
 
@@ -539,47 +556,108 @@
     </section>
 
     <!-- ======================================================================
-         5. REPRODUCTOR FLOTANTE A LA CARTA (STICKY MINI-PLAYER)
+         5. REPRODUCTOR ESTÁTICO PERMANENTE INFERIOR (BOTTOM APP DOCK & PLAYER)
+         * Siempre anclado abajo para navegación móvil y control constante.
+         * Sintonizador 24/7 en vivo y reproductor de grabaciones a la carta.
          ====================================================================== -->
-    <aside id="onDemandMiniPlayer" class="sticky-audio-bar hidden">
+    <aside id="onDemandMiniPlayer" class="sticky-audio-bar static-bottom-dock" aria-label="Reproductor persistente de Radio Esperanza">
+      <!-- Barra de navegación rápida móvil integrada estilo App nativa -->
+      <nav class="app-mobile-tab-bar" aria-label="Navegación rápida de la app">
+        <a href="#radio-player-section" class="mobile-tab-item active" data-tab="radio">
+          <span class="material-symbols-outlined">radio</span>
+          <span class="tab-label" data-i18n="nav_radio">Radio 24/7</span>
+        </a>
+        <a href="#programacion-section" class="mobile-tab-item" data-tab="schedule">
+          <span class="material-symbols-outlined">calendar_today</span>
+          <span class="tab-label" data-i18n="nav_schedule">Guía</span>
+        </a>
+        <a href="#podcast-section" class="mobile-tab-item" data-tab="podcast">
+          <span class="material-symbols-outlined">headphones</span>
+          <span class="tab-label" data-i18n="nav_podcasts">A la Carta</span>
+        </a>
+        <a href="#contacto-section" class="mobile-tab-item" data-tab="contact">
+          <span class="material-symbols-outlined">chat</span>
+          <span class="tab-label" data-i18n="nav_contact">Contacto</span>
+        </a>
+        <button type="button" id="appNavInstallBtn" class="mobile-tab-item tab-install" title="Instalar App de Radio" data-i18n-title="pwa_install_btn_tip">
+          <span class="material-symbols-outlined">get_app</span>
+          <span class="tab-label" data-i18n="pwa_install_label">Instalar</span>
+        </button>
+      </nav>
+
       <div class="mini-player-container">
-        
-        <!-- Info del Audio en Reproducción -->
-        <div class="mini-track-info">
-          <img id="miniTrackCover" src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=150&q=80" alt="Miniatura de episodio grabado" class="mini-cover">
+        <!-- Info del Programa / Audio en Reproducción -->
+        <div class="mini-track-info" id="bottomTrackInfo">
+          <div class="mini-cover-wrapper">
+            <img id="miniTrackCover" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=150&q=80" alt="Carátula Radio Esperanza" class="mini-cover">
+            <span id="bottomLiveDot" class="mini-live-indicator pulse-animation" title="Señal en directo"></span>
+          </div>
           <div class="mini-meta">
-            <span class="mini-tag" data-i18n="mini_playing_label">REPRODUCIENDO GRABACIÓN</span>
-            <h4 id="miniTrackTitle" class="mini-title">El Mensaje a la Iglesia de Éfeso</h4>
-            <span id="miniTrackHost" class="mini-host">Pr. Daniel Salazar</span>
+            <div class="mini-tag-badge-row">
+              <span id="miniTrackTag" class="mini-tag" data-i18n="bottom_tag_live">EN VIVO 24/7</span>
+              <div id="bottomEqualizerBars" class="mini-equalizer-bars">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <h4 id="miniTrackTitle" class="mini-title">MMM TURQUÍA — Radio Esperanza</h4>
+            <span id="miniTrackHost" class="mini-host">Señal en directo desde Estambul</span>
           </div>
         </div>
 
-        <!-- Mandos del Reproductor a la Carta -->
+        <!-- Mandos del Reproductor Persistente -->
         <div class="mini-player-controls">
           <div class="mini-btns-row">
-            <button id="miniRewindBtn" class="btn-skip-15" title="Retroceder 15 segundos">
+            <!-- Botón 15s atrás (Activo en modo a la carta) -->
+            <button id="miniRewindBtn" class="btn-skip-15 hidden" title="Retroceder 15 segundos" data-i18n-title="mini_rewind_tip">
               <span class="material-symbols-outlined">replay_10</span>
             </button>
-            <button id="miniPlayBtn" class="btn-mini-play" aria-label="Reproducir o pausar episodio">
+
+            <!-- Botón Master Play / Pause Inferior -->
+            <button id="miniPlayBtn" class="btn-mini-play" aria-label="Reproducir o pausar emisión">
               <span class="material-symbols-outlined" id="miniPlayIcon">play_arrow</span>
             </button>
-            <button id="miniForwardBtn" class="btn-skip-15" title="Adelantar 15 segundos">
+
+            <!-- Botón 15s adelante (Activo en modo a la carta) -->
+            <button id="miniForwardBtn" class="btn-skip-15 hidden" title="Adelantar 15 segundos" data-i18n-title="mini_forward_tip">
               <span class="material-symbols-outlined">forward_10</span>
             </button>
           </div>
 
-          <!-- Barra de Progreso Deslizante -->
-          <div class="mini-timeline-row">
+          <!-- Barra de Progreso Deslizante para Grabaciones A la Carta -->
+          <div id="miniTimelineRow" class="mini-timeline-row hidden">
             <span id="miniCurrentTime" class="time-label">0:00</span>
-            <input type="range" id="miniProgressSlider" class="timeline-slider" min="0" max="100" value="0">
+            <input type="range" id="miniProgressSlider" class="timeline-slider" min="0" max="100" value="0" aria-label="Barra de avance de podcast">
             <span id="miniTotalTime" class="time-label">0:00</span>
           </div>
         </div>
 
-        <!-- Volumen y Botón Cerrar Mini Player -->
+        <!-- Acciones Rápidas: Mute, Volver a Live, Ver Consola, Instalar App -->
         <div class="mini-actions">
-          <button id="miniCloseBtn" class="btn-close-mini" title="Cerrar reproductor a la carta">
+          <!-- Silenciar / Activar Sonido -->
+          <button id="miniMuteBtn" class="btn-mini-action" title="Silenciar / Activar sonido" aria-label="Control de volumen rápido">
+            <span class="material-symbols-outlined" id="miniVolumeIcon">volume_up</span>
+          </button>
+
+          <!-- Botón Volver a En Vivo (Cuando se reproduce un podcast) -->
+          <button id="miniReturnToLiveBtn" class="btn-mini-action btn-return-live hidden" title="Volver a sintonizar Radio 24/7 en vivo" data-i18n-title="bottom_btn_live">
+            <span class="material-symbols-outlined">sensors</span>
+            <span class="action-text" data-i18n="bottom_btn_live">En Vivo</span>
+          </button>
+
+          <!-- Botón Cerrar Episodio / Volver (Para volver a radio en vivo) -->
+          <button id="miniCloseBtn" class="btn-close-mini hidden" title="Cerrar reproducción a la carta" data-i18n-title="mini_close_tip">
             <span class="material-symbols-outlined">close</span>
+          </button>
+
+          <!-- Botón Expandir / Ir al Sintonizador Principal -->
+          <a href="#radio-player-section" id="miniExpandBtn" class="btn-mini-action btn-expand" title="Ver sintonizador principal y detalles" data-i18n-title="bottom_btn_expand">
+            <span class="material-symbols-outlined">tune</span>
+          </a>
+
+          <!-- Botón Instalar PWA en Celular -->
+          <button id="miniInstallAppBtn" class="btn-mini-install" title="Instalar App de Radio" data-i18n-title="pwa_install_btn_tip">
+            <span class="material-symbols-outlined">install_mobile</span>
+            <span class="install-pill-text" data-i18n="pwa_install_label">App</span>
           </button>
         </div>
 
@@ -667,22 +745,22 @@
               <div class="highlight-item">
                 <span class="material-symbols-outlined">mark_chat_unread</span>
                 <div>
-                  <strong>Grupo de Oración en WhatsApp</strong>
-                  <p>Coordinación pastoral y motivos diarios de clamor.</p>
+                  <strong data-i18n="contact_hl1_title">Grupo de Oración en WhatsApp</strong>
+                  <p data-i18n="contact_hl1_desc">Coordinación pastoral y motivos diarios de clamor.</p>
                 </div>
               </div>
               <div class="highlight-item">
                 <span class="material-symbols-outlined">verified_user</span>
                 <div>
-                  <strong>Privacidad y Respaldo</strong>
-                  <p>Tus datos son tratados con estricta confidencialidad pastoral.</p>
+                  <strong data-i18n="contact_hl2_title">Privacidad y Respaldo</strong>
+                  <p data-i18n="contact_hl2_desc">Tus datos son tratados con estricta confidencialidad pastoral.</p>
                 </div>
               </div>
               <div class="highlight-item">
                 <span class="material-symbols-outlined">radio</span>
                 <div>
-                  <strong>Peticiones para la Radio</strong>
-                  <p>Menciona si deseas que oremos en vivo por tu familia o ciudad.</p>
+                  <strong data-i18n="contact_hl3_title">Peticiones para la Radio</strong>
+                  <p data-i18n="contact_hl3_desc">Menciona si deseas que oremos en vivo por tu familia o ciudad.</p>
                 </div>
               </div>
             </div>
@@ -764,7 +842,7 @@
 
               <div id="formSuccessNotice" class="form-notice hidden">
                 <span class="material-symbols-outlined">check_circle</span>
-                <span>¡Gracias por contactarnos! Tu solicitud ha sido registrada y nos pondremos en contacto contigo por WhatsApp o correo.</span>
+                <span data-i18n="form_success_alert">¡Gracias por contactarnos! Tu solicitud ha sido registrada y nos pondremos en contacto contigo por WhatsApp o correo.</span>
               </div>
             </form>
           </div>
@@ -812,14 +890,75 @@
 
     <div class="footer-bottom-bar">
       <div class="section-container bottom-bar-inner">
-        <p>© 2026 MMM Turquía — Todos los derechos reservados. Radio y Misión.</p>
-        <p class="footer-quote">«El que tiene oído, oiga lo que el Espíritu dice a las iglesias» — Apocalipsis 2:7</p>
+        <p data-i18n="footer_rights">© 2026 MMM Turquía — Todos los derechos reservados. Radio y Misión.</p>
+        <p class="footer-quote" data-i18n="footer_verse">«El que tiene oído, oiga lo que el Espíritu dice a las iglesias» — Apocalipsis 2:7</p>
       </div>
     </div>
   </footer>
 
   <!-- ======================================================================
-       9. CARGA MODULAR DE SCRIPTS JS SEPARADOS
+       9. MODAL DE INSTALACIÓN PWA (WEB APP & APK READY)
+       ====================================================================== -->
+  <div id="pwaInstallModal" class="pwa-install-modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pwaModalHeading">
+    <div class="pwa-modal-card">
+      <div class="pwa-modal-header">
+        <div class="pwa-modal-icon-wrap">
+          <img src="./assets/icons/app-icon.svg" alt="Ícono de Radio Esperanza" class="pwa-modal-app-icon">
+        </div>
+        <div class="pwa-modal-titles">
+          <h3 id="pwaModalHeading" class="pwa-modal-title" data-i18n="pwa_modal_title">Instalar Radio Esperanza en tu Celular</h3>
+          <p class="pwa-modal-tagline">MMM Turquía — Web App Oficial</p>
+        </div>
+        <button id="closePwaModalBtn" class="pwa-modal-close-btn" aria-label="Cerrar modal">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="pwa-modal-body">
+        <p class="pwa-modal-description" data-i18n="pwa_modal_desc">
+          Disfruta de la mejor experiencia: reproduce con la pantalla bloqueada, sin interrupciones y con acceso directo desde tu pantalla de inicio como una aplicación nativa.
+        </p>
+
+        <!-- Beneficios en viñetas minimalistas -->
+        <div class="pwa-features-list">
+          <div class="pwa-feature-item">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span>Audio 24/7 sin cortes con la pantalla apagada</span>
+          </div>
+          <div class="pwa-feature-item">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span>Acceso instantáneo con 1 toque desde tu pantalla</span>
+          </div>
+          <div class="pwa-feature-item">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span>Bajo consumo de datos móviles y batería</span>
+          </div>
+        </div>
+
+        <!-- Instrucciones especiales para iOS Safari si aplica -->
+        <div id="iosInstallGuide" class="pwa-ios-instructions hidden">
+          <strong data-i18n="pwa_modal_ios_guide">En iPhone / iPad (Safari):</strong>
+          <ol class="ios-steps-list">
+            <li data-i18n="pwa_modal_ios_step1">1. Toca el botón Compartir (icono cuadrado con flecha hacia arriba).</li>
+            <li data-i18n="pwa_modal_ios_step2">2. Desplaza hacia abajo y selecciona «Añadir a pantalla de inicio».</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="pwa-modal-footer">
+        <button id="confirmPwaInstallBtn" class="btn-confirm-install">
+          <span class="material-symbols-outlined">download</span>
+          <span data-i18n="pwa_modal_btn_install">Instalar Aplicación Ahora</span>
+        </button>
+        <button id="dismissPwaModalBtn" class="btn-dismiss-modal" data-i18n="pwa_modal_close">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       10. CARGA MODULAR DE SCRIPTS JS SEPARADOS
        ====================================================================== -->
   <script type="module" src="./assets/js/lang.js"></script>
   <script type="module" src="./assets/js/radio-schedule.js"></script>

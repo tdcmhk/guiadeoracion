@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "MMM Turquía — Radio Esperanza 24/7",
+  "short_name": "Radio Esperanza",
+  "description": "Radio cristiana 24/7 de alabanzas, Palabra de Dios y oración en vivo desde Turquía. Fonoteca a la carta y guía de programación.",
+  "id": "/?source=pwa",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#070d19",
+  "theme_color": "#070d19",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["music", "news", "lifestyle", "education"],
+  "icons": [
+    {
+      "src": "./assets/icons/app-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icons/app-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Radio en Vivo",
+      "short_name": "En Vivo",
+      "description": "Escuchar señal en directo 24/7",
+      "url": "./index.html#radio-player-section",
+      "icons": [{ "src": "./assets/icons/app-icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Guía de Programación",
+      "short_name": "Horarios",
+      "description": "Consultar la programación de hoy",
+      "url": "./index.html#programacion-section",
+      "icons": [{ "src": "./assets/icons/app-icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Fonoteca a la Carta",
+      "short_name": "A la Carta",
+      "description": "Estudios bíblicos y alabanzas grabadas",
+      "url": "./index.html#podcast-section",
+      "icons": [{ "src": "./assets/icons/app-icon.svg", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}

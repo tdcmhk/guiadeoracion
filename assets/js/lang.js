@@ -140,6 +140,24 @@ export const translations = {
     form_toast_link_copied: "¡Enlace de la radio copiado al portapapeles!",
     form_toast_pwa_install: "Para instalar la App: abre el menú de tu navegador y pulsa 'Añadir a pantalla de inicio'.",
 
+    // Reproductor Estático Inferior & PWA
+    bottom_tag_live: "EN VIVO 24/7",
+    bottom_tag_ondemand: "A LA CARTA",
+    bottom_station_default: "MMM Turquía — Radio Esperanza",
+    bottom_station_desc: "Señal en directo desde Estambul",
+    bottom_btn_live: "En Vivo",
+    bottom_btn_expand: "Ver sintonizador",
+    nav_install_app: "Instalar",
+    pwa_install_label: "Instalar",
+    pwa_install_btn_tip: "Instalar App de Radio en tu celular",
+    pwa_modal_title: "Instalar Radio Esperanza en tu Celular",
+    pwa_modal_desc: "Disfruta de la mejor experiencia: reproduce con la pantalla bloqueada, sin interrupciones y con acceso directo desde tu pantalla de inicio como una aplicación nativa.",
+    pwa_modal_btn_install: "Instalar Aplicación Ahora",
+    pwa_modal_ios_guide: "En iPhone / iPad (Safari):",
+    pwa_modal_ios_step1: "1. Toca el botón Compartir (icono cuadrado con flecha hacia arriba).",
+    pwa_modal_ios_step2: "2. Desplaza hacia abajo y selecciona «Añadir a pantalla de inicio».",
+    pwa_modal_close: "Cerrar",
+
     // Pie de Página (Footer)
     footer_tagline: "Radio Esperanza 24/7 & Testimonio en la Cuna de la Iglesia Histórica.",
     footer_nav_title: "Navegación",
@@ -270,6 +288,24 @@ export const translations = {
     form_success_alert: "Bize ulaştığınız için teşekkür ederiz! Talebiniz kaydedildi; ekibimiz sizinle WhatsApp veya e-posta yoluyla iletişime geçecektir.",
     form_toast_link_copied: "Radyo bağlantısı panoya kopyalandı!",
     form_toast_pwa_install: "Uygulamayı yüklemek için: Tarayıcı menüsünü açın ve 'Ana ekrana ekle' seçeneğine dokunun.",
+
+    // Alt Sabit Oynatıcı & PWA
+    bottom_tag_live: "CANLI YAYIN 7/24",
+    bottom_tag_ondemand: "İSTEĞE BAĞLI",
+    bottom_station_default: "MMM Türkiye — Umut Radyosu",
+    bottom_station_desc: "İstanbul'dan canlı yayın",
+    bottom_btn_live: "Canlı Yayın",
+    bottom_btn_expand: "Radyoyu Büyüt",
+    nav_install_app: "Yükle",
+    pwa_install_label: "Yükle",
+    pwa_install_btn_tip: "Radyo uygulamasını telefonuna yükle",
+    pwa_modal_title: "Umut Radyosu'nu Telefonuna Yükle",
+    pwa_modal_desc: "En iyi mobil deneyimin tadını çıkarın: ekran kilitliyken kesintisiz dinleyin ve ana ekranınızdan yerel bir uygulama gibi tek dokunuşla bağlanın.",
+    pwa_modal_btn_install: "Uygulamayı Şimdi Yükle",
+    pwa_modal_ios_guide: "iPhone / iPad (Safari) için:",
+    pwa_modal_ios_step1: "1. Paylaş düğmesine dokunun (yukarı oklu kare simge).",
+    pwa_modal_ios_step2: "2. Aşağı kaydırıp «Ana Ekrana Ekle»yi seçin.",
+    pwa_modal_close: "Kapat",
 
     // Pie de Página (Footer)
     footer_tagline: "Umut Radyosu 7/24 & Tarihi Kiliselerin Beşiğinde Canlı Tanıklık.",
@@ -402,6 +438,24 @@ export const translations = {
     form_toast_link_copied: "Radio link copied to clipboard!",
     form_toast_pwa_install: "To install app: Open your browser menu and tap 'Add to Home Screen'.",
 
+    // Bottom Sticky Player & PWA
+    bottom_tag_live: "LIVE 24/7",
+    bottom_tag_ondemand: "ON DEMAND",
+    bottom_station_default: "MMM Turkey — Hope Radio",
+    bottom_station_desc: "Live broadcast from Istanbul",
+    bottom_btn_live: "Live",
+    bottom_btn_expand: "Open Tuner",
+    nav_install_app: "Install",
+    pwa_install_label: "Install",
+    pwa_install_btn_tip: "Install Radio App on your mobile device",
+    pwa_modal_title: "Install Hope Radio on your Phone",
+    pwa_modal_desc: "Enjoy the best mobile experience: listen with locked screen, no interruptions, and instant 1-tap launch from your home screen like a native app.",
+    pwa_modal_btn_install: "Install Application Now",
+    pwa_modal_ios_guide: "On iPhone / iPad (Safari):",
+    pwa_modal_ios_step1: "1. Tap the Share button (square icon with arrow pointing up).",
+    pwa_modal_ios_step2: "2. Scroll down and tap «Add to Home Screen».",
+    pwa_modal_close: "Close",
+
     // Footer
     footer_tagline: "Hope Radio 24/7 & Witness in the Cradle of the Early Church.",
     footer_nav_title: "Navigation",
@@ -532,6 +586,24 @@ export const translations = {
     form_success_alert: "Grazie per averci contattato! La tua richiesta è stata registrata e il nostro team ti contatterà presto via WhatsApp o email.",
     form_toast_link_copied: "Link della radio copiato negli appunti!",
     form_toast_pwa_install: "Per installare l'app: Apri il menu del browser e tocca 'Aggiungi a schermata Home'.",
+
+    // Riproduttore Fisso Inferiore & PWA
+    bottom_tag_live: "IN DIRETTA 24/7",
+    bottom_tag_ondemand: "A RICHIESTA",
+    bottom_station_default: "MMM Turchia — Radio Speranza",
+    bottom_station_desc: "Trasmissione in diretta da Istanbul",
+    bottom_btn_live: "In Diretta",
+    bottom_btn_expand: "Apri Sintonizzatore",
+    nav_install_app: "Installa",
+    pwa_install_label: "Installa",
+    pwa_install_btn_tip: "Installa l'App Radio sul tuo telefono",
+    pwa_modal_title: "Installa Radio Speranza sul tuo Telefono",
+    pwa_modal_desc: "Goditi la migliore esperienza mobile: ascolta con lo schermo bloccato, senza interruzioni e con accesso diretto dalla schermata iniziale come un'app nativa.",
+    pwa_modal_btn_install: "Installa Applicazione Ora",
+    pwa_modal_ios_guide: "Su iPhone / iPad (Safari):",
+    pwa_modal_ios_step1: "1. Tocca il pulsante Condividi (icona quadrata con freccia verso l'alto).",
+    pwa_modal_ios_step2: "2. Scorri verso il basso e tocca «Aggiungi alla schermata Home».",
+    pwa_modal_close: "Chiudi",
 
     // Footer
     footer_tagline: "Radio Speranza 24/7 & Testimonianza nella Culla della Chiesa Storica.",

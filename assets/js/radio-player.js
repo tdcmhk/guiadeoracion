@@ -83,10 +83,12 @@ class RadioPlayerEngine {
   // ==========================================================================
   init() {
     this.cacheElements();
+    this.setupServiceWorker();
     this.setupLiveAudio();
     this.setupOnDemandAudio();
     this.bindLiveControls();
     this.bindOnDemandControls();
+    this.initPersistentBottomPlayer();
     this.bindFonotecaFilters();
     this.bindNavigationAndUi();
     this.bindPastoralForm();
@@ -94,7 +96,21 @@ class RadioPlayerEngine {
     this.startListenersSimulator();
     this.startLiveProgressTracker();
 
-    console.log('📻 [RadioPlayerEngine] Inicializado correctamente.');
+    console.log('📻 [RadioPlayerEngine] Inicializado correctamente con reproductor persistente.');
+  }
+
+  setupServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => {
+            console.log('✅ [PWA] Service Worker registrado:', reg.scope);
+          })
+          .catch((err) => {
+            console.warn('⚠️ [PWA] Registro de Service Worker omitido:', err);
+          });
+      });
+    }
   }
 
   cacheElements() {
@@ -121,20 +137,40 @@ class RadioPlayerEngine {
     this.showProgressFill = document.getElementById('showProgressFill');
     this.currentShowRemaining = document.getElementById('currentShowRemaining');
 
-    // On-Demand Sticky Mini-Player
+    // Reproductor Persistente Inferior (Dock Estático)
     this.audioOnDemand = document.getElementById('onDemandAudioElement');
     this.miniPlayerBar = document.getElementById('onDemandMiniPlayer');
     this.miniTrackTitle = document.getElementById('miniTrackTitle');
     this.miniTrackHost = document.getElementById('miniTrackHost');
     this.miniTrackCover = document.getElementById('miniTrackCover');
+    this.miniTrackTag = document.getElementById('miniTrackTag');
+    this.bottomLiveDot = document.getElementById('bottomLiveDot');
+    this.bottomEqualizerBars = document.getElementById('bottomEqualizerBars');
     this.btnMiniPlay = document.getElementById('miniPlayBtn');
     this.iconMiniPlay = document.getElementById('miniPlayIcon');
     this.btnMiniRewind = document.getElementById('miniRewindBtn');
     this.btnMiniForward = document.getElementById('miniForwardBtn');
     this.btnMiniClose = document.getElementById('miniCloseBtn');
+    this.miniReturnToLiveBtn = document.getElementById('miniReturnToLiveBtn');
+    this.miniMuteBtn = document.getElementById('miniMuteBtn');
+    this.miniVolumeIcon = document.getElementById('miniVolumeIcon');
+    this.miniExpandBtn = document.getElementById('miniExpandBtn');
+    this.miniTimelineRow = document.getElementById('miniTimelineRow');
     this.miniProgressSlider = document.getElementById('miniProgressSlider');
     this.miniCurrentTime = document.getElementById('miniCurrentTime');
     this.miniTotalTime = document.getElementById('miniTotalTime');
+
+    // Instalación PWA & Mobile App
+    this.miniInstallAppBtn = document.getElementById('miniInstallAppBtn');
+    this.headerInstallBtn = document.getElementById('headerInstallBtn');
+    this.drawerInstallBtn = document.getElementById('drawerInstallBtn');
+    this.appNavInstallBtn = document.getElementById('appNavInstallBtn');
+    this.pwaInstallModal = document.getElementById('pwaInstallModal');
+    this.closePwaModalBtn = document.getElementById('closePwaModalBtn');
+    this.dismissPwaModalBtn = document.getElementById('dismissPwaModalBtn');
+    this.confirmPwaInstallBtn = document.getElementById('confirmPwaInstallBtn');
+    this.iosInstallGuide = document.getElementById('iosInstallGuide');
+    this.appMobileTabs = document.querySelectorAll('.app-mobile-tab-bar .mobile-tab-item');
 
     // Fonoteca
     this.podcastSearchInput = document.getElementById('podcastSearchInput');
@@ -367,14 +403,12 @@ class RadioPlayerEngine {
       this.labelVolumeValue.textContent = `${Math.round(vol * 100)}%`;
     }
 
+    const iconName = (vol === 0 || this.isMuted) ? 'volume_off' : (vol < 0.4 ? 'volume_down' : 'volume_up');
     if (this.iconVolume) {
-      if (vol === 0 || this.isMuted) {
-        this.iconVolume.textContent = 'volume_off';
-      } else if (vol < 0.4) {
-        this.iconVolume.textContent = 'volume_down';
-      } else {
-        this.iconVolume.textContent = 'volume_up';
-      }
+      this.iconVolume.textContent = iconName;
+    }
+    if (this.miniVolumeIcon) {
+      this.miniVolumeIcon.textContent = iconName;
     }
   }
 
@@ -384,7 +418,9 @@ class RadioPlayerEngine {
       this.iconMasterPlay.textContent = isPlaying ? 'pause' : 'play_arrow';
     }
     if (this.textMasterPlay) {
-      this.textMasterPlay.textContent = isPlaying ? 'Pausar Transmisión' : 'Escuchar en Vivo';
+      const pauseStr = window.t ? window.t('btn_pause_live') : 'Pausar Transmisión';
+      const playStr = window.t ? window.t('btn_listen_live') : 'Escuchar en Vivo';
+      this.textMasterPlay.textContent = isPlaying ? pauseStr : playStr;
     }
     if (this.btnMasterPlay) {
       this.btnMasterPlay.classList.toggle('is-playing', isPlaying);
@@ -399,6 +435,19 @@ class RadioPlayerEngine {
     const artworkWrapper = document.querySelector('.artwork-wrapper');
     if (artworkWrapper) {
       artworkWrapper.classList.toggle('is-broadcasting', isPlaying);
+    }
+
+    // 4. Sincronizar Reproductor Estático Persistente si estamos en modo Radio en Vivo
+    if (!this.isPlayingOnDemand) {
+      if (this.iconMiniPlay) {
+        this.iconMiniPlay.textContent = isPlaying ? 'pause' : 'play_arrow';
+      }
+      if (this.bottomEqualizerBars) {
+        this.bottomEqualizerBars.classList.toggle('is-playing', isPlaying);
+      }
+      if (this.bottomLiveDot) {
+        this.bottomLiveDot.classList.toggle('pulse-animation', isPlaying);
+      }
     }
   }
 
@@ -480,14 +529,7 @@ class RadioPlayerEngine {
       });
     });
 
-    // 2. Play / Pause en el Mini Player flotante
-    if (this.btnMiniPlay) {
-      this.btnMiniPlay.addEventListener('click', () => {
-        this.toggleOnDemandPlayback();
-      });
-    }
-
-    // 3. Adelantar / Retroceder 15s
+    // 2. Adelantar / Retroceder 15s
     if (this.btnMiniRewind) {
       this.btnMiniRewind.addEventListener('click', () => {
         if (this.audioOnDemand) {
@@ -504,7 +546,7 @@ class RadioPlayerEngine {
       });
     }
 
-    // 4. Slider de avance
+    // 3. Slider de avance de podcast
     if (this.miniProgressSlider) {
       this.miniProgressSlider.addEventListener('input', (e) => {
         if (this.audioOnDemand && this.audioOnDemand.duration) {
@@ -514,12 +556,95 @@ class RadioPlayerEngine {
       });
     }
 
-    // 5. Cerrar mini player
+    // 4. Cerrar reproducción de podcast (vuelve al modo Live)
     if (this.btnMiniClose) {
       this.btnMiniClose.addEventListener('click', () => {
         this.closeOnDemandPlayer();
       });
     }
+  }
+
+  /**
+   * Inicializar el Reproductor Estático Persistente Inferior (Dock Mobile-First)
+   */
+  initPersistentBottomPlayer() {
+    // 1. Iniciar en modo Live Radio 24/7 (siempre visible)
+    this.returnToLiveRadioState();
+
+    // 2. Play / Pause unificado en el reproductor inferior
+    if (this.btnMiniPlay) {
+      this.btnMiniPlay.addEventListener('click', () => {
+        if (this.currentEpisodePlaying) {
+          this.toggleOnDemandPlayback();
+        } else {
+          this.toggleLivePlayback();
+        }
+      });
+    }
+
+    // 3. Botón Silenciar / Volumen rápido en la barra inferior
+    if (this.miniMuteBtn) {
+      this.miniMuteBtn.addEventListener('click', () => {
+        this.toggleMute();
+      });
+    }
+
+    // 4. Botón Volver a En Vivo (cuando se escucha un episodio a la carta)
+    if (this.miniReturnToLiveBtn) {
+      this.miniReturnToLiveBtn.addEventListener('click', () => {
+        this.returnToLiveRadio();
+      });
+    }
+
+    // 5. Botones de instalación PWA en Header, Drawer, Bottom Nav y Mini Player
+    const installButtons = [
+      this.miniInstallAppBtn,
+      this.headerInstallBtn,
+      this.drawerInstallBtn,
+      this.appNavInstallBtn,
+      this.btnPwaInstall,
+    ];
+
+    installButtons.forEach((btn) => {
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.openPwaInstallModal();
+        });
+      }
+    });
+
+    // 6. Botones de cierre y confirmación del modal PWA
+    if (this.closePwaModalBtn) {
+      this.closePwaModalBtn.addEventListener('click', () => this.closePwaInstallModal());
+    }
+    if (this.dismissPwaModalBtn) {
+      this.dismissPwaModalBtn.addEventListener('click', () => this.closePwaInstallModal());
+    }
+    if (this.confirmPwaInstallBtn) {
+      this.confirmPwaInstallBtn.addEventListener('click', () => this.handlePwaInstallConfirmation());
+    }
+    if (this.pwaInstallModal) {
+      this.pwaInstallModal.addEventListener('click', (e) => {
+        if (e.target === this.pwaInstallModal) this.closePwaInstallModal();
+      });
+    }
+
+    // 7. Navegación rápida por pestañas móviles (.app-mobile-tab-bar)
+    if (this.appMobileTabs && this.appMobileTabs.length > 0) {
+      this.appMobileTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          if (tab.classList.contains('tab-install')) return; // Manejado por modal PWA
+          this.appMobileTabs.forEach((t) => t.classList.remove('active'));
+          tab.classList.add('active');
+        });
+      });
+    }
+
+    // 8. Escuchar evento de cambio de idioma global para sincronizar etiquetas
+    window.addEventListener('idiomaCambiado', () => {
+      this.syncLanguageInBottomPlayer();
+    });
   }
 
   handleEpisodeClick(episode) {
@@ -531,23 +656,29 @@ class RadioPlayerEngine {
       return;
     }
 
-    // Nuevo episodio seleccionado: Pausar Live Radio para evitar choque de sonido
+    // Nuevo episodio: Pausar Live Radio para evitar superposición
     if (this.isPlayingLive && this.audioLive) {
       this.audioLive.pause();
     }
 
     this.currentEpisodePlaying = episode;
+    this.isPlayingOnDemand = true;
 
-    // Actualizar datos del Mini Player flotante
+    // Cambiar a Modo A la Carta en el reproductor inferior persistente
+    if (this.miniRewindBtn) this.miniRewindBtn.classList.remove('hidden');
+    if (this.miniForwardBtn) this.miniForwardBtn.classList.remove('hidden');
+    if (this.miniTimelineRow) this.miniTimelineRow.classList.remove('hidden');
+    if (this.miniReturnToLiveBtn) this.miniReturnToLiveBtn.classList.remove('hidden');
+    if (this.btnMiniClose) this.btnMiniClose.classList.remove('hidden');
+    if (this.bottomLiveDot) this.bottomLiveDot.classList.add('hidden');
+    if (this.bottomEqualizerBars) this.bottomEqualizerBars.classList.remove('is-playing');
+
+    const onDemandTag = window.t ? window.t('bottom_tag_ondemand') : 'A LA CARTA';
+    if (this.miniTrackTag) this.miniTrackTag.textContent = onDemandTag;
     if (this.miniTrackTitle) this.miniTrackTitle.textContent = episode.title || 'Episodio Grabado';
     if (this.miniTrackHost) this.miniTrackHost.textContent = episode.host || 'Equipo Pastoral';
     if (this.miniTrackCover && episode.cover) this.miniTrackCover.src = episode.cover;
-
-    // Mostrar el mini player flotante quitando clase 'hidden'
-    if (this.miniPlayerBar) {
-      this.miniPlayerBar.classList.remove('hidden');
-      this.miniPlayerBar.classList.add('is-visible');
-    }
+    if (this.iconMiniPlay) this.iconMiniPlay.textContent = 'pause';
 
     // Cargar y reproducir
     this.audioOnDemand.src = episode.src;
@@ -577,10 +708,122 @@ class RadioPlayerEngine {
     this.isPlayingOnDemand = false;
     this.currentEpisodePlaying = null;
     this.updateEpisodePlayButtons(false);
+    this.returnToLiveRadioState();
+  }
 
-    if (this.miniPlayerBar) {
-      this.miniPlayerBar.classList.add('hidden');
-      this.miniPlayerBar.classList.remove('is-visible');
+  returnToLiveRadio() {
+    if (this.audioOnDemand) {
+      this.audioOnDemand.pause();
+      this.audioOnDemand.currentTime = 0;
+    }
+    this.isPlayingOnDemand = false;
+    this.currentEpisodePlaying = null;
+    this.updateEpisodePlayButtons(false);
+    this.returnToLiveRadioState();
+
+    // Reanudar señal en directo
+    if (!this.isPlayingLive && this.audioLive) {
+      this.audioLive.play().catch(() => {});
+    }
+  }
+
+  returnToLiveRadioState() {
+    this.isPlayingOnDemand = false;
+    this.currentEpisodePlaying = null;
+
+    // Ocultar controles específicos de podcast
+    if (this.miniRewindBtn) this.miniRewindBtn.classList.add('hidden');
+    if (this.miniForwardBtn) this.miniForwardBtn.classList.add('hidden');
+    if (this.miniTimelineRow) this.miniTimelineRow.classList.add('hidden');
+    if (this.miniReturnToLiveBtn) this.miniReturnToLiveBtn.classList.add('hidden');
+    if (this.btnMiniClose) this.btnMiniClose.classList.add('hidden');
+
+    // Restaurar indicador de señal en directo
+    if (this.bottomLiveDot) {
+      this.bottomLiveDot.classList.remove('hidden');
+      this.bottomLiveDot.classList.toggle('pulse-animation', this.isPlayingLive);
+    }
+
+    // Restaurar textos y carátula de la estación en vivo
+    const liveTag = window.t ? window.t('bottom_tag_live') : 'EN VIVO 24/7';
+    if (this.miniTrackTag) this.miniTrackTag.textContent = liveTag;
+
+    const defaultTitle = window.t ? window.t('bottom_station_default') : 'MMM TURQUÍA — Radio Esperanza';
+    const liveTitle = this.currentShowTitle?.textContent || defaultTitle;
+    if (this.miniTrackTitle) this.miniTrackTitle.textContent = liveTitle;
+
+    const defaultHost = window.t ? window.t('bottom_station_desc') : 'Señal en directo desde Estambul';
+    const liveHost = this.currentShowHost?.textContent || defaultHost;
+    if (this.miniTrackHost) this.miniTrackHost.textContent = liveHost;
+
+    if (this.miniTrackCover) {
+      this.miniTrackCover.src = this.currentShowCover?.src || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=150&q=80';
+    }
+
+    // Restaurar icono de reproducción inferior según el estado en vivo
+    if (this.iconMiniPlay) {
+      this.iconMiniPlay.textContent = this.isPlayingLive ? 'pause' : 'play_arrow';
+    }
+    if (this.bottomEqualizerBars) {
+      this.bottomEqualizerBars.classList.toggle('is-playing', this.isPlayingLive);
+    }
+  }
+
+  syncLanguageInBottomPlayer() {
+    if (!this.isPlayingOnDemand) {
+      if (this.miniTrackTag) {
+        this.miniTrackTag.textContent = window.t ? window.t('bottom_tag_live') : 'EN VIVO 24/7';
+      }
+    } else {
+      if (this.miniTrackTag) {
+        this.miniTrackTag.textContent = window.t ? window.t('bottom_tag_ondemand') : 'A LA CARTA';
+      }
+    }
+  }
+
+  openPwaInstallModal() {
+    if (!this.pwaInstallModal) return;
+    this.pwaInstallModal.classList.remove('hidden');
+
+    // Detectar iOS Safari para mostrar las instrucciones visuales paso a paso
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIos = /iphone|ipad|ipod/.test(userAgent);
+
+    if (this.iosInstallGuide) {
+      if (isIos) {
+        this.iosInstallGuide.classList.remove('hidden');
+        if (this.confirmPwaInstallBtn) {
+          this.confirmPwaInstallBtn.style.display = 'none';
+        }
+      } else {
+        this.iosInstallGuide.classList.add('hidden');
+        if (this.confirmPwaInstallBtn) {
+          this.confirmPwaInstallBtn.style.display = 'flex';
+        }
+      }
+    }
+  }
+
+  closePwaInstallModal() {
+    if (this.pwaInstallModal) {
+      this.pwaInstallModal.classList.add('hidden');
+    }
+  }
+
+  handlePwaInstallConfirmation() {
+    if (this.deferredPwaPrompt) {
+      this.deferredPwaPrompt.prompt();
+      this.deferredPwaPrompt.userChoice.then((choice) => {
+        if (choice.outcome === 'accepted') {
+          this.showToastNotification('¡Gracias por instalar Radio Esperanza en tu pantalla!');
+        }
+        this.deferredPwaPrompt = null;
+        this.closePwaInstallModal();
+      });
+    } else {
+      this.closePwaInstallModal();
+      const promptMsg = window.t ? window.t('form_toast_pwa_install') : 'Para instalar la App: abre el menú de tu navegador y pulsa "Añadir a pantalla de inicio".';
+      this.showToastNotification(promptMsg);
     }
   }
 
@@ -1016,6 +1259,11 @@ window.RadioPlayer = {
     if (radioEngine.currentShowTitle && title) radioEngine.currentShowTitle.textContent = title;
     if (radioEngine.currentShowHost && host) radioEngine.currentShowHost.textContent = host;
     if (radioEngine.currentShowCover && cover) radioEngine.currentShowCover.src = cover;
+    if (!radioEngine.isPlayingOnDemand) {
+      if (radioEngine.miniTrackTitle && title) radioEngine.miniTrackTitle.textContent = title;
+      if (radioEngine.miniTrackHost && host) radioEngine.miniTrackHost.textContent = host;
+      if (radioEngine.miniTrackCover && cover) radioEngine.miniTrackCover.src = cover;
+    }
     radioEngine.updateMediaSessionMetadata();
   },
 };
