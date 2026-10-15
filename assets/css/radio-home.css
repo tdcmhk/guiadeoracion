@@ -71,7 +71,11 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 75px;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -81,10 +85,17 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  max-width: 100vw;
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
-  padding-bottom: calc(115px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(125px + env(safe-area-inset-bottom, 0px));
+}
+
+main, section, header, footer, aside, nav, article {
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Accesibilidad y Foco Visible */
@@ -93,7 +104,7 @@ body {
   outline-offset: 3px;
 }
 
-img {
+img, video, canvas, audio, iframe {
   max-width: 100%;
   height: auto;
   display: block;
@@ -464,7 +475,8 @@ button {
   top: -150px;
   left: 50%;
   transform: translateX(-50%);
-  width: 800px;
+  width: min(800px, 100vw);
+  max-width: 100%;
   height: 500px;
   background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(212, 175, 55, 0.08) 50%, transparent 70%);
   filter: blur(80px);
@@ -922,8 +934,11 @@ button {
 
 /* Tabs de Días */
 .schedule-days-tabs {
+  width: 100%;
+  max-width: 100%;
   margin-bottom: 1.5rem;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   padding-bottom: 0.5rem;
 }
 
@@ -1239,7 +1254,7 @@ button {
 /* Grid de Tarjetas de Episodios */
 .podcast-episodes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(270px, 100%), 1fr));
   gap: 1.75rem;
 }
 
@@ -1945,7 +1960,7 @@ button {
 
 .news-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
   gap: 2rem;
 }
 
@@ -2392,33 +2407,118 @@ button {
 }
 
 @media (max-width: 768px) {
-  /* Navbar */
+  /* Contenedores Generales */
+  .section-container {
+    padding: 0 1rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .section-title-wrapper {
+    margin-bottom: 2rem;
+  }
+
+  .section-heading {
+    font-size: 1.6rem;
+  }
+
+  .section-subheading {
+    font-size: 0.92rem;
+  }
+
+  /* Navbar Limpio y Compacto Estilo App */
   .nav-menu,
-  .btn-nav-action {
-    display: none;
+  .btn-nav-action,
+  .btn-header-install,
+  .nav-live-indicator {
+    display: none !important;
+  }
+
+  .nav-container {
+    padding: 0.65rem 1rem;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-brand {
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .brand-emblem {
+    width: 38px;
+    height: 38px;
+  }
+
+  .emblem-icon {
+    font-size: 20px;
+  }
+
+  .brand-title {
+    font-size: 1.02rem;
+    white-space: nowrap;
+  }
+
+  .brand-subtitle {
+    font-size: 0.64rem;
+    white-space: nowrap;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .lang-btn {
+    padding: 0.38rem 0.65rem;
+    font-size: 0.8rem;
   }
 
   .mobile-toggle-btn {
     display: inline-flex;
+    width: 38px;
+    height: 38px;
   }
 
   /* Hero Console */
   .radio-hero-section {
-    padding: 2rem 0 3rem;
+    padding: 1.75rem 0 2.5rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .radio-hero-header {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    width: 100%;
   }
 
   .radio-console-card {
-    padding: 1.5rem;
+    padding: 1.25rem 0.9rem;
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius-lg);
   }
 
   .console-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
     text-align: center;
-    gap: 1.5rem;
+    width: 100%;
   }
 
   .console-cover-col {
     margin: 0 auto;
+    width: 100%;
+  }
+
+  .artwork-wrapper {
+    width: 170px;
+    height: 170px;
+    margin: 0 auto;
+    max-width: 100%;
   }
 
   .station-meta-strip,
@@ -2426,45 +2526,189 @@ button {
     justify-content: center;
   }
 
+  .current-show-title {
+    font-size: clamp(1.3rem, 5.5vw, 1.75rem);
+    word-break: break-word;
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+
   .current-show-desc {
-    margin: 0 auto 1.5rem;
+    margin: 0 auto 1.25rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
   }
 
   .console-controls-row {
     justify-content: center;
-    gap: 1rem;
+    gap: 0.75rem;
+    width: 100%;
   }
 
   .btn-master-play {
     width: 100%;
     justify-content: center;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.95rem;
   }
 
   .volume-control-box {
     width: 100%;
     justify-content: center;
+    padding: 0.5rem 1rem;
   }
 
   .stream-quick-actions {
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     justify-content: center;
+  }
+
+  .btn-action-tool {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 110px;
+    justify-content: center;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.78rem;
+  }
+
+  .stream-status-bar {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
   }
 
   .upcoming-teaser-card {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
+    width: 100%;
   }
 
-  /* Schedule */
+  .teaser-item {
+    width: 100%;
+    word-break: break-word;
+    font-size: 0.85rem;
+  }
+
+  /* Schedule / Programación */
+  .schedule-section {
+    padding: 3rem 0;
+    width: 100%;
+  }
+
+  .schedule-days-tabs {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .schedule-categories-filter {
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .cat-pill-btn {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
   .program-card {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.85rem;
+    padding: 1.1rem 1rem;
+    width: 100%;
+  }
+
+  .time-col {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .time-range {
+    font-size: 1rem;
   }
 
   .btn-listen-card {
     width: 100%;
     justify-content: center;
+    padding: 0.65rem 1rem;
+  }
+
+  /* Podcasts / Fonoteca */
+  .podcast-section {
+    padding: 3rem 0;
+    width: 100%;
+  }
+
+  .podcast-episodes-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .search-field {
+    font-size: 0.88rem;
+    padding: 0.75rem 2.5rem 0.75rem 2.75rem;
+  }
+
+  /* Noticias */
+  .news-section {
+    padding: 3rem 0;
+    width: 100%;
+  }
+
+  .news-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  /* Contacto y Formularios */
+  .contact-section {
+    padding: 3rem 0 4rem;
+    width: 100%;
+  }
+
+  .contact-box-wrapper {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .contact-info-panel,
+  .contact-form-panel {
+    padding: 1.75rem 1rem;
+    width: 100%;
+  }
+
+  .form-row-2 {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    width: 100%;
+  }
+
+  .contact-panel-title {
+    font-size: 1.4rem;
+  }
+
+  /* Footer */
+  .radio-footer {
+    padding: 3rem 0 0;
+    width: 100%;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .bottom-bar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
 
   /* Barra de Pestañas Móvil Integrada en el Dock */
@@ -2472,27 +2716,38 @@ button {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    width: 100%;
     padding-bottom: 0.35rem;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.35rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
 
   .mobile-tab-item {
+    flex: 1 1 0;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 2px;
     color: var(--text-dim);
     text-decoration: none;
-    font-size: 0.68rem;
+    font-size: 0.65rem;
     font-weight: 600;
-    padding: 0.2rem 0.5rem;
+    padding: 0.2rem 0.1rem;
     border-radius: var(--radius-sm);
     background: transparent;
     border: none;
     cursor: pointer;
     transition: all var(--transition-fast);
     -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-tab-item .tab-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .mobile-tab-item .material-symbols-outlined {
@@ -2511,40 +2766,79 @@ button {
 
   /* Reproductor Estático Persistente en Celulares */
   .sticky-audio-bar {
-    padding: 0.45rem 1rem calc(0.45rem + env(safe-area-inset-bottom, 0px));
+    padding: 0.35rem 0.75rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+    width: 100%;
+    max-width: 100%;
   }
 
   .mini-player-container {
-    grid-template-columns: 1fr auto;
-    gap: 0.65rem;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .mini-track-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
   }
 
   .mini-cover-wrapper {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
   }
 
   .mini-cover {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
   }
 
   .mini-meta {
-    max-width: calc(100vw - 180px);
+    flex: 1;
+    min-width: 0;
   }
 
   .mini-title {
-    font-size: 0.88rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .mini-host {
-    font-size: 0.72rem;
+    font-size: 0.66rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .mini-player-controls {
-    flex-direction: row;
-    gap: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+  }
+
+  .mini-btns-row {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .btn-mini-play {
+    width: 40px;
+    height: 40px;
+  }
+
+  .btn-mini-play .material-symbols-outlined {
+    font-size: 24px;
   }
 
   .mini-timeline-row {
@@ -2552,34 +2846,30 @@ button {
   }
 
   .mini-actions {
-    gap: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+  }
+
+  .btn-mini-action {
+    width: 34px;
+    height: 34px;
   }
 
   .btn-mini-install {
-    display: none; /* En celular se usa el botón de la barra de pestañas */
-  }
-
-  /* Form */
-  .form-row-2 {
-    grid-template-columns: 1fr;
-  }
-
-  /* Footer */
-  .footer-content {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .bottom-bar-inner {
-    flex-direction: column;
-    align-items: flex-start;
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
+  .section-container {
+    padding: 0 0.85rem;
+  }
+
   .artwork-wrapper {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 150px;
   }
 
   .radio-hero-header {
@@ -2588,22 +2878,21 @@ button {
   }
 
   .current-show-title {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
   }
 
   .btn-master-play {
-    padding: 0.85rem 1.25rem;
-    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
   }
 
-  .podcast-episodes-grid,
-  .news-cards-grid {
-    grid-template-columns: 1fr;
+  .btn-action-tool {
+    font-size: 0.74rem;
+    padding: 0.5rem 0.4rem;
   }
 
-  .contact-info-panel,
-  .contact-form-panel {
-    padding: 1.75rem 1.25rem;
+  .pwa-modal-card {
+    padding: 1.25rem 1rem;
   }
 }
 
