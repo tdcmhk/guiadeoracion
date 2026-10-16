@@ -419,15 +419,67 @@ export const INITIAL_DIARY_ENTRIES: DailyPrayerEntry[] = [
     scripture: '1 Pedro 1:15',
     category: 'orado',
     date: 'Hoy, 08:30',
-    notes: 'Clamé por fortaleza emocional y pureza en medio del entorno hostil.'
+    notes: 'Clamé por fortaleza emocional y pureza en medio del entorno hostil.',
+    blockId: 'seccion-1',
+    blockNumber: 1,
+    items: [
+      {
+        id: 'd1-m1',
+        title: 'Santidad',
+        description: 'Oremos para que las mujeres latinas y turcas que viven dispersas por las distintas ciudades comprendan su identidad en Cristo.',
+        isAnswered: false,
+        responseComments: []
+      },
+      {
+        id: 'd1-m2',
+        title: 'Regeneración',
+        description: 'Pidamos que la Palabra transforme sus pensamientos, decisiones y relaciones en sus hogares.',
+        isAnswered: true,
+        answeredDate: 'Hoy',
+        responseComments: [
+          {
+            id: 'rc-d1-1',
+            author: 'Intercesora María',
+            text: 'Una hermana en Ankara testificó que su esposo le permitió orar abiertamente en casa.',
+            date: 'Hoy, 09:15'
+          }
+        ]
+      }
+    ]
   },
   {
     id: 'd-2',
-    title: 'Provisión completa para el viaje a Bursa y Balıkesir (Bloque 7)',
+    title: 'Provisión y fidelidad para la obra en Turquía (Bloque 7)',
     scripture: '1 Pedro 4:11',
     category: 'guardado',
     date: 'Ayer, 21:00',
-    notes: 'Recordar en el ayuno de este viernes.'
+    notes: 'Recordar en el ayuno congregacional de este viernes.',
+    blockId: 'seccion-7',
+    blockNumber: 7,
+    items: [
+      {
+        id: 'd2-m1',
+        title: 'Fidelidad en el Servicio',
+        description: 'Que cada hermano que ministre lo haga según el poder que Dios da, con dedicación y perseverancia.',
+        isAnswered: true,
+        answeredDate: 'Ayer',
+        responseComments: [
+          {
+            id: 'rc-d2-1',
+            author: 'Pastor Ricardo',
+            text: '¡Gloria a Dios! Se sumaron 2 colaboradores locales para apoyar la distribución de folletos bíblicos.',
+            date: 'Ayer, 22:30'
+          }
+        ]
+      },
+      {
+        id: 'd2-m2',
+        title: 'Provisión del Reino',
+        description: 'Sustento para los viajes de visitación a las familias aisladas en Balıkesir y Bursa.',
+        isAnswered: false,
+        responseComments: []
+      }
+    ]
   },
   {
     id: 'd-3',
@@ -435,7 +487,48 @@ export const INITIAL_DIARY_ENTRIES: DailyPrayerEntry[] = [
     scripture: '1 Pedro 1:17b',
     category: 'propio',
     date: '14 Oct 2026',
-    notes: 'Pidiendo dirección para el equipo que acompañará la logística.'
+    notes: 'Pidiendo dirección para el equipo que acompañará la logística y apertura legal.',
+    isAnswered: false,
+    items: [
+      {
+        id: 'd3-m1',
+        title: 'Cita Consular',
+        description: 'Favor de Dios ante los oficiales de inmigración en la entrevista.',
+        isAnswered: true,
+        answeredDate: '13 Oct',
+        responseComments: [
+          {
+            id: 'rc-d3-1',
+            author: 'Intercesor Douglas',
+            text: 'Nos recibieron todos los documentos sin ninguna objeción inicial.',
+            date: '13 Oct 2026'
+          }
+        ]
+      },
+      {
+        id: 'd3-m2',
+        title: 'Fondos de Traslado',
+        description: 'Provisión completa para los boletos aéreos y hospedaje misionero.',
+        isAnswered: true,
+        answeredDate: '14 Oct',
+        responseComments: [
+          {
+            id: 'rc-d3-2',
+            author: 'Intercesor Douglas',
+            text: 'Una ofrenda no esperada cubrió el 100% de los pasajes. ¡Dios es fiel!',
+            date: '14 Oct 2026'
+          }
+        ]
+      }
+    ],
+    responseComments: [
+      {
+        id: 'rc-d3-main',
+        author: 'Intercesor Douglas',
+        text: 'Viendo la mano de Dios obrando paso a paso en esta petición misionera familiar.',
+        date: '14 Oct 2026'
+      }
+    ]
   },
   {
     id: 'd-4',
@@ -443,6 +536,16 @@ export const INITIAL_DIARY_ENTRIES: DailyPrayerEntry[] = [
     scripture: '1 Pedro 1:1-2',
     category: 'contestado',
     date: '10 Oct 2026',
-    notes: '¡Alabado sea el Señor! Se completó la primera entrega de Biblias en turco.'
+    notes: '¡Alabado sea el Señor! Se completó la primera entrega de Biblias en turco y ya comenzaron las reuniones.',
+    isAnswered: true,
+    answeredDate: '10 Oct 2026',
+    responseComments: [
+      {
+        id: 'rc-d4-1',
+        author: 'Hna. Claudia',
+        text: 'La familia nos recibió con té y oramos juntos por la paz en su hogar.',
+        date: '10 Oct 2026'
+      }
+    ]
   }
 ];

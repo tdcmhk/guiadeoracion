@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { NavTab, Language, PrayerBlock, DailyPrayerEntry, ChatMessage, Poll, UserProfile, UserRole } from './types';
+import { NavTab, Language, PrayerBlock, DailyPrayerEntry, ChatMessage, Poll, UserProfile, UserRole, PrayerResponseComment } from './types';
 import {
   INITIAL_PRAYER_BLOCKS,
   INITIAL_CALENDAR_EVENTS,
@@ -295,8 +295,17 @@ export default function App() {
         title: `${block.title} (Bloque ${block.number})`,
         scripture: block.scriptureRef,
         category: 'guardado',
+        blockId: block.id,
+        blockNumber: block.number,
         date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
-        notes: block.items[0]?.description
+        notes: block.context,
+        items: block.items.map((it, idx) => ({
+          id: `motive-${block.id}-${idx}-${Date.now()}`,
+          title: it.title,
+          description: it.description,
+          isAnswered: false,
+          responseComments: []
+        }))
       };
       setDiaryEntries((prev) => {
         const updated = [newEntry, ...prev];
@@ -382,6 +391,93 @@ export default function App() {
   const handleDeleteDiaryEntry = (id: string) => {
     setDiaryEntries((prev) => {
       const updated = prev.filter((e) => e.id !== id);
+      localStorage.setItem('mmmturquia_diary', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleToggleMotiveAnswered = (entryId: string, motiveId: string) => {
+    setDiaryEntries((prev) => {
+      const updated = prev.map((entry) => {
+        if (entry.id !== entryId) return entry;
+        const updatedItems = (entry.items || []).map((motive) => {
+          if (motive.id !== motiveId) return motive;
+          const nextState = !motive.isAnswered;
+          return {
+            ...motive,
+            isAnswered: nextState,
+            answeredDate: nextState ? new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : undefined
+          };
+        });
+        const hasAnyAnswered = updatedItems.some((m) => m.isAnswered);
+        return {
+          ...entry,
+          items: updatedItems,
+          isAnswered: hasAnyAnswered || entry.isAnswered
+        };
+      });
+      localStorage.setItem('mmmturquia_diary', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleToggleEntryAnswered = (entryId: string) => {
+    setDiaryEntries((prev) => {
+      const updated = prev.map((entry) => {
+        if (entry.id !== entryId) return entry;
+        const nextAnswered = !entry.isAnswered;
+        return {
+          ...entry,
+          isAnswered: nextAnswered,
+          answeredDate: nextAnswered ? new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) : undefined,
+          category: nextAnswered && entry.category === 'propio' ? 'contestado' : entry.category
+        };
+      });
+      localStorage.setItem('mmmturquia_diary', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleAddResponseComment = (entryId: string, motiveId: string | undefined, text: string) => {
+    if (!text.trim()) return;
+    const authorName = currentUser?.nombre
+      ? `${currentUser.nombre} (${(currentUser.rol || 'SEGUIDOR').toUpperCase()})`
+      : 'Intercesor en Turquía';
+
+    const newComment: PrayerResponseComment = {
+      id: `resp-${Date.now()}`,
+      author: authorName,
+      text: text.trim(),
+      date: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+    };
+
+    setDiaryEntries((prev) => {
+      const updated = prev.map((entry) => {
+        if (entry.id !== entryId) return entry;
+        if (motiveId) {
+          const updatedItems = (entry.items || []).map((motive) => {
+            if (motive.id !== motiveId) return motive;
+            return {
+              ...motive,
+              isAnswered: true,
+              answeredDate: motive.answeredDate || new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+              responseComments: [...(motive.responseComments || []), newComment]
+            };
+          });
+          return {
+            ...entry,
+            isAnswered: true,
+            items: updatedItems
+          };
+        } else {
+          return {
+            ...entry,
+            isAnswered: true,
+            answeredDate: entry.answeredDate || new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }),
+            responseComments: [...(entry.responseComments || []), newComment]
+          };
+        }
+      });
       localStorage.setItem('mmmturquia_diary', JSON.stringify(updated));
       return updated;
     });
@@ -484,8 +580,13 @@ export default function App() {
           <DiarioView
             entries={diaryEntries}
             lang={lang}
+            blocks={blocks}
+            currentUser={currentUser}
             onAddEntry={handleAddDiaryEntry}
             onDeleteEntry={handleDeleteDiaryEntry}
+            onToggleMotiveAnswered={handleToggleMotiveAnswered}
+            onToggleEntryAnswered={handleToggleEntryAnswered}
+            onAddResponseComment={handleAddResponseComment}
           />
         )}
 

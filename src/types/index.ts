@@ -114,6 +114,22 @@ export interface OnlineIntercessor {
   activeMinutes: number;
 }
 
+export interface PrayerResponseComment {
+  id: string;
+  author: string;
+  text: string;
+  date: string;
+}
+
+export interface DailyPrayerMotive {
+  id: string;
+  title: string;
+  description?: string;
+  isAnswered?: boolean;
+  answeredDate?: string;
+  responseComments?: PrayerResponseComment[];
+}
+
 export interface DailyPrayerEntry {
   id: string;
   title: string;
@@ -121,4 +137,10 @@ export interface DailyPrayerEntry {
   category: 'orado' | 'guardado' | 'contestado' | 'propio';
   date: string;
   notes?: string;
+  blockId?: string;
+  blockNumber?: number;
+  items?: DailyPrayerMotive[];
+  isAnswered?: boolean;
+  answeredDate?: string;
+  responseComments?: PrayerResponseComment[];
 }
