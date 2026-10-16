@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Language, NavTab } from '../types';
 import { translations } from '../data/i18n';
+import { usePWAInstall } from '../hooks/usePWAInstall';
+import { PWAInstallModal } from './PWAInstallModal';
 
 interface RootHomeViewProps {
   lang: Language;
@@ -16,6 +18,19 @@ export const RootHomeView: React.FC<RootHomeViewProps> = ({
   onToggleRadio
 }) => {
   const t = translations[lang] || translations.es;
+  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+  const [showInstallModal, setShowInstallModal] = useState<boolean>(false);
+
+  const handleOpenInstall = async () => {
+    if (isInstallable) {
+      const accepted = await install();
+      if (!accepted) {
+        setShowInstallModal(true);
+      }
+    } else {
+      setShowInstallModal(true);
+    }
+  };
 
   return (
     <div className="space-y-12">
@@ -49,25 +64,21 @@ export const RootHomeView: React.FC<RootHomeViewProps> = ({
               <span>Estudio Radio 24/7</span>
             </button>
 
+            {/* Botón Descargar WebApp (reemplaza los botones de intercesor y patrocinador en el Home) */}
             <button
-              onClick={() => onNavigateTab('perfil')}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#0e9594]/20 hover:bg-[#0e9594]/30 text-[#2dd4bf] font-semibold text-sm border border-[#0e9594]/50 transition-colors"
+              onClick={handleOpenInstall}
+              className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-[#0e9594] to-[#1e3a8a] text-white font-bold text-sm shadow-lg hover:scale-105 active:scale-95 transition-all border border-[#38bdf8]/40 group"
+              title="Descargar e instalar la aplicación web en tu celular o PC"
             >
-              <span className="material-symbols-outlined text-[18px]">favorite</span>
-              <span>Unirme como Intercesor</span>
-            </button>
-
-            <button
-              onClick={() => onNavigateTab('perfil')}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-slate-700 transition-colors"
-            >
-              <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
-              <span>Ser Patrocinador VIP</span>
+              <span className="material-symbols-outlined text-[20px] group-hover:translate-y-0.5 transition-transform">
+                download
+              </span>
+              <span>{isInstalled ? 'WebApp Instalada' : 'Descargar WebApp'}</span>
             </button>
 
             <a
               href="#siete-iglesias"
-              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-sm border border-slate-700 transition-colors"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-sm border border-slate-700 transition-colors"
             >
               <span className="material-symbols-outlined text-[18px]">travel_explore</span>
               <span>7 Iglesias</span>
@@ -207,6 +218,16 @@ export const RootHomeView: React.FC<RootHomeViewProps> = ({
           <span>Ir a Mi Perfil / Registrarme</span>
         </button>
       </div>
+
+      {/* Modal de Instalación / Descarga de la WebApp PWA */}
+      <PWAInstallModal
+        isOpen={showInstallModal}
+        onClose={() => setShowInstallModal(false)}
+        isInstallable={isInstallable}
+        isInstalled={isInstalled}
+        isIOS={isIOS}
+        onInstall={install}
+      />
     </div>
   );
 };

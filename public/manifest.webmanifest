@@ -1,54 +1,56 @@
 {
-  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "MMM Turquía — Radio Esperanza 24/7 & Plataforma Misionera",
+  "id": "/",
+  "name": "MMM Turquía — Radio Esperanza & Plataforma Misionera",
   "short_name": "MMM Turquía",
-  "description": "Radio cristiana 24/7 de alabanzas, Palabra de Dios y oración en vivo desde Turquía. Fonoteca a la carta, guía de programación e Intranet protegida.",
-  "id": "/?source=pwa",
-  "start_url": "/?source=pwa",
+  "description": "Radio cristiana 24/7 de alabanzas, Palabra de Dios y oración por la obra en Turquía y las 7 Iglesias del Bósforo.",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#070d19",
   "theme_color": "#070d19",
   "lang": "es",
-  "dir": "ltr",
-  "categories": ["music", "news", "lifestyle", "education"],
+  "categories": ["religion", "music", "education"],
   "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
     {
       "src": "/assets/icons/app-icon.svg",
       "sizes": "192x192 512x512",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "/assets/icons/app-icon.svg",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
     }
   ],
   "shortcuts": [
     {
       "name": "Radio en Vivo",
-      "short_name": "En Vivo",
+      "short_name": "Radio 24/7",
       "description": "Escuchar señal en directo 24/7",
-      "url": "/#radio-section",
-      "icons": [{ "src": "/assets/icons/app-icon.svg", "sizes": "192x192" }]
+      "url": "/?tab=radio",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Boletín de Oración",
       "short_name": "Boletín",
       "description": "Intercesión por los 9 bloques misioneros",
-      "url": "/#boletin",
-      "icons": [{ "src": "/assets/icons/app-icon.svg", "sizes": "192x192" }]
-    },
-    {
-      "name": "Intranet Protegida",
-      "short_name": "Intranet",
-      "description": "Acceso a diario y documentos pastorales",
-      "url": "/#intranet",
-      "icons": [{ "src": "/assets/icons/app-icon.svg", "sizes": "192x192" }]
+      "url": "/?tab=boletin",
+      "icons": [{ "src": "/pwa-192x192.png", "sizes": "192x192" }]
     }
-  ],
-  "prefer_related_applications": false
+  ]
 }

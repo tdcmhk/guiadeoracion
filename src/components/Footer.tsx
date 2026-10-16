@@ -1,7 +1,22 @@
 import React, { useState } from 'react';
+import { usePWAInstall } from '../hooks/usePWAInstall';
+import { PWAInstallModal } from './PWAInstallModal';
 
 export const Footer: React.FC = () => {
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [showInstallModal, setShowInstallModal] = useState(false);
+  const { isInstallable, isInstalled, isIOS, install } = usePWAInstall();
+
+  const handleOpenInstall = async () => {
+    if (isInstallable) {
+      const accepted = await install();
+      if (!accepted) {
+        setShowInstallModal(true);
+      }
+    } else {
+      setShowInstallModal(true);
+    }
+  };
 
   const handleShareWhatsApp = () => {
     const text = 'Te invito a unirte a la Intranet y Boletín de Oración por la Movilización en Turquía: ';
@@ -84,11 +99,12 @@ export const Footer: React.FC = () => {
 
             {/* Install PWA Button */}
             <button
-              onClick={() => alert('Para instalar en tu celular: Toca el menú de tu navegador y selecciona "Agregar a la pantalla principal" o "Instalar App".')}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-gradient-to-r from-[#0e9594] to-[#1a365d] text-white text-xs font-bold shadow-md hover:scale-105 active:scale-95 transition-transform"
+              onClick={handleOpenInstall}
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-gradient-to-r from-[#0e9594] to-[#1a365d] text-white text-xs font-bold shadow-md hover:scale-105 active:scale-95 transition-transform border border-[#38bdf8]/30"
+              title="Descargar e instalar la aplicación web en tu dispositivo"
             >
               <span className="material-symbols-outlined text-[16px]">download_for_offline</span>
-              <span>Instalar App</span>
+              <span>{isInstalled ? 'App Instalada' : 'Instalar App'}</span>
             </button>
           </div>
 
@@ -100,6 +116,16 @@ export const Footer: React.FC = () => {
           <p className="italic text-slate-600">Contenido de uso exclusivo para la movilización de la iglesia y la intercesión pastoral.</p>
         </div>
       </div>
+
+      {/* Modal de Instalación PWA */}
+      <PWAInstallModal
+        isOpen={showInstallModal}
+        onClose={() => setShowInstallModal(false)}
+        isInstallable={isInstallable}
+        isInstalled={isInstalled}
+        isIOS={isIOS}
+        onInstall={install}
+      />
 
       {/* Floating Scroll to Top Button */}
       <button
