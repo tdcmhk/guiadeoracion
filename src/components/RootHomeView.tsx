@@ -76,9 +76,18 @@ export const RootHomeView: React.FC<RootHomeViewProps> = ({
               <span>{isInstalled ? 'WebApp Instalada' : 'Descargar WebApp'}</span>
             </button>
 
+            <button
+              onClick={() => onNavigateTab('streaming')}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#0e9594] to-[#1e3a8a] hover:from-[#0c7a79] hover:to-[#172554] text-white font-bold text-sm border border-[#38bdf8]/40 shadow-md transition-all hover:scale-105"
+              title="Ver videos, cabeceras y documentales misioneros en streaming"
+            >
+              <span className="material-symbols-outlined text-[19px] text-[#38bdf8]">live_tv</span>
+              <span>Streaming Play</span>
+            </button>
+
             <a
               href="#siete-iglesias"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-sm border border-slate-700 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-sm border border-slate-700 transition-colors"
             >
               <span className="material-symbols-outlined text-[18px]">travel_explore</span>
               <span>7 Iglesias</span>

@@ -103,6 +103,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
 
+            {/* Streaming MMM Play (Estilo Prime Video / Netflix) */}
+            <button
+              onClick={() => handleTabClick('streaming')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                currentTab === 'streaming'
+                  ? 'bg-gradient-to-r from-[#0e9594] to-[#1e3a8a] text-white font-bold shadow-xs border border-[#38bdf8]/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+              title="MMM Turquía Play — Videos & Documentales"
+            >
+              <span className="material-symbols-outlined text-[17px] text-[#38bdf8]">live_tv</span>
+              <span>{t.nav_streaming || 'Streaming'}</span>
+              <span className="px-1.5 py-0.2 bg-[#e5a93b] text-slate-950 rounded-full text-[9px] font-black">
+                PLAY
+              </span>
+            </button>
+
             {/* Pestaña PERFIL (Siempre visible para registrarse o ver estado) */}
             <button
               onClick={() => handleTabClick('perfil')}
@@ -292,6 +309,23 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <span className={`text-xs font-bold ${isPlayingRadio ? 'text-red-400' : 'text-slate-400'}`}>
               {isPlayingRadio ? '● EN VIVO' : 'Consola Completa'}
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleTabClick('streaming')}
+            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
+              currentTab === 'streaming'
+                ? 'bg-gradient-to-r from-[#0e9594] to-[#1e3a8a] text-white font-bold'
+                : 'text-slate-200 hover:bg-slate-800'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[20px] text-[#38bdf8]">live_tv</span>
+              <span>Streaming MMM Play</span>
+            </div>
+            <span className="px-1.5 py-0.5 bg-[#e5a93b] text-slate-950 rounded-full text-[10px] font-black">
+              VIDEO
             </span>
           </button>
 

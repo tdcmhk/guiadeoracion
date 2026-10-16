@@ -18,6 +18,18 @@
   --role-admin: #a855f7;
 }
 
+@font-face {
+  font-family: 'RiyadhusSholihin';
+  src: url('/assets/fonts/RiyadhusSholihin.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-riyadh {
+  font-family: 'RiyadhusSholihin', 'Marcellus', Georgia, serif;
+}
+
 .font-serif-title {
   font-family: 'Marcellus', Georgia, serif;
 }

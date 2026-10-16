@@ -19,6 +19,7 @@ import { DiarioView } from './components/DiarioView';
 import { ExpedicionesView } from './components/ExpedicionesView';
 import { RamadanView } from './components/RamadanView';
 import { PerfilView } from './components/PerfilView';
+import { StreamingView } from './components/StreamingView';
 import { AdminPanel } from './components/AdminPanel';
 import { PastoralChatWidget } from './components/PastoralChatWidget';
 import { Footer } from './components/Footer';
@@ -543,6 +544,11 @@ export default function App() {
             onToggleRadio={handleToggleRadio}
             onNavigateTab={setCurrentTab}
           />
+        )}
+
+        {/* TAB: STREAMING MMM PLAY (Estilo Prime Video / Netflix) */}
+        {currentTab === 'streaming' && (
+          <StreamingView onNavigateTab={setCurrentTab} />
         )}
 
         {/* TAB 3: INTRANET DASHBOARD (homeintranet - Protegido para Intercesores/Admins) */}

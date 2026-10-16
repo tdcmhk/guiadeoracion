@@ -2,7 +2,35 @@ export type Language = 'es' | 'tr' | 'en' | 'it';
 
 export type UserRole = 'seguidor' | 'intercesor' | 'patrocinador' | 'admin';
 
-export type NavTab = 'portal' | 'radio' | 'home' | 'boletin' | 'diario' | 'expediciones' | 'ramadan' | 'perfil' | 'admin';
+export type NavTab = 'portal' | 'radio' | 'streaming' | 'home' | 'boletin' | 'diario' | 'expediciones' | 'ramadan' | 'perfil' | 'admin';
+
+export interface StreamingVideo {
+  id: string;
+  title: string;
+  subtitle?: string;
+  category: 'expedicion' | 'documental' | 'mensaje' | 'avance';
+  duration: string;
+  year: string;
+  videoSrc: string;
+  thumbnail: string;
+  badge?: string;
+  synopsis: string;
+  scriptureRef?: string;
+  tags: string[];
+  featured?: boolean;
+}
+
+export interface DocumentarySeries {
+  id: string;
+  title: string;
+  episodesCount: string;
+  coverImage: string;
+  badge: string;
+  category: string;
+  synopsis: string;
+  releaseYear: string;
+  rating: string;
+}
 
 export interface UserProfile {
   uid: string;
