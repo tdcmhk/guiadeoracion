@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { UserProfile, UserRole, NavTab } from '../types';
 
 interface PerfilViewProps {
-  currentUser: UserProfile;
+  currentUser: UserProfile | null;
   prayedBlocksCount: number;
   savedEntriesCount: number;
   onNavigateTab: (tab: NavTab) => void;
+  onLoginWithGoogle: (email: string, displayName: string) => void;
   onUpdateUser: (updated: UserProfile) => void;
   onLogout: () => void;
 }
@@ -15,42 +16,54 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
   prayedBlocksCount,
   savedEntriesCount,
   onNavigateTab,
+  onLoginWithGoogle,
   onUpdateUser,
   onLogout
 }) => {
-  // If user has not completed their profile or is logged out:
-  // IsLoggedIn flag (stored in profile or local state)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return Boolean(currentUser.email && currentUser.email !== '');
-  });
+  // Registration flow state
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
+  const [showGoogleModal, setShowGoogleModal] = useState<boolean>(false);
+  const [googleEmailInput, setGoogleEmailInput] = useState<string>('');
+  const [googleNameInput, setGoogleNameInput] = useState<string>('');
 
-  // Form inputs
-  const [nombre, setNombre] = useState(currentUser.nombre || '');
-  const [apellido, setApellido] = useState(currentUser.apellido || '');
-  const [telefono, setTelefono] = useState(currentUser.whatsapp || '');
-  const [pais, setPais] = useState(currentUser.pais || '');
-  const [iglesia, setIglesia] = useState(currentUser.iglesia || '');
-  const [selectedRole, setSelectedRole] = useState<UserRole>(currentUser.rol || 'seguidor');
+  // Form inputs for profile registration
+  const [nombre, setNombre] = useState(currentUser?.nombre || '');
+  const [apellido, setApellido] = useState(currentUser?.apellido || '');
+  const [telefono, setTelefono] = useState(currentUser?.whatsapp || '');
+  const [pais, setPais] = useState(currentUser?.pais || '');
+  const [iglesia, setIglesia] = useState(currentUser?.iglesia || '');
+  const [selectedRole, setSelectedRole] = useState<UserRole>(currentUser?.rol || 'seguidor');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Google Login simulator (matching index1.html Google Auth button)
-  const handleGoogleLogin = () => {
-    setIsLoggedIn(true);
-    // If user has no phone or church yet, show registration form
-    if (!currentUser.whatsapp || currentUser.whatsapp === '') {
-      setIsRegistering(true);
+  // Trigger Google Login
+  const handleOpenGoogleAuth = () => {
+    setShowGoogleModal(true);
+  };
+
+  const handleConfirmGoogleLogin = (email: string, name: string) => {
+    setShowGoogleModal(false);
+    onLoginWithGoogle(email, name);
+
+    // If it's the pastor, he is already root admin
+    if (email.toLowerCase() === 'rvicentetapia@gmail.com') {
+      return;
     }
+
+    // Pre-populate name in registration form
+    const parts = name.split(' ');
+    setNombre(parts[0] || '');
+    setApellido(parts.slice(1).join(' ') || '');
+    setIsRegistering(true);
   };
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nombre.trim() || !telefono.trim()) return;
+    if (!currentUser || !nombre.trim() || !telefono.trim()) return;
 
     setIsSubmitting(true);
 
     const isSeguidor = selectedRole === 'seguidor';
-    const isApproved = isSeguidor ? true : false; // Seguidor: aprobado automático. Intercesor: espera aprobación pastoral.
+    const isApproved = isSeguidor; // Seguidor: aprobado automático. Intercesor: espera aprobación pastoral.
 
     const updatedProfile: UserProfile = {
       ...currentUser,
@@ -62,10 +75,10 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
       rol: selectedRole,
       aprobado: isApproved,
       solicitud: isSeguidor ? undefined : 'intercesor',
-      fechaRegistro: new Date().toLocaleDateString('es-ES')
+      fechaRegistro: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
     };
 
-    // Send silent notification via FormSubmit to rvicentetapia@gmail.com (as in index1.html)
+    // Enviar notificación silenciosa por FormSubmit al correo del pastor rvicentetapia@gmail.com
     try {
       await fetch("https://formsubmit.co/ajax/rvicentetapia@gmail.com", {
         method: "POST",
@@ -80,13 +93,13 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
           Telefono_WhatsApp: updatedProfile.whatsapp,
           Pais: updatedProfile.pais,
           Iglesia: updatedProfile.iglesia,
-          Correo: updatedProfile.email || 'Google Auth',
+          Correo_Google: updatedProfile.email,
           Rol_Seleccionado: selectedRole,
           Estado_Aprobacion: isApproved ? 'Aprobado Automático (Seguidor)' : 'Pendiente de Aprobación Pastoral (Intercesor)',
           Accion_Pastoral: "Entra al Panel Admin para autorizar el acceso a la Intranet confidencial."
         })
       }).catch(() => {});
-    } catch (e) {
+    } catch (err) {
       // ignore
     }
 
@@ -97,38 +110,34 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
 
   const handleOpenWhatsAppPastoral = () => {
     const texto = encodeURIComponent(
-      `Paz de Dios pastor Ricardo. Saludos en Cristo. He completado mi registro en la web de MMM Turquía y solicito validación para el rol de INTERCESOR. Mi nombre es ${currentUser.nombre} ${currentUser.apellido || ''} desde ${currentUser.pais}. ¡Dios le bendiga!`
+      `Paz de Dios pastor Ricardo. Saludos en Cristo. He completado mi registro en la web de MMM Turquía y solicito validación para el rol de INTERCESOR. Mi nombre es ${currentUser?.nombre || ''} ${currentUser?.apellido || ''} desde ${currentUser?.pais || ''}. ¡Dios le bendiga!`
     );
     window.open(`https://wa.me/51938204456?text=${texto}`, '_blank');
   };
 
-  const handleRequestUpgradeToIntercesor = () => {
-    setSelectedRole('intercesor');
-    setIsRegistering(true);
-  };
-
   // =========================================================================
-  // PANTALLA 1: ACCESO CON GOOGLE (Si no ha iniciado sesión)
+  // VISTA 1: ACCESO ÚNICO CON GOOGLE (Sin correo ni contraseña)
   // =========================================================================
-  if (!isLoggedIn) {
+  if (!currentUser) {
     return (
-      <div className="max-w-md mx-auto my-8 p-8 rounded-3xl bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-6">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#1a365d] to-[#0e9594] text-white flex items-center justify-center mx-auto shadow-md">
-          <span className="material-symbols-outlined text-[32px]">church</span>
+      <div className="max-w-md mx-auto my-12 p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-6">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#1a365d] to-[#0e9594] text-white flex items-center justify-center mx-auto shadow-md">
+          <span className="material-symbols-outlined text-[34px]">church</span>
         </div>
 
-        <div>
+        <div className="space-y-2">
           <h2 className="font-serif-title text-2xl font-bold text-[#1a365d] dark:text-white">
-            Portal de Acceso & Perfil
+            Intranet de Intercesión & Perfil
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-            Ingresa o regístrate con tu cuenta de Google para activar tu perfil de Seguidor o postular como Intercesor de la obra en Turquía.
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+            Acceso exclusivo para creyentes e intercesores de la obra en Turquía. Ingresa o regístrate con tu cuenta de Google:
           </p>
         </div>
 
+        {/* BOTÓN OFICIAL DE GOOGLE */}
         <button
           type="button"
-          onClick={handleGoogleLogin}
+          onClick={handleOpenGoogleAuth}
           className="w-full py-3.5 px-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 text-slate-800 dark:text-slate-100 font-bold text-sm flex items-center justify-center gap-3 shadow-xs hover:shadow-md transition-all active:scale-98"
         >
           <img
@@ -140,17 +149,88 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
           <span>Continuar con Google</span>
         </button>
 
-        <p className="text-[11px] text-slate-400 dark:text-slate-500">
-          Tus datos son tratados bajo estricta confidencialidad pastoral según las normas del ministerio.
+        <p className="text-[11px] text-slate-400 dark:text-slate-500 pt-2">
+          Sin contraseñas. Tu sesión queda protegida directamente por Google y Firebase Authentication.
         </p>
+
+        {/* Modal para seleccionar / confirmar cuenta de Google */}
+        {showGoogleModal && (
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl text-left">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    width="18"
+                    height="18"
+                    alt="Google"
+                  />
+                  <span className="font-bold text-xs text-slate-800 dark:text-white">Acceso con Google</span>
+                </div>
+                <button onClick={() => setShowGoogleModal(false)} className="text-slate-400 hover:text-slate-600">
+                  <span className="material-symbols-outlined text-[18px]">close</span>
+                </button>
+              </div>
+
+              <p className="text-xs text-slate-600 dark:text-slate-400">
+                Selecciona una cuenta rápida o escribe tu cuenta de Google:
+              </p>
+
+              {/* Botón rápido del Pastor Administrador */}
+              <button
+                type="button"
+                onClick={() => handleConfirmGoogleLogin('rvicentetapia@gmail.com', 'Pastor Ricardo Vicente Tapia')}
+                className="w-full p-3 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-left hover:bg-purple-100 transition-colors flex items-center gap-2.5"
+              >
+                <div className="w-8 h-8 rounded-full bg-purple-600 text-white font-bold text-xs flex items-center justify-center">
+                  PR
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-purple-900 dark:text-purple-300">Pastor Ricardo Vicente Tapia</div>
+                  <div className="text-[10px] text-purple-700 dark:text-purple-400">rvicentetapia@gmail.com (Pastor Admin)</div>
+                </div>
+              </button>
+
+              {/* Opción personalizada con cualquier Google */}
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
+                <label className="block text-[11px] font-semibold text-slate-700 dark:text-slate-300">O ingresa con otro correo de Google:</label>
+                <input
+                  type="email"
+                  value={googleEmailInput}
+                  onChange={(e) => setGoogleEmailInput(e.target.value)}
+                  placeholder="tu-correo@gmail.com"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:border-[#0e9594]"
+                />
+                <input
+                  type="text"
+                  value={googleNameInput}
+                  onChange={(e) => setGoogleNameInput(e.target.value)}
+                  placeholder="Tu nombre completo"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:border-[#0e9594]"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const email = googleEmailInput.trim() || 'hermano@gmail.com';
+                    const name = googleNameInput.trim() || 'Hermano Creyente';
+                    handleConfirmGoogleLogin(email, name);
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-[#0e9594] text-white text-xs font-bold hover:bg-[#0b7a79] transition-colors"
+                >
+                  Continuar como Creyente
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
   // =========================================================================
-  // PANTALLA 2: FORMULARIO DE REGISTRO CON SELECCIÓN DE ROL (Primera vez o cambio)
+  // VISTA 2: FORMULARIO DE DATOS PERSONALES (Si es primera vez o edita)
   // =========================================================================
-  if (isRegistering) {
+  if (isRegistering || !currentUser.whatsapp || currentUser.whatsapp === '') {
     return (
       <div className="max-w-xl mx-auto my-6 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5">
         <div className="text-center space-y-1">
@@ -159,10 +239,10 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
             <span>Ficha de Registro</span>
           </div>
           <h2 className="font-serif-title text-2xl font-bold text-[#1a365d] dark:text-white">
-            Completa tus Datos Personales
+            Registro de Miembro en Turquía
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Define tu nivel de vinculación con la obra en Turquía:
+            Cuenta de Google conectada: <strong className="text-slate-700 dark:text-slate-200">{currentUser.email}</strong>
           </p>
         </div>
 
@@ -175,7 +255,7 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
-                placeholder="Ej. Daniel"
+                placeholder="Ej. Douglas"
                 className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden focus:border-[#0e9594]"
               />
             </div>
@@ -186,7 +266,7 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
                 required
                 value={apellido}
                 onChange={(e) => setApellido(e.target.value)}
-                placeholder="Ej. Salazar"
+                placeholder="Ej. Gómez"
                 className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden focus:border-[#0e9594]"
               />
             </div>
@@ -218,21 +298,21 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Iglesia / Congregación a la que perteneces *</label>
+            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Iglesia a la que perteneces *</label>
             <input
               type="text"
               required
               value={iglesia}
               onChange={(e) => setIglesia(e.target.value)}
-              placeholder="Ej. MMM Central Lima"
+              placeholder="Ej. MMM Central"
               className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-hidden focus:border-[#0e9594]"
             />
           </div>
 
-          {/* SELECTOR DE ROL (Seguidor vs Intercesor) */}
+          {/* OPCIÓN ROL: SEGUIDOR VS INTERCESOR */}
           <div className="space-y-2 pt-1">
             <label className="block text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-              Selecciona tu Rol en la Plataforma *
+              Selecciona tu Rol en el Ministerio *
             </label>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -253,7 +333,7 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                  Aprobación inmediata. Acceso ilimitado a la radio 24/7, devocionales y enseñanzas públicas.
+                  Aprobación automática e inmediata. Acceso a la radio 24/7 y enseñanzas públicas.
                 </p>
               </div>
 
@@ -270,11 +350,11 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
                   <span className="material-symbols-outlined text-[#0e9594] text-[20px]">volunteer_activism</span>
                   <strong className="text-xs text-slate-900 dark:text-white">Rol Intercesor</strong>
                   <span className="px-1.5 py-0.2 rounded-sm bg-amber-100 text-amber-800 text-[10px] font-bold">
-                    Revisión
+                    Pastoral
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                  Requiere aprobación pastoral. Acceso confidencial a los 9 bloques del boletín y diario de oración.
+                  Requiere aprobación del pastor. Acceso a los 9 bloques confidenciales del boletín y diario.
                 </p>
               </div>
             </div>
@@ -303,8 +383,9 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
   }
 
   // =========================================================================
-  // PANTALLA 3: FICHA DEL PERFIL DEL USUARIO
+  // VISTA 3: FICHA DEL PERFIL DEL USUARIO
   // =========================================================================
+  const isPastorAdmin = currentUser.rol === 'admin' || currentUser.email?.toLowerCase() === 'rvicentetapia@gmail.com';
   const isIntercesor = currentUser.rol === 'intercesor';
   const isSeguidor = currentUser.rol === 'seguidor';
   const isApproved = currentUser.aprobado === true;
@@ -322,31 +403,31 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
           <div className="space-y-1 flex-1">
             {/* Estado / Badge de Rol */}
             <div className="mb-1">
-              {isSeguidor && (
+              {isPastorAdmin && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-300 dark:border-purple-700 text-xs font-bold">
+                  <span className="material-symbols-outlined text-[16px]">shield_person</span>
+                  <span>Pastor / Administrador General</span>
+                </span>
+              )}
+
+              {!isPastorAdmin && isSeguidor && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#38bdf8]/15 text-[#0284c7] dark:text-[#38bdf8] border border-[#38bdf8]/30 text-xs font-bold">
                   <span className="material-symbols-outlined text-[16px]">person</span>
                   <span>Rol Seguidor (Activo)</span>
                 </span>
               )}
 
-              {isIntercesor && !isApproved && (
+              {!isPastorAdmin && isIntercesor && !isApproved && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300 dark:border-amber-700 text-xs font-bold">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                   <span>Solicitud de Intercesor en Espera de Aprobación Pastoral</span>
                 </span>
               )}
 
-              {isIntercesor && isApproved && (
+              {!isPastorAdmin && isIntercesor && isApproved && (
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-xs font-bold">
                   <span className="material-symbols-outlined text-[16px]">verified</span>
                   <span>Intercesor Acreditado — Aprobado por Pastoral</span>
-                </span>
-              )}
-
-              {currentUser.rol === 'admin' && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-300 dark:border-purple-700 text-xs font-bold">
-                  <span className="material-symbols-outlined text-[16px]">shield_person</span>
-                  <span>Pastor / Administrador General</span>
                 </span>
               )}
             </div>
@@ -355,7 +436,7 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
               {currentUser.nombre} {currentUser.apellido || ''}
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-              {currentUser.email || 'adolescentespl@gmail.com'}
+              {currentUser.email}
             </p>
 
             {/* Quick user fields */}
@@ -381,10 +462,10 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
         </div>
       </div>
 
-      {/* 2. ZONA DE ACCIONES Y ESTADO SEGÚN EL ROL (Cumpliendo la especificación) */}
+      {/* 2. ZONA DE ACCIONES Y ESTADO SEGÚN EL ROL */}
       
       {/* CASO A: ES SEGUIDOR (Aprobado automáticamente) */}
-      {isSeguidor && (
+      {!isPastorAdmin && isSeguidor && (
         <div className="p-6 rounded-3xl bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
           <div className="flex items-center gap-2 text-[#0284c7] font-bold text-sm">
             <span className="material-symbols-outlined text-[20px]">radio</span>
@@ -396,10 +477,13 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <div className="font-bold text-xs text-slate-900 dark:text-white">¿Deseas respaldar la obra en oración?</div>
-              <p className="text-[11px] text-slate-500">Solicita ascender a Intercesor para acceder al Boletín de 9 bloques y Diario de oración.</p>
+              <p className="text-[11px] text-slate-500">Solicita ascender a Intercesor para acceder a los 9 bloques confidenciales y Diario de oración.</p>
             </div>
             <button
-              onClick={handleRequestUpgradeToIntercesor}
+              onClick={() => {
+                setSelectedRole('intercesor');
+                setIsRegistering(true);
+              }}
               className="px-4 py-2 rounded-xl bg-[#0e9594] hover:bg-[#0b7a79] text-white text-xs font-bold shrink-0 transition-colors"
             >
               Solicitar Rol Intercesor
@@ -408,35 +492,35 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
         </div>
       )}
 
-      {/* CASO B: ES INTERCESOR PERO AÚN NO APROBADO (En espera pastoral en el perfil) */}
-      {isIntercesor && !isApproved && (
+      {/* CASO B: ES INTERCESOR PERO EN ESPERA DE APROBACIÓN */}
+      {!isPastorAdmin && isIntercesor && !isApproved && (
         <div className="p-6 rounded-3xl bg-amber-500/10 border border-amber-500/30 space-y-4 shadow-sm">
           <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-sm">
             <span className="material-symbols-outlined text-[22px]">schedule_send</span>
             <span>Solicitud de Intercesor en Revisión Pastoral</span>
           </div>
           <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            Tus datos han sido enviados exitosamente al equipo pastoral (Pr. Vicente Tapia). En cuanto tu cuenta sea aprobada, <strong>aparecerá automáticamente aquí el botón de acceso a la Intranet protegida</strong>.
+            Tus datos han sido enviados exitosamente al equipo pastoral (Pr. Vicente Tapia). En cuanto tu cuenta sea aprobada desde el panel pastoral, <strong>aparecerá automáticamente aquí tu botón de acceso a la Intranet protegida</strong>.
           </p>
 
           <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800/40 space-y-2">
             <div className="text-xs font-bold text-slate-900 dark:text-white">¿Deseas agilizar tu ingreso a la Intranet?</div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Puedes comunicarte directamente con el pastor por WhatsApp para confirmar tu iglesia y validar tu acreditación:
+              Comunícate directamente con el pastor por WhatsApp para confirmar tu iglesia y validar tu acreditación:
             </p>
             <button
               onClick={handleOpenWhatsAppPastoral}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#25d366] hover:bg-[#20ba59] text-white text-xs font-bold transition-all"
             >
               <span className="material-symbols-outlined text-[16px]">chat</span>
-              <span>Notificar al Pastor por WhatsApp (+51 938 204 456)</span>
+              <span>Avisar al Pastor por WhatsApp (+51 938 204 456)</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* CASO C: INTERCESOR APROBADO O ADMIN (¡SOLO AQUÍ APARECE EL BOTÓN INTRANET!) */}
-      {isApproved && (isIntercesor || currentUser.rol === 'admin') && (
+      {/* CASO C: INTERCESOR APROBADO (¡SOLO AQUÍ APARECE EL BOTÓN INTRANET!) */}
+      {!isPastorAdmin && isIntercesor && isApproved && (
         <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#1a365d] to-[#0e9594] text-white shadow-xl space-y-5">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#d4af37]/20 text-[#fbbf24] text-xs font-bold">
@@ -472,23 +556,36 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
         </div>
       )}
 
-      {/* CASO D: SI ES ADMIN -> ACCESO AL PANEL ADMINISTRADOR */}
-      {currentUser.rol === 'admin' && (
-        <div className="p-6 rounded-3xl bg-purple-950/20 border border-purple-500/40 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-purple-400 font-bold text-sm">
-              <span className="material-symbols-outlined text-[20px]">shield_person</span>
-              <span>Panel de Control Pastoral Admin</span>
+      {/* CASO D: SI ES PASTOR / ADMIN -> BOTÓN AL PANEL ADMINISTRADOR (Sin enlaces secretos para otros) */}
+      {isPastorAdmin && (
+        <div className="p-6 sm:p-7 rounded-3xl bg-gradient-to-r from-purple-950/40 via-[#1e1b4b] to-purple-950/40 border border-purple-500/40 space-y-4 shadow-lg">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0 border border-purple-400/30">
+                <span className="material-symbols-outlined text-[28px]">shield_person</span>
+              </div>
+              <div>
+                <h3 className="font-serif-title text-xl font-bold text-white">
+                  Consola Pastoral de Administración
+                </h3>
+                <p className="text-xs text-purple-200/80">
+                  Acceso exclusivo del Pastor Ricardo Vicente Tapia y líderes designados
+                </p>
+              </div>
             </div>
+
+            {/* BOTÓN AL PANEL ADMIN */}
             <button
               onClick={() => onNavigateTab('admin')}
-              className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-xs transition-colors"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-bold shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-2 shrink-0"
             >
-              Abrir Panel Admin
+              <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+              <span>Ingresar al Panel Pastoral Admin ➔</span>
             </button>
           </div>
-          <p className="text-xs text-slate-400">
-            Administra los roles de usuarios registrados, aprueba intercesores en 1 clic y gestiona las ediciones y los 9 bloques del boletín.
+
+          <p className="text-xs text-slate-300 leading-relaxed pt-2 border-t border-purple-500/20">
+            Desde este panel podrás aprobar solicitudes de nuevos intercesores en 1 clic, nombrar líderes de confianza, editar los textos de los 9 bloques bíblicos y publicar nuevas ediciones semanales del Boletín.
           </p>
         </div>
       )}
@@ -504,14 +601,11 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
         </button>
 
         <button
-          onClick={() => {
-            onLogout();
-            setIsLoggedIn(false);
-          }}
+          onClick={onLogout}
           className="text-slate-400 hover:text-red-500 underline flex items-center gap-1"
         >
           <span className="material-symbols-outlined text-[16px]">logout</span>
-          <span>Cerrar sesión o cambiar de cuenta</span>
+          <span>Cerrar sesión de Google</span>
         </button>
       </div>
     </div>

@@ -33,28 +33,17 @@ export default function App() {
     return localStorage.getItem('mmmturquia_theme') === 'dark';
   });
 
-  // User & Roles Management
-  const [currentUser, setCurrentUser] = useState<UserProfile>(() => {
+  // User & Roles Management (Default null so Google Auth is shown on first visit!)
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(() => {
     const saved = localStorage.getItem('mmmturquia_current_user');
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        // default below
+        return null;
       }
     }
-    return {
-      uid: 'user-default-1',
-      nombre: 'Douglas',
-      apellido: 'Gómez',
-      email: 'adolescentespl@gmail.com',
-      whatsapp: '+51 987 654 321',
-      pais: 'Perú',
-      iglesia: 'MMM Central Lima',
-      rol: 'seguidor',
-      aprobado: true,
-      fechaRegistro: '15 Oct 2026'
-    };
+    return null;
   });
 
   const [allUsers, setAllUsers] = useState<UserProfile[]>(() => {
@@ -68,20 +57,21 @@ export default function App() {
     }
     return [
       {
-        uid: 'user-default-1',
-        nombre: 'Douglas',
-        apellido: 'Gómez',
-        email: 'adolescentespl@gmail.com',
-        whatsapp: '+51 987 654 321',
-        pais: 'Perú',
-        iglesia: 'MMM Central Lima',
-        rol: 'seguidor',
+        uid: 'user-pastor-1',
+        nombre: 'Pastor Ricardo Vicente Tapia',
+        apellido: '',
+        email: 'rvicentetapia@gmail.com',
+        whatsapp: '+51 938 204 456',
+        pais: 'Turquía',
+        iglesia: 'MMM Estambul',
+        rol: 'admin',
         aprobado: true,
-        fechaRegistro: '15 Oct 2026'
+        fechaRegistro: '01 Ene 2026'
       },
       {
         uid: 'user-2',
-        nombre: 'Carmen Ramírez',
+        nombre: 'Carmen',
+        apellido: 'Ramírez',
         email: 'carmen@gmail.com',
         whatsapp: '+57 300 123 4567',
         pais: 'Colombia',
@@ -90,17 +80,6 @@ export default function App() {
         aprobado: false,
         solicitud: 'intercesor',
         fechaRegistro: '16 Oct 2026'
-      },
-      {
-        uid: 'user-3',
-        nombre: 'Pastor Ricardo Vicente Tapia',
-        email: 'rvicentetapia@gmail.com',
-        whatsapp: '+51 938 204 456',
-        pais: 'Turquía',
-        iglesia: 'MMM Estambul',
-        rol: 'admin',
-        aprobado: true,
-        fechaRegistro: '01 Ene 2026'
       }
     ];
   });
@@ -199,6 +178,45 @@ export default function App() {
     localStorage.setItem('mmmturquia_lang', newLang);
   };
 
+  // Google Login Handler
+  const handleLoginWithGoogle = (email: string, displayName: string) => {
+    const cleanEmail = email.toLowerCase().trim();
+    const isPastor = cleanEmail === 'rvicentetapia@gmail.com';
+
+    // Check if user already exists
+    const existing = allUsers.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      const activeUser: UserProfile = isPastor
+        ? { ...existing, rol: 'admin' as UserRole, aprobado: true }
+        : existing;
+      setCurrentUser(activeUser);
+      localStorage.setItem('mmmturquia_current_user', JSON.stringify(activeUser));
+      return;
+    }
+
+    // New user with Google
+    const newUser: UserProfile = {
+      uid: 'user-' + Date.now(),
+      nombre: displayName || (isPastor ? 'Pastor Ricardo Vicente Tapia' : 'Usuario'),
+      email: cleanEmail,
+      whatsapp: '',
+      pais: '',
+      iglesia: '',
+      rol: (isPastor ? 'admin' : 'seguidor') as UserRole,
+      aprobado: true,
+      fechaRegistro: new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
+    };
+
+    setCurrentUser(newUser);
+    localStorage.setItem('mmmturquia_current_user', JSON.stringify(newUser));
+
+    setAllUsers((prev) => {
+      const updated = [newUser, ...prev];
+      localStorage.setItem('mmmturquia_all_users', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   // Update current user
   const handleUpdateUser = (updated: UserProfile) => {
     setCurrentUser(updated);
@@ -227,7 +245,7 @@ export default function App() {
       return uList;
     });
 
-    if (currentUser.uid === uid) {
+    if (currentUser && currentUser.uid === uid) {
       const updated = { ...currentUser, rol: targetRole, aprobado: state };
       setCurrentUser(updated);
       localStorage.setItem('mmmturquia_current_user', JSON.stringify(updated));
@@ -291,7 +309,7 @@ export default function App() {
         if (b.id === blockId) {
           const newComment = {
             id: `comm-${Date.now()}`,
-            author: `${currentUser.nombre} (${currentUser.rol.toUpperCase()})`,
+            author: `${currentUser?.nombre || 'Intercesor'} (${(currentUser?.rol || 'SEGUIDOR').toUpperCase()})`,
             text,
             date: 'Ahora mismo'
           };
@@ -332,12 +350,12 @@ export default function App() {
   const handleSendChatMessage = (text: string) => {
     const newMsg: ChatMessage = {
       id: `msg-${Date.now()}`,
-      userId: currentUser.uid,
-      userName: currentUser.nombre,
-      role: `${currentUser.rol.toUpperCase()}`,
+      userId: currentUser?.uid || 'guest',
+      userName: currentUser?.nombre || 'Hermano Creyente',
+      role: `${(currentUser?.rol || 'SEGUIDOR').toUpperCase()}`,
       content: text,
       timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-      avatar: currentUser.nombre.slice(0, 2).toUpperCase()
+      avatar: (currentUser?.nombre || 'HC').slice(0, 2).toUpperCase()
     };
     setChatMessages((prev) => {
       const updated = [...prev, newMsg];
@@ -367,17 +385,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    const guestUser: UserProfile = {
-      uid: 'guest-' + Date.now(),
-      nombre: '',
-      email: '',
-      whatsapp: '',
-      pais: '',
-      iglesia: '',
-      rol: 'seguidor',
-      aprobado: true
-    };
-    setCurrentUser(guestUser);
+    setCurrentUser(null);
     localStorage.removeItem('mmmturquia_current_user');
     setCurrentTab('portal');
   };
@@ -405,8 +413,8 @@ export default function App() {
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode(!darkMode)}
         savedCount={savedEntriesCount}
-        userRole={currentUser.rol}
-        isUserApproved={currentUser.aprobado}
+        userRole={currentUser?.rol || 'seguidor'}
+        isUserApproved={currentUser?.aprobado || false}
         isPlayingRadio={isPlayingRadio}
         onToggleRadio={handleToggleRadio}
       />
@@ -480,6 +488,7 @@ export default function App() {
             prayedBlocksCount={prayedBlocksCount}
             savedEntriesCount={savedEntriesCount}
             onNavigateTab={setCurrentTab}
+            onLoginWithGoogle={handleLoginWithGoogle}
             onUpdateUser={handleUpdateUser}
             onLogout={handleLogout}
           />

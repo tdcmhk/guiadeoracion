@@ -277,6 +277,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         Rol Seguidor
                       </button>
 
+                      {/* Botón Nombrar Pastor / Líder */}
+                      <button
+                        onClick={() => onApproveUser(u.uid, 'admin', true)}
+                        className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 transition-all ${
+                          u.rol === 'admin'
+                            ? 'bg-purple-900/40 text-purple-300 border border-purple-500/30'
+                            : 'bg-purple-600 hover:bg-purple-500 text-white shadow-xs'
+                        }`}
+                        title="Conceder permisos de líder pastoral y acceso al panel admin"
+                      >
+                        <span className="material-symbols-outlined text-[15px]">shield_person</span>
+                        <span>{u.rol === 'admin' ? 'Es Pastor' : 'Hacer Líder / Pastor'}</span>
+                      </button>
+
                       {/* Botón Revocar / Pausar */}
                       {isApproved && (
                         <button
