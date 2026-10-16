@@ -12,7 +12,6 @@ interface NavbarProps {
   savedCount: number;
   userRole: UserRole;
   isUserApproved: boolean;
-  onOpenRoleModal: () => void;
   isPlayingRadio: boolean;
   onToggleRadio: () => void;
 }
@@ -27,7 +26,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   savedCount,
   userRole,
   isUserApproved,
-  onOpenRoleModal,
   isPlayingRadio,
   onToggleRadio
 }) => {
@@ -40,30 +38,11 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const getRoleBadgeStyle = (role: UserRole) => {
-    switch (role) {
-      case 'admin':
-        return 'bg-purple-500/20 text-purple-400 border-purple-500/40';
-      case 'patrocinador':
-        return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
-      case 'intercesor':
-        return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
-      default:
-        return 'bg-[#38bdf8]/20 text-[#38bdf8] border-[#38bdf8]/40';
-    }
-  };
-
-  const getRoleIcon = (role: UserRole) => {
-    switch (role) {
-      case 'admin': return 'shield_person';
-      case 'patrocinador': return 'stars';
-      case 'intercesor': return 'volunteer_activism';
-      default: return 'person';
-    }
-  };
+  // Solo los intercesores aprobados o administradores tienen acceso a la Intranet
+  const hasIntranetAccess = isUserApproved && (userRole === 'intercesor' || userRole === 'admin' || userRole === 'patrocinador');
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#070d19]/90 dark:bg-[#070d19]/95 backdrop-blur-md border-b border-slate-800 text-slate-100 shadow-md">
+    <nav className="sticky top-0 z-50 bg-[#070d19]/95 backdrop-blur-md border-b border-slate-800 text-slate-100 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
           
@@ -91,6 +70,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
+            {/* Inicio / Portal */}
             <button
               onClick={() => handleTabClick('portal')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
@@ -103,6 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{t.nav_portal}</span>
             </button>
 
+            {/* Radio 24/7 Streaming Toggle */}
             <button
               onClick={onToggleRadio}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
@@ -120,76 +101,101 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
 
+            {/* Pestaña PERFIL (Siempre visible para registrarse o ver estado) */}
             <button
-              onClick={() => handleTabClick('home')}
+              onClick={() => handleTabClick('perfil')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                currentTab === 'home'
-                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                currentTab === 'perfil'
+                  ? 'bg-[#0e9594] text-white font-bold shadow-xs'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              <span className="material-symbols-outlined text-[17px]">dashboard</span>
-              <span>{t.nav_home}</span>
+              <span className="material-symbols-outlined text-[17px]">account_circle</span>
+              <span>{t.nav_perfil}</span>
             </button>
 
-            <button
-              onClick={() => handleTabClick('boletin')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                currentTab === 'boletin'
-                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[17px]">menu_book</span>
-              <span>{t.nav_boletin}</span>
-              <span className="px-1.5 py-0.2 bg-[#0e9594] text-white rounded-full text-[10px] font-bold">
-                9
-              </span>
-            </button>
+            {/* SECCIONES DE LA INTRANET PROTEGIDA: SOLO VISIBLES SI ESTÁ APROBADO */}
+            {hasIntranetAccess && (
+              <>
+                <span className="text-slate-600 px-1">|</span>
 
-            <button
-              onClick={() => handleTabClick('diario')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                currentTab === 'diario'
-                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[17px]">bookmark_heart</span>
-              <span>{t.nav_diario}</span>
-              {savedCount > 0 && (
-                <span className="px-1.5 py-0.2 bg-[#e5a93b] text-slate-900 rounded-full text-[10px] font-bold">
-                  {savedCount}
-                </span>
-              )}
-            </button>
+                <button
+                  onClick={() => handleTabClick('home')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                    currentTab === 'home'
+                      ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  }`}
+                  title="Dashboard Intranet"
+                >
+                  <span className="material-symbols-outlined text-[17px]">dashboard</span>
+                  <span>Intranet</span>
+                </button>
 
-            <button
-              onClick={() => handleTabClick('expediciones')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                currentTab === 'expediciones'
-                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[17px]">explore</span>
-              <span>{t.nav_expediciones}</span>
-            </button>
+                <button
+                  onClick={() => handleTabClick('boletin')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                    currentTab === 'boletin'
+                      ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[17px]">menu_book</span>
+                  <span>{t.nav_boletin}</span>
+                  <span className="px-1.5 py-0.2 bg-[#0e9594] text-white rounded-full text-[10px] font-bold">
+                    9
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => handleTabClick('diario')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                    currentTab === 'diario'
+                      ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[17px]">bookmark_heart</span>
+                  <span>{t.nav_diario}</span>
+                  {savedCount > 0 && (
+                    <span className="px-1.5 py-0.2 bg-[#e5a93b] text-slate-900 rounded-full text-[10px] font-bold">
+                      {savedCount}
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => handleTabClick('expediciones')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                    currentTab === 'expediciones'
+                      ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-[17px]">explore</span>
+                  <span>{t.nav_expediciones}</span>
+                </button>
+              </>
+            )}
+
+            {/* Admin pastoral tab */}
+            {userRole === 'admin' && (
+              <button
+                onClick={() => handleTabClick('admin')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                  currentTab === 'admin'
+                    ? 'bg-purple-600 text-white font-bold'
+                    : 'text-purple-300 hover:bg-purple-950/40'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[17px]">shield_person</span>
+                <span>Admin</span>
+              </button>
+            )}
           </div>
 
-          {/* Right Controls: Role Badge, Language Selector, DarkMode, CTA */}
+          {/* Right Controls */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* User Role Chip in Navbar */}
-            <button
-              onClick={onOpenRoleModal}
-              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border transition-transform hover:scale-105 ${getRoleBadgeStyle(userRole)}`}
-              title="Haz clic para ver o solicitar cambio de rol"
-            >
-              <span className="material-symbols-outlined text-[15px]">{getRoleIcon(userRole)}</span>
-              <span className="capitalize">{userRole}</span>
-              {isUserApproved && <span className="text-emerald-400">✓</span>}
-            </button>
-
             {/* Language Switcher */}
             <div className="flex items-center bg-slate-800/80 p-0.5 rounded-lg border border-slate-700">
               {(['es', 'tr', 'en', 'it'] as Language[]).map((l) => (
@@ -220,8 +226,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </button>
 
-            {/* Main Action Button */}
-            {isUserApproved ? (
+            {/* Botón CTA Perfil / Intranet */}
+            {hasIntranetAccess ? (
               <button
                 onClick={() => handleTabClick('home')}
                 className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-[#070d19] bg-emerald-400 hover:bg-emerald-300 rounded-lg shadow-sm transition-all"
@@ -231,11 +237,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             ) : (
               <button
-                onClick={onOpenRoleModal}
+                onClick={() => handleTabClick('perfil')}
                 className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-[#070d19] bg-gradient-to-r from-[#d4af37] to-[#b45309] rounded-lg shadow-sm hover:opacity-95 transition-opacity"
               >
-                <span className="material-symbols-outlined text-[16px]">verified_user</span>
-                <span>Validar Cuenta</span>
+                <span className="material-symbols-outlined text-[16px]">account_circle</span>
+                <span>Mi Perfil</span>
               </button>
             )}
 
@@ -281,76 +287,85 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
-            onClick={() => handleTabClick('home')}
-            className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'home' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[20px]">dashboard</span>
-            <span>{t.nav_home}</span>
-          </button>
-
-          <button
-            onClick={() => handleTabClick('boletin')}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'boletin' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px]">menu_book</span>
-              <span>{t.nav_boletin}</span>
-            </div>
-            <span className="px-2 py-0.5 bg-[#0e9594] text-white rounded-full text-xs font-bold">
-              9 Bloques
-            </span>
-          </button>
-
-          <button
-            onClick={() => handleTabClick('diario')}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'diario' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="material-symbols-outlined text-[20px]">bookmark_heart</span>
-              <span>{t.nav_diario}</span>
-            </div>
-            {savedCount > 0 && (
-              <span className="px-2 py-0.5 bg-[#e5a93b] text-slate-900 rounded-full text-xs font-bold">
-                {savedCount}
-              </span>
-            )}
-          </button>
-
-          <button
-            onClick={() => handleTabClick('expediciones')}
-            className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'expediciones' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[20px]">explore</span>
-            <span>{t.nav_expediciones}</span>
-          </button>
-
-          <button
-            onClick={() => handleTabClick('ramadan')}
-            className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'ramadan' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[20px]">nightlight</span>
-            <span>{t.nav_ramadan}</span>
-          </button>
-
-          <button
             onClick={() => handleTabClick('perfil')}
             className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'perfil' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
+              currentTab === 'perfil' ? 'bg-[#0e9594] text-white font-bold' : 'text-slate-200 hover:bg-slate-800'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">account_circle</span>
-            <span>{t.nav_perfil}</span>
+            <span>Mi Perfil</span>
           </button>
+
+          {hasIntranetAccess && (
+            <>
+              <div className="pt-2 pb-1 text-[11px] font-bold text-slate-500 uppercase px-3">
+                Intranet Protegida
+              </div>
+              <button
+                onClick={() => handleTabClick('home')}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
+                  currentTab === 'home' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[20px]">dashboard</span>
+                <span>Dashboard Intranet</span>
+              </button>
+
+              <button
+                onClick={() => handleTabClick('boletin')}
+                className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
+                  currentTab === 'boletin' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[20px]">menu_book</span>
+                  <span>{t.nav_boletin}</span>
+                </div>
+                <span className="px-2 py-0.5 bg-[#0e9594] text-white rounded-full text-xs font-bold">
+                  9 Bloques
+                </span>
+              </button>
+
+              <button
+                onClick={() => handleTabClick('diario')}
+                className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
+                  currentTab === 'diario' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-[20px]">bookmark_heart</span>
+                  <span>{t.nav_diario}</span>
+                </div>
+                {savedCount > 0 && (
+                  <span className="px-2 py-0.5 bg-[#e5a93b] text-slate-900 rounded-full text-xs font-bold">
+                    {savedCount}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={() => handleTabClick('expediciones')}
+                className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
+                  currentTab === 'expediciones' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
+                }`}
+              >
+                <span className="material-symbols-outlined text-[20px]">explore</span>
+                <span>{t.nav_expediciones}</span>
+              </button>
+            </>
+          )}
+
+          {userRole === 'admin' && (
+            <button
+              onClick={() => handleTabClick('admin')}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
+                currentTab === 'admin' ? 'bg-purple-600 text-white' : 'text-purple-300 hover:bg-slate-800'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">shield_person</span>
+              <span>Panel Admin Pastoral</span>
+            </button>
+          )}
         </div>
       )}
     </nav>

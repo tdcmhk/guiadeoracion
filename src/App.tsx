@@ -18,6 +18,7 @@ import { DiarioView } from './components/DiarioView';
 import { ExpedicionesView } from './components/ExpedicionesView';
 import { RamadanView } from './components/RamadanView';
 import { PerfilView } from './components/PerfilView';
+import { AdminPanel } from './components/AdminPanel';
 import { PastoralChatWidget } from './components/PastoralChatWidget';
 import { Footer } from './components/Footer';
 
@@ -44,14 +45,15 @@ export default function App() {
     }
     return {
       uid: 'user-default-1',
-      nombre: 'Douglas Gómez',
+      nombre: 'Douglas',
+      apellido: 'Gómez',
       email: 'adolescentespl@gmail.com',
       whatsapp: '+51 987 654 321',
       pais: 'Perú',
-      iglesia: 'MMM Central',
-      rol: 'discipulo',
-      aprobado: false,
-      solicitud: 'intercesor'
+      iglesia: 'MMM Central Lima',
+      rol: 'seguidor',
+      aprobado: true,
+      fechaRegistro: '15 Oct 2026'
     };
   });
 
@@ -67,14 +69,15 @@ export default function App() {
     return [
       {
         uid: 'user-default-1',
-        nombre: 'Douglas Gómez',
+        nombre: 'Douglas',
+        apellido: 'Gómez',
         email: 'adolescentespl@gmail.com',
         whatsapp: '+51 987 654 321',
         pais: 'Perú',
-        iglesia: 'MMM Central',
-        rol: 'discipulo',
-        aprobado: false,
-        solicitud: 'intercesor'
+        iglesia: 'MMM Central Lima',
+        rol: 'seguidor',
+        aprobado: true,
+        fechaRegistro: '15 Oct 2026'
       },
       {
         uid: 'user-2',
@@ -84,17 +87,20 @@ export default function App() {
         pais: 'Colombia',
         iglesia: 'Medellín Central',
         rol: 'intercesor',
-        aprobado: true
+        aprobado: false,
+        solicitud: 'intercesor',
+        fechaRegistro: '16 Oct 2026'
       },
       {
         uid: 'user-3',
-        nombre: 'Antonio Vega',
-        email: 'antonio@empresa.com',
-        whatsapp: '+34 600 987 654',
-        pais: 'España',
-        iglesia: 'Madrid Sur',
-        rol: 'patrocinador',
-        aprobado: true
+        nombre: 'Pastor Ricardo Vicente Tapia',
+        email: 'rvicentetapia@gmail.com',
+        whatsapp: '+51 938 204 456',
+        pais: 'Turquía',
+        iglesia: 'MMM Estambul',
+        rol: 'admin',
+        aprobado: true,
+        fechaRegistro: '01 Ene 2026'
       }
     ];
   });
@@ -193,17 +199,18 @@ export default function App() {
     localStorage.setItem('mmmturquia_lang', newLang);
   };
 
-  // Switch role simulator
-  const handleRoleSwitch = (newRole: UserRole, approved: boolean) => {
-    const updated = { ...currentUser, rol: newRole, aprobado: approved };
+  // Update current user
+  const handleUpdateUser = (updated: UserProfile) => {
     setCurrentUser(updated);
     localStorage.setItem('mmmturquia_current_user', JSON.stringify(updated));
 
-    // Also update in allUsers
     setAllUsers((prev) => {
-      const uList = prev.map((u) => (u.uid === updated.uid ? updated : u));
-      localStorage.setItem('mmmturquia_all_users', JSON.stringify(uList));
-      return uList;
+      const exists = prev.some((u) => u.uid === updated.uid);
+      const list = exists
+        ? prev.map((u) => (u.uid === updated.uid ? updated : u))
+        : [updated, ...prev];
+      localStorage.setItem('mmmturquia_all_users', JSON.stringify(list));
+      return list;
     });
   };
 
@@ -227,28 +234,12 @@ export default function App() {
     }
   };
 
-  // Register new user request
-  const handleRegisterUser = (data: Partial<UserProfile> & { targetRole: UserRole }) => {
-    const newUser: UserProfile = {
-      uid: `usr-${Date.now()}`,
-      nombre: data.nombre || 'Nuevo Usuario',
-      email: data.email || '',
-      whatsapp: data.whatsapp || '',
-      pais: data.pais || '',
-      iglesia: data.iglesia || '',
-      rol: 'discipulo',
-      aprobado: false,
-      solicitud: data.targetRole,
-      fechaRegistro: new Date().toLocaleDateString('es-ES')
-    };
-
-    setCurrentUser(newUser);
-    localStorage.setItem('mmmturquia_current_user', JSON.stringify(newUser));
-
-    setAllUsers((prev) => {
-      const uList = [newUser, ...prev];
-      localStorage.setItem('mmmturquia_all_users', JSON.stringify(uList));
-      return uList;
+  // Update prayer block in Admin
+  const handleUpdateBlock = (updatedBlock: PrayerBlock) => {
+    setBlocks((prev) => {
+      const list = prev.map((b) => (b.id === updatedBlock.id ? updatedBlock : b));
+      localStorage.setItem('mmmturquia_blocks', JSON.stringify(list));
+      return list;
     });
   };
 
@@ -375,6 +366,22 @@ export default function App() {
     });
   };
 
+  const handleLogout = () => {
+    const guestUser: UserProfile = {
+      uid: 'guest-' + Date.now(),
+      nombre: '',
+      email: '',
+      whatsapp: '',
+      pais: '',
+      iglesia: '',
+      rol: 'seguidor',
+      aprobado: true
+    };
+    setCurrentUser(guestUser);
+    localStorage.removeItem('mmmturquia_current_user');
+    setCurrentTab('portal');
+  };
+
   const prayedBlocksCount = blocks.filter((b) => b.hasPrayed).length;
   const savedEntriesCount = diaryEntries.length;
 
@@ -400,29 +407,23 @@ export default function App() {
         savedCount={savedEntriesCount}
         userRole={currentUser.rol}
         isUserApproved={currentUser.aprobado}
-        onOpenRoleModal={() => setCurrentTab('portal')}
         isPlayingRadio={isPlayingRadio}
         onToggleRadio={handleToggleRadio}
       />
 
       {/* Main Container Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* TAB 1: PORTAL DE RAÍZ / HOME & RADIO 24/7 (index 1) */}
+        {/* TAB 1: PORTAL DE RAÍZ / HOME & RADIO 24/7 (Limpio, enfocado en Radio y Misión) */}
         {currentTab === 'portal' && (
           <RootHomeView
-            currentUser={currentUser}
-            allUsers={allUsers}
             lang={lang}
             onNavigateTab={setCurrentTab}
-            onRoleSwitch={handleRoleSwitch}
-            onApproveUser={handleApproveUser}
-            onRegisterUser={handleRegisterUser}
             isPlayingRadio={isPlayingRadio}
             onToggleRadio={handleToggleRadio}
           />
         )}
 
-        {/* TAB 2: INTRANET DASHBOARD (homeintranet) */}
+        {/* TAB 2: INTRANET DASHBOARD (homeintranet - Protegido para Intercesores/Admins) */}
         {currentTab === 'home' && (
           <IntranetDashboard
             events={INITIAL_CALENDAR_EVENTS}
@@ -472,11 +473,26 @@ export default function App() {
           <RamadanView />
         )}
 
-        {/* TAB 7: PERFIL DEL INTERCESOR */}
+        {/* TAB 7: PERFIL DEL USUARIO / REGISTRO & SELECCIÓN DE ROL */}
         {currentTab === 'perfil' && (
           <PerfilView
+            currentUser={currentUser}
             prayedBlocksCount={prayedBlocksCount}
             savedEntriesCount={savedEntriesCount}
+            onNavigateTab={setCurrentTab}
+            onUpdateUser={handleUpdateUser}
+            onLogout={handleLogout}
+          />
+        )}
+
+        {/* TAB 8: PANEL PASTORAL DE ADMINISTRACIÓN */}
+        {currentTab === 'admin' && (
+          <AdminPanel
+            users={allUsers}
+            blocks={blocks}
+            onApproveUser={handleApproveUser}
+            onUpdateBlock={handleUpdateBlock}
+            onNavigateTab={setCurrentTab}
           />
         )}
       </main>
