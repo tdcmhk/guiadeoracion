@@ -31,7 +31,9 @@ export default function App() {
     return (saved as Language) || 'es';
   });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('mmmturquia_theme') === 'dark';
+    const saved = localStorage.getItem('mmmturquia_theme');
+    if (saved) return saved === 'dark';
+    return true; // Por defecto versión oscura para el boletín y la misión
   });
 
   // User & Roles Management (Default null so Google Auth is shown on first visit!)
@@ -400,7 +402,7 @@ export default function App() {
   const savedEntriesCount = diaryEntries.length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#070d19] text-slate-100 antialiased selection:bg-[#0e9594]/30 selection:text-white transition-colors duration-200">
+    <div className={`min-h-screen flex flex-col ${darkMode ? 'bg-[#070d19] text-slate-100' : 'bg-slate-100 text-slate-900'} antialiased selection:bg-[#0e9594]/30 selection:text-white transition-colors duration-200`}>
       {/* Background Audio Stream Player */}
       <audio
         ref={audioRef}

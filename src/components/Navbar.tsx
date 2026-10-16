@@ -216,15 +216,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               ))}
             </div>
 
-            {/* Dark Mode Toggle */}
+            {/* Dark / Light Mode Toggle */}
             <button
               onClick={onToggleDarkMode}
-              className="p-1.5 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors"
-              title={darkMode ? t.light_mode : t.dark_mode}
-              aria-label="Toggle dark mode"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition-all shadow-xs"
+              title={darkMode ? 'Cambiar a Modo Claro' : 'Cambiar a Modo Oscuro'}
+              aria-label="Alternar tema claro y oscuro"
             >
-              <span className="material-symbols-outlined text-[20px]">
+              <span className="material-symbols-outlined text-[18px] text-[#fbbf24]">
                 {darkMode ? 'light_mode' : 'dark_mode'}
+              </span>
+              <span className="hidden lg:inline text-[11px]">
+                {darkMode ? 'Oscuro' : 'Claro'}
               </span>
             </button>
 
@@ -372,6 +375,43 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Panel Admin Pastoral</span>
             </button>
           )}
+
+          {/* Selector de Tema y Lenguaje en Móvil */}
+          <div className="pt-3 mt-2 border-t border-slate-800 space-y-3">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs text-slate-400 font-semibold">Tema de la Web:</span>
+              <button
+                type="button"
+                onClick={onToggleDarkMode}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-xs text-white font-semibold shadow-xs"
+              >
+                <span className="material-symbols-outlined text-[17px] text-[#fbbf24]">
+                  {darkMode ? 'light_mode' : 'dark_mode'}
+                </span>
+                <span>{darkMode ? 'Modo Oscuro (Activo)' : 'Modo Claro (Activo)'}</span>
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs text-slate-400 font-semibold">Idioma:</span>
+              <div className="flex items-center bg-slate-800 p-0.5 rounded-lg border border-slate-700">
+                {(['es', 'tr', 'en', 'it'] as Language[]).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => {
+                      onLangChange(l);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`px-2.5 py-1 text-xs font-bold rounded-md uppercase transition-colors ${
+                      lang === l ? 'bg-[#0e9594] text-white shadow-xs' : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </nav>
