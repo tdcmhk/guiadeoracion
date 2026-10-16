@@ -220,7 +220,46 @@ La estructura del proyecto respeta la separación limpia de código:
     ├── diario/            <-- Diario personal de oración
         └── index.html              
     ├── ramadan/            
-        └── index.html                  
+        └── index.html      
+
+nuevo
+
+├── index.html                           <-- HTML raíz (carga fuentes Marcellus, Plus Jakarta Sans e íconos)
+├── package.json                         <-- Dependencias instaladas (React, Tailwind, Lucide, Motion)
+├── vite.config.ts                       <-- Configuración del servidor y empaquetador
+├── tsconfig.json                        <-- Configuración de TypeScript
+│
+└── 📁 src/
+    ├── main.tsx                         <-- Punto de entrada de React (monta la app)
+    ├── App.tsx                          <-- Orquestador principal (controla pestañas, modo oscuro y persistencia)
+    ├── index.css                        <-- Estilos globales y variables de color (#1a365d, #0e9594, etc.)
+    │
+    ├── 📁 components/                   <-- TODAS LAS VISTAS Y MÓDULOS DE LA INTRANET
+    │   ├── Navbar.tsx                   <-- Barra superior (logo, pestañas, idiomas ES/TR/EN/IT, botón WhatsApp)
+    │   ├── IntranetDashboard.tsx        <-- EL HOME DE LA INTRANET (Modelo "homeintranet" con calendario, muro y encuestas)
+    │   ├── BoletinView.tsx              <-- EL BOLETÍN DE ORACIÓN (Los 9 bloques bíblicos, fotos, versículos y comentarios)
+    │   ├── DiarioView.tsx               <-- EL DIARIO DE ORACIÓN (Los 4 pilares: Orados, Guardados, Contestados, Propios)
+    │   ├── ExpedicionesView.tsx         <-- EXPEDICIONES (Avance de viajes a Bursa, Balıkesir y Grecia)
+    │   ├── RamadanView.tsx              <-- PROGRAMA RAMADÁN (Guía de 30 días de clamor por Turquía)
+    │   ├── PerfilView.tsx               <-- PERFIL DE USUARIO (Ficha de Intercesor Acreditado)
+    │   ├── PastoralChatWidget.tsx       <-- BOTÓN FLOTANTE PASTORAL (Ventana emergente que conecta a WhatsApp)
+    │   └── Footer.tsx                   <-- PIE DE PÁGINA (Acciones: Grupo WhatsApp, Compartir, Instalar App)
+    │
+    ├── 📁 data/                         <-- CONTENIDO Y TEXTOS DE LA PLATAFORMA
+    │   ├── initialData.ts               <-- Textos de los 9 bloques de 1 Pedro, eventos, proyectos, cumpleaños y chat
+    │   └── i18n.ts                      <-- Diccionario multilingüe unificado (Español, Turco, Inglés, Italiano)
+    │
+    ├── 📁 types/                        <-- TIPOS DE DATOS (TypeScript)
+    │   └── index.ts                     <-- Estructuras de datos (PrayerBlock, CalendarEvent, Poll, etc.)
+    │
+    └── 📁 assets/
+        └── 📁 images/                   <-- FOTOGRAFÍAS REALES EN ALTA RESOLUCIÓN
+            ├── intranet_hero_bosphorus_*.jpg       <-- Portada panorámica del Bósforo
+            ├── bursa_mission_field_*.jpg           <-- Foto de la misión en Bursa
+            ├── missionary_expedition_aegean_*.jpg  <-- Foto de la expedición a Grecia
+            └── bible_study_fellowship_*.jpg        <-- Foto del estudio bíblico y comunión
+
+
 ```
 
 ## 🛠️ 8. ARQUITECTURA TÉCNICA Y GESTIÓN DE MEDIOS (BUNNY.NET)

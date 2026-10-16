@@ -1,0 +1,108 @@
+export type Language = 'es' | 'tr' | 'en' | 'it';
+
+export type NavTab = 'home' | 'boletin' | 'diario' | 'expediciones' | 'ramadan' | 'perfil';
+
+export interface PrayerItem {
+  title: string;
+  description: string;
+}
+
+export interface Comment {
+  id: string;
+  author: string;
+  text: string;
+  date: string;
+}
+
+export interface PrayerBlock {
+  id: string;
+  number: number;
+  title: string;
+  scriptureRef: string;
+  scriptureText: string;
+  context: string;
+  challenge: string;
+  items: PrayerItem[];
+  imageUrl: string;
+  prayedCount: number;
+  hasPrayed?: boolean;
+  isSaved?: boolean;
+  comments: Comment[];
+  isExtra?: boolean;
+}
+
+export interface CalendarEvent {
+  id: string;
+  day: number;
+  month: string;
+  year: number;
+  title: string;
+  time: string;
+  location: string;
+  category: 'vigilia' | 'discipulado' | 'mision' | 'reunion';
+  description: string;
+  linkText?: string;
+  zoomUrl?: string;
+}
+
+export interface PollOption {
+  id: number;
+  text: string;
+  votes: number;
+}
+
+export interface Poll {
+  id: string;
+  question: string;
+  options: PollOption[];
+  totalVotes: number;
+  userVotedOptionId?: number | null;
+}
+
+export interface MissionaryProject {
+  id: string;
+  title: string;
+  description: string;
+  progressPercent: number;
+  goal: string;
+  current: string;
+  status: 'active' | 'completed' | 'preparation';
+  image: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  userId: string;
+  userName: string;
+  content: string;
+  timestamp: string;
+  avatar?: string;
+  role?: string;
+}
+
+export interface MissionaryBirthday {
+  id: string;
+  name: string;
+  role: string;
+  age: number;
+  date: string;
+  avatar: string;
+}
+
+export interface OnlineIntercessor {
+  id: string;
+  name: string;
+  country: string;
+  city: string;
+  flag: string;
+  activeMinutes: number;
+}
+
+export interface DailyPrayerEntry {
+  id: string;
+  title: string;
+  scripture?: string;
+  category: 'orado' | 'guardado' | 'contestado' | 'propio';
+  date: string;
+  notes?: string;
+}

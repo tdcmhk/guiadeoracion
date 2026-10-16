@@ -1,0 +1,6 @@
+{
+  "name": "Intranet Misionera MMM Turquía",
+  "description": "Plataforma central e Intranet de intercesión, movilización, boletín de oración, diario espiritual y coordinación misionera para la obra en Turquía.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

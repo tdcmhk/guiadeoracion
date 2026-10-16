@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "site.mmmturquia.intranet",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:7D:0F:52:CC:71:85:49:87:CE:77:E9:1B:7F:30:98:46:9A:C5:3C:94:4A:BA:55:0C:E3:1C:17:64:84"
+      ]
+    }
+  }
+]
