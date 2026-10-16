@@ -385,10 +385,15 @@ export default function App() {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = (redirectTab?: NavTab) => {
     setCurrentUser(null);
     localStorage.removeItem('mmmturquia_current_user');
-    setCurrentTab('portal');
+    if (redirectTab) {
+      setCurrentTab(redirectTab);
+    } else if (currentTab === 'admin' || currentTab === 'home') {
+      setCurrentTab('portal');
+    }
+    // If on perfil, stays on perfil so the Google Login screen is shown immediately
   };
 
   const prayedBlocksCount = blocks.filter((b) => b.hasPrayed).length;

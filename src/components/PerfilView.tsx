@@ -115,6 +115,15 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
     window.open(`https://wa.me/51938204456?text=${texto}`, '_blank');
   };
 
+  const handleCancelRegistration = () => {
+    setIsRegistering(false);
+    // Si el usuario no completó los datos obligatorios o cancela el registro,
+    // se cierra la sesión actual para devolverlo inmediatamente al Acceso con Google
+    if (!currentUser?.whatsapp) {
+      onLogout();
+    }
+  };
+
   // =========================================================================
   // VISTA 1: ACCESO ÚNICO CON GOOGLE (Sin correo ni contraseña)
   // =========================================================================
@@ -233,6 +242,27 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
   if (isRegistering || !currentUser.whatsapp || currentUser.whatsapp === '') {
     return (
       <div className="max-w-xl mx-auto my-6 p-6 sm:p-8 rounded-3xl bg-white dark:bg-[#131d33] border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5">
+        {/* Barra superior de navegación / Cancelar */}
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800 text-xs">
+          <button
+            type="button"
+            onClick={handleCancelRegistration}
+            className="inline-flex items-center gap-1.5 font-semibold text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/40 px-2.5 py-1.5 rounded-lg transition-colors"
+          >
+            <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            <span>Cancelar e ingresar con Google</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onNavigateTab('portal')}
+            className="inline-flex items-center gap-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 px-2 py-1 rounded-lg transition-colors"
+          >
+            <span>Ir al Inicio</span>
+            <span className="material-symbols-outlined text-[16px]">home</span>
+          </button>
+        </div>
+
         <div className="text-center space-y-1">
           <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#0e9594]/15 text-[#0e9594] text-xs font-bold uppercase tracking-wider">
             <span className="material-symbols-outlined text-[16px]">how_to_reg</span>
@@ -360,21 +390,23 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 pt-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
             <button
               type="button"
-              onClick={() => setIsRegistering(false)}
-              className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
+              onClick={handleCancelRegistration}
+              className="px-4 py-2.5 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 flex items-center gap-1.5 transition-colors"
             >
-              Cancelar
+              <span className="material-symbols-outlined text-[18px]">close</span>
+              <span>Cancelar y volver al Acceso Google</span>
             </button>
 
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-xl bg-[#0e9594] hover:bg-[#0b7a79] text-white text-xs font-bold shadow-md transition-all"
+              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#0e9594] to-[#1a365d] hover:opacity-95 text-white text-xs font-bold shadow-md transition-all flex items-center gap-2"
             >
-              {isSubmitting ? 'Guardando...' : 'Completar Registro'}
+              <span className="material-symbols-outlined text-[18px]">how_to_reg</span>
+              <span>{isSubmitting ? 'Guardando...' : 'Completar Registro'}</span>
             </button>
           </div>
         </form>
