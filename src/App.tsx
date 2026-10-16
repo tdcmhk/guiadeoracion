@@ -12,6 +12,7 @@ import {
 } from './data/initialData';
 import { Navbar } from './components/Navbar';
 import { RootHomeView } from './components/RootHomeView';
+import { RadioView } from './components/RadioView';
 import { IntranetDashboard } from './components/IntranetDashboard';
 import { BoletinView } from './components/BoletinView';
 import { DiarioView } from './components/DiarioView';
@@ -431,7 +432,17 @@ export default function App() {
           />
         )}
 
-        {/* TAB 2: INTRANET DASHBOARD (homeintranet - Protegido para Intercesores/Admins) */}
+        {/* TAB 2: RADIO ESPERANZA 24/7 (Consola Completa, Guía de Programación y Fonoteca a la carta) */}
+        {currentTab === 'radio' && (
+          <RadioView
+            lang={lang}
+            isPlayingRadio={isPlayingRadio}
+            onToggleRadio={handleToggleRadio}
+            onNavigateTab={setCurrentTab}
+          />
+        )}
+
+        {/* TAB 3: INTRANET DASHBOARD (homeintranet - Protegido para Intercesores/Admins) */}
         {currentTab === 'home' && (
           <IntranetDashboard
             events={INITIAL_CALENDAR_EVENTS}

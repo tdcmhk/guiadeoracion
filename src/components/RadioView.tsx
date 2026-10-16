@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Language } from '../types';
+import { Language, NavTab } from '../types';
 import { translations } from '../data/i18n';
 
 interface RadioViewProps {
   lang: Language;
   isPlayingRadio: boolean;
   onToggleRadio: () => void;
+  onNavigateTab?: (tab: NavTab) => void;
 }
 
 interface PodcastEpisode {
@@ -163,7 +164,8 @@ const SCHEDULE_PROGRAMS: ScheduleProgram[] = [
 export const RadioView: React.FC<RadioViewProps> = ({
   lang,
   isPlayingRadio,
-  onToggleRadio
+  onToggleRadio,
+  onNavigateTab
 }) => {
   const t = translations[lang] || translations.es;
 
@@ -248,11 +250,23 @@ export const RadioView: React.FC<RadioViewProps> = ({
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#0e9594]/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-6">
-          {/* Header Row: Live indicator and listener counter */}
+          {/* Header Row: Back to Inicio, Live indicator, listener counter */}
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-bold uppercase tracking-wider">
-              <span className={`w-2.5 h-2.5 rounded-full bg-red-500 shadow-lg shadow-red-500/50 ${isPlayingRadio ? 'animate-ping' : ''}`} />
-              <span>{t.radio_live_status}</span>
+            <div className="flex items-center gap-3">
+              {onNavigateTab && (
+                <button
+                  onClick={() => onNavigateTab('portal')}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-xs font-semibold text-slate-200 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[16px]">arrow_back</span>
+                  <span>Volver al Inicio</span>
+                </button>
+              )}
+
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-red-500/15 border border-red-500/40 text-red-300 text-xs font-bold uppercase tracking-wider">
+                <span className={`w-2.5 h-2.5 rounded-full bg-red-500 shadow-lg shadow-red-500/50 ${isPlayingRadio ? 'animate-ping' : ''}`} />
+                <span>{t.radio_live_status}</span>
+              </div>
             </div>
 
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 font-mono-code">

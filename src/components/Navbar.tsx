@@ -83,19 +83,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>{t.nav_portal}</span>
             </button>
 
-            {/* Radio 24/7 Streaming Toggle */}
+            {/* Radio 24/7 - Navegación a la Consola y Estado de Transmisión */}
             <button
-              onClick={onToggleRadio}
+              onClick={() => handleTabClick('radio')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                isPlayingRadio
-                  ? 'bg-red-500/20 text-red-400 border border-red-500/40'
+                currentTab === 'radio'
+                  ? 'bg-gradient-to-r from-[#d4af37] to-[#b45309] text-slate-950 font-bold shadow-xs'
+                  : isPlayingRadio
+                  ? 'bg-red-500/20 text-red-300 border border-red-500/40'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
               <span className="material-symbols-outlined text-[17px]">
                 {isPlayingRadio ? 'volume_up' : 'radio'}
               </span>
-              <span>{t.nav_radio}</span>
+              <span>{t.nav_radio || 'Radio 24/7'}</span>
               {isPlayingRadio && (
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
               )}
@@ -274,15 +276,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
-            onClick={onToggleRadio}
-            className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg text-slate-200 hover:bg-slate-800"
+            onClick={() => handleTabClick('radio')}
+            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
+              currentTab === 'radio'
+                ? 'bg-gradient-to-r from-[#d4af37] to-[#b45309] text-slate-900 font-bold'
+                : 'text-slate-200 hover:bg-slate-800'
+            }`}
           >
             <div className="flex items-center gap-2.5">
               <span className="material-symbols-outlined text-[20px]">radio</span>
               <span>Radio Esperanza 24/7</span>
             </div>
             <span className={`text-xs font-bold ${isPlayingRadio ? 'text-red-400' : 'text-slate-400'}`}>
-              {isPlayingRadio ? 'EN VIVO' : 'Pausado'}
+              {isPlayingRadio ? '● EN VIVO' : 'Consola Completa'}
             </span>
           </button>
 

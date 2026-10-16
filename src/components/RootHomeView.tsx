@@ -39,63 +39,87 @@ export const RootHomeView: React.FC<RootHomeViewProps> = ({
             {t.hero_portal_sub}
           </p>
 
-          {/* Primary Action Buttons */}
+          {/* Primary Action Buttons (Hero CTA Group) */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
-              onClick={onToggleRadio}
+              onClick={() => onNavigateTab('radio')}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b45309] text-[#070d19] font-bold text-sm shadow-lg hover:scale-105 active:scale-95 transition-all"
             >
-              <span className="material-symbols-outlined text-[20px]">
-                {isPlayingRadio ? 'pause_circle' : 'radio'}
-              </span>
-              <span>{isPlayingRadio ? 'Pausar Radio' : 'Sintonizar Radio 24/7'}</span>
+              <span className="material-symbols-outlined text-[20px]">radio</span>
+              <span>Estudio Radio 24/7</span>
+            </button>
+
+            <button
+              onClick={() => onNavigateTab('perfil')}
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#0e9594]/20 hover:bg-[#0e9594]/30 text-[#2dd4bf] font-semibold text-sm border border-[#0e9594]/50 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">favorite</span>
+              <span>Unirme como Intercesor</span>
             </button>
 
             <button
               onClick={() => onNavigateTab('perfil')}
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-sm border border-slate-700 transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">account_circle</span>
-              <span>Acceder a Mi Perfil</span>
+              <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
+              <span>Ser Patrocinador VIP</span>
             </button>
 
             <a
               href="#siete-iglesias"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-sm border border-slate-700 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-sm border border-slate-700 transition-colors"
             >
               <span className="material-symbols-outlined text-[18px]">travel_explore</span>
-              <span>Las 7 Iglesias</span>
+              <span>7 Iglesias</span>
             </a>
           </div>
 
-          {/* Mini Consola Radio 24/7 en el Home */}
-          <div className="max-w-xl mx-auto rounded-2xl bg-slate-900/80 border border-slate-700/80 p-4 sm:p-5 flex items-center justify-between gap-4 backdrop-blur-md shadow-xl text-left">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-500 shrink-0">
+          {/* Mini Consola Radio 24/7 en el Home (con Consola Completa) */}
+          <div className="max-w-xl mx-auto rounded-2xl bg-slate-900/90 border border-[#d4af37]/40 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-md shadow-2xl text-left">
+            <div className="flex items-center gap-3.5 w-full sm:w-auto">
+              <div className="w-12 h-12 rounded-xl bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-500 shrink-0 relative">
                 <span className={`w-3.5 h-3.5 rounded-full bg-red-500 shadow-lg shadow-red-500/50 ${isPlayingRadio ? 'animate-ping' : ''}`} />
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500 absolute" />
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-white text-sm">Radio Esperanza Turquía</span>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-red-500/20 text-red-400 font-mono-code font-bold uppercase">
-                    EN VIVO 24/7
+                  <h4 className="font-bold text-white text-sm truncate">Radio Esperanza Turquía 24/7</h4>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-red-500/20 text-red-400 font-mono-code font-bold uppercase shrink-0">
+                    EN VIVO
                   </span>
                 </div>
                 <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
-                  {isPlayingRadio ? t.radio_playing_status : t.radio_paused_status}
+                  {isPlayingRadio
+                    ? 'Transmitiendo en directo — Radio Esperanza Turquía 24/7'
+                    : 'En directo: Alabanzas y mensajes de fe desde Estambul'}
                 </p>
               </div>
             </div>
 
-            <button
-              onClick={onToggleRadio}
-              className="w-11 h-11 rounded-full bg-gradient-to-r from-[#0e9594] to-[#1e3a8a] text-white flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-transform shrink-0"
-              aria-label="Reproducir o pausar transmisión"
-            >
-              <span className="material-symbols-outlined text-[24px]">
-                {isPlayingRadio ? 'pause' : 'play_arrow'}
-              </span>
-            </button>
+            {/* Controles de la Consola: Play/Pausa + Botón Consola Completa */}
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
+              <button
+                onClick={onToggleRadio}
+                className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b45309] text-slate-950 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all"
+                aria-label={isPlayingRadio ? 'Pausar transmisión' : 'Reproducir transmisión'}
+                title={isPlayingRadio ? 'Pausar transmisión' : 'Reproducir transmisión'}
+              >
+                <span className="material-symbols-outlined text-[24px]">
+                  {isPlayingRadio ? 'pause' : 'play_arrow'}
+                </span>
+              </button>
+
+              <button
+                onClick={() => onNavigateTab('radio')}
+                className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all hover:border-[#d4af37]/60 group"
+                title="Abrir la consola completa de Radio Esperanza"
+              >
+                <span>Consola Completa</span>
+                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">
+                  arrow_forward
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
