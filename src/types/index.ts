@@ -2,7 +2,7 @@ export type Language = 'es' | 'tr' | 'en' | 'it';
 
 export type UserRole = 'seguidor' | 'intercesor' | 'patrocinador' | 'admin';
 
-export type NavTab = 'portal' | 'home' | 'boletin' | 'diario' | 'expediciones' | 'ramadan' | 'perfil' | 'admin';
+export type NavTab = 'portal' | 'radio' | 'home' | 'boletin' | 'diario' | 'expediciones' | 'ramadan' | 'perfil' | 'admin';
 
 export interface UserProfile {
   uid: string;
