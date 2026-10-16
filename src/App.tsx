@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { NavTab, Language, PrayerBlock, DailyPrayerEntry, ChatMessage, Poll } from './types';
+import { useState, useEffect, useRef } from 'react';
+import { NavTab, Language, PrayerBlock, DailyPrayerEntry, ChatMessage, Poll, UserProfile, UserRole } from './types';
 import {
   INITIAL_PRAYER_BLOCKS,
   INITIAL_CALENDAR_EVENTS,
@@ -11,6 +11,7 @@ import {
   INITIAL_DIARY_ENTRIES
 } from './data/initialData';
 import { Navbar } from './components/Navbar';
+import { RootHomeView } from './components/RootHomeView';
 import { IntranetDashboard } from './components/IntranetDashboard';
 import { BoletinView } from './components/BoletinView';
 import { DiarioView } from './components/DiarioView';
@@ -22,7 +23,7 @@ import { Footer } from './components/Footer';
 
 export default function App() {
   // Navigation & Theme
-  const [currentTab, setCurrentTab] = useState<NavTab>('home');
+  const [currentTab, setCurrentTab] = useState<NavTab>('portal');
   const [lang, setLang] = useState<Language>(() => {
     const saved = localStorage.getItem('mmmturquia_lang');
     return (saved as Language) || 'es';
@@ -31,7 +32,78 @@ export default function App() {
     return localStorage.getItem('mmmturquia_theme') === 'dark';
   });
 
-  // State collections
+  // User & Roles Management
+  const [currentUser, setCurrentUser] = useState<UserProfile>(() => {
+    const saved = localStorage.getItem('mmmturquia_current_user');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // default below
+      }
+    }
+    return {
+      uid: 'user-default-1',
+      nombre: 'Douglas Gómez',
+      email: 'adolescentespl@gmail.com',
+      whatsapp: '+51 987 654 321',
+      pais: 'Perú',
+      iglesia: 'MMM Central',
+      rol: 'discipulo',
+      aprobado: false,
+      solicitud: 'intercesor'
+    };
+  });
+
+  const [allUsers, setAllUsers] = useState<UserProfile[]>(() => {
+    const saved = localStorage.getItem('mmmturquia_all_users');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        // default below
+      }
+    }
+    return [
+      {
+        uid: 'user-default-1',
+        nombre: 'Douglas Gómez',
+        email: 'adolescentespl@gmail.com',
+        whatsapp: '+51 987 654 321',
+        pais: 'Perú',
+        iglesia: 'MMM Central',
+        rol: 'discipulo',
+        aprobado: false,
+        solicitud: 'intercesor'
+      },
+      {
+        uid: 'user-2',
+        nombre: 'Carmen Ramírez',
+        email: 'carmen@gmail.com',
+        whatsapp: '+57 300 123 4567',
+        pais: 'Colombia',
+        iglesia: 'Medellín Central',
+        rol: 'intercesor',
+        aprobado: true
+      },
+      {
+        uid: 'user-3',
+        nombre: 'Antonio Vega',
+        email: 'antonio@empresa.com',
+        whatsapp: '+34 600 987 654',
+        pais: 'España',
+        iglesia: 'Madrid Sur',
+        rol: 'patrocinador',
+        aprobado: true
+      }
+    ];
+  });
+
+  // Radio Streaming Engine
+  const [isPlayingRadio, setIsPlayingRadio] = useState<boolean>(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Prayer collections state
   const [blocks, setBlocks] = useState<PrayerBlock[]>(() => {
     const saved = localStorage.getItem('mmmturquia_blocks');
     if (saved) {
@@ -100,13 +172,87 @@ export default function App() {
     }
   }, [darkMode]);
 
+  // Audio stream handler
+  const handleToggleRadio = () => {
+    if (!audioRef.current) return;
+    if (isPlayingRadio) {
+      audioRef.current.pause();
+      setIsPlayingRadio(false);
+    } else {
+      audioRef.current.play().then(() => {
+        setIsPlayingRadio(true);
+      }).catch((err) => {
+        console.warn('Audio stream error:', err);
+      });
+    }
+  };
+
   // Sync lang
   const handleLangChange = (newLang: Language) => {
     setLang(newLang);
     localStorage.setItem('mmmturquia_lang', newLang);
   };
 
-  // Actions
+  // Switch role simulator
+  const handleRoleSwitch = (newRole: UserRole, approved: boolean) => {
+    const updated = { ...currentUser, rol: newRole, aprobado: approved };
+    setCurrentUser(updated);
+    localStorage.setItem('mmmturquia_current_user', JSON.stringify(updated));
+
+    // Also update in allUsers
+    setAllUsers((prev) => {
+      const uList = prev.map((u) => (u.uid === updated.uid ? updated : u));
+      localStorage.setItem('mmmturquia_all_users', JSON.stringify(uList));
+      return uList;
+    });
+  };
+
+  // Pastoral 1-click approval
+  const handleApproveUser = (uid: string, targetRole: UserRole, state: boolean) => {
+    setAllUsers((prev) => {
+      const uList = prev.map((u) => {
+        if (u.uid === uid) {
+          return { ...u, rol: targetRole, aprobado: state };
+        }
+        return u;
+      });
+      localStorage.setItem('mmmturquia_all_users', JSON.stringify(uList));
+      return uList;
+    });
+
+    if (currentUser.uid === uid) {
+      const updated = { ...currentUser, rol: targetRole, aprobado: state };
+      setCurrentUser(updated);
+      localStorage.setItem('mmmturquia_current_user', JSON.stringify(updated));
+    }
+  };
+
+  // Register new user request
+  const handleRegisterUser = (data: Partial<UserProfile> & { targetRole: UserRole }) => {
+    const newUser: UserProfile = {
+      uid: `usr-${Date.now()}`,
+      nombre: data.nombre || 'Nuevo Usuario',
+      email: data.email || '',
+      whatsapp: data.whatsapp || '',
+      pais: data.pais || '',
+      iglesia: data.iglesia || '',
+      rol: 'discipulo',
+      aprobado: false,
+      solicitud: data.targetRole,
+      fechaRegistro: new Date().toLocaleDateString('es-ES')
+    };
+
+    setCurrentUser(newUser);
+    localStorage.setItem('mmmturquia_current_user', JSON.stringify(newUser));
+
+    setAllUsers((prev) => {
+      const uList = [newUser, ...prev];
+      localStorage.setItem('mmmturquia_all_users', JSON.stringify(uList));
+      return uList;
+    });
+  };
+
+  // Actions for prayer blocks
   const handleTogglePrayBlock = (blockId: string) => {
     setBlocks((prev) => {
       const updated = prev.map((b) => {
@@ -125,14 +271,12 @@ export default function App() {
   const handleToggleSaveBlock = (block: PrayerBlock) => {
     const newIsSaved = !block.isSaved;
 
-    // Update block state
     setBlocks((prev) => {
       const updated = prev.map((b) => (b.id === block.id ? { ...b, isSaved: newIsSaved } : b));
       localStorage.setItem('mmmturquia_blocks', JSON.stringify(updated));
       return updated;
     });
 
-    // Add or remove from diary
     if (newIsSaved) {
       const newEntry: DailyPrayerEntry = {
         id: `entry-${block.id}-${Date.now()}`,
@@ -156,7 +300,7 @@ export default function App() {
         if (b.id === blockId) {
           const newComment = {
             id: `comm-${Date.now()}`,
-            author: 'Douglas (Intercesor)',
+            author: `${currentUser.nombre} (${currentUser.rol.toUpperCase()})`,
             text,
             date: 'Ahora mismo'
           };
@@ -197,12 +341,12 @@ export default function App() {
   const handleSendChatMessage = (text: string) => {
     const newMsg: ChatMessage = {
       id: `msg-${Date.now()}`,
-      userId: 'user-douglas',
-      userName: 'Douglas G.',
-      role: 'Intercesor Acreditado',
+      userId: currentUser.uid,
+      userName: currentUser.nombre,
+      role: `${currentUser.rol.toUpperCase()}`,
       content: text,
       timestamp: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
-      avatar: 'DG'
+      avatar: currentUser.nombre.slice(0, 2).toUpperCase()
     };
     setChatMessages((prev) => {
       const updated = [...prev, newMsg];
@@ -235,7 +379,16 @@ export default function App() {
   const savedEntriesCount = diaryEntries.length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0b1120] text-slate-800 dark:text-slate-100 transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-[#070d19] text-slate-100 antialiased selection:bg-[#0e9594]/30 selection:text-white transition-colors duration-200">
+      {/* Background Audio Stream Player */}
+      <audio
+        ref={audioRef}
+        preload="none"
+        src="https://stream.zeno.fm/f3wvbbqmdg8uv"
+        onPlay={() => setIsPlayingRadio(true)}
+        onPause={() => setIsPlayingRadio(false)}
+      />
+
       {/* Top Navigation */}
       <Navbar
         currentTab={currentTab}
@@ -245,10 +398,31 @@ export default function App() {
         darkMode={darkMode}
         onToggleDarkMode={() => setDarkMode(!darkMode)}
         savedCount={savedEntriesCount}
+        userRole={currentUser.rol}
+        isUserApproved={currentUser.aprobado}
+        onOpenRoleModal={() => setCurrentTab('portal')}
+        isPlayingRadio={isPlayingRadio}
+        onToggleRadio={handleToggleRadio}
       />
 
       {/* Main Container Viewport */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* TAB 1: PORTAL DE RAÍZ / HOME & RADIO 24/7 (index 1) */}
+        {currentTab === 'portal' && (
+          <RootHomeView
+            currentUser={currentUser}
+            allUsers={allUsers}
+            lang={lang}
+            onNavigateTab={setCurrentTab}
+            onRoleSwitch={handleRoleSwitch}
+            onApproveUser={handleApproveUser}
+            onRegisterUser={handleRegisterUser}
+            isPlayingRadio={isPlayingRadio}
+            onToggleRadio={handleToggleRadio}
+          />
+        )}
+
+        {/* TAB 2: INTRANET DASHBOARD (homeintranet) */}
         {currentTab === 'home' && (
           <IntranetDashboard
             events={INITIAL_CALENDAR_EVENTS}
@@ -264,6 +438,7 @@ export default function App() {
           />
         )}
 
+        {/* TAB 3: BOLETÍN DE ORACIÓN (9 BLOQUES COMPLETOS) */}
         {currentTab === 'boletin' && (
           <BoletinView
             blocks={blocks}
@@ -277,6 +452,7 @@ export default function App() {
           />
         )}
 
+        {/* TAB 4: DIARIO DE ORACIÓN */}
         {currentTab === 'diario' && (
           <DiarioView
             entries={diaryEntries}
@@ -286,14 +462,17 @@ export default function App() {
           />
         )}
 
+        {/* TAB 5: EXPEDICIONES MISIONERAS */}
         {currentTab === 'expediciones' && (
           <ExpedicionesView projects={INITIAL_PROJECTS} />
         )}
 
+        {/* TAB 6: PROGRAMA RAMADÁN 2026 */}
         {currentTab === 'ramadan' && (
           <RamadanView />
         )}
 
+        {/* TAB 7: PERFIL DEL INTERCESOR */}
         {currentTab === 'perfil' && (
           <PerfilView
             prayedBlocksCount={prayedBlocksCount}

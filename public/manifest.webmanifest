@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "MMM Turquía — Radio Esperanza 24/7 & Plataforma Misionera",
+  "short_name": "MMM Turquía",
+  "description": "Radio cristiana 24/7 de alabanzas, Palabra de Dios y oración en vivo desde Turquía. Fonoteca a la carta, guía de programación e Intranet protegida.",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#070d19",
+  "theme_color": "#070d19",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["music", "news", "lifestyle", "education"],
+  "icons": [
+    {
+      "src": "/assets/icons/app-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/app-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Radio en Vivo",
+      "short_name": "En Vivo",
+      "description": "Escuchar señal en directo 24/7",
+      "url": "/#radio-section",
+      "icons": [{ "src": "/assets/icons/app-icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Boletín de Oración",
+      "short_name": "Boletín",
+      "description": "Intercesión por los 9 bloques misioneros",
+      "url": "/#boletin",
+      "icons": [{ "src": "/assets/icons/app-icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Intranet Protegida",
+      "short_name": "Intranet",
+      "description": "Acceso a diario y documentos pastorales",
+      "url": "/#intranet",
+      "icons": [{ "src": "/assets/icons/app-icon.svg", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}

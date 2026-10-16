@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavTab, Language } from '../types';
+import { NavTab, Language, UserRole } from '../types';
 import { translations } from '../data/i18n';
 
 interface NavbarProps {
@@ -10,6 +10,11 @@ interface NavbarProps {
   darkMode: boolean;
   onToggleDarkMode: () => void;
   savedCount: number;
+  userRole: UserRole;
+  isUserApproved: boolean;
+  onOpenRoleModal: () => void;
+  isPlayingRadio: boolean;
+  onToggleRadio: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -19,7 +24,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLangChange,
   darkMode,
   onToggleDarkMode,
-  savedCount
+  savedCount,
+  userRole,
+  isUserApproved,
+  onOpenRoleModal,
+  isPlayingRadio,
+  onToggleRadio
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const t = translations[lang] || translations.es;
@@ -30,31 +40,50 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const getRoleBadgeStyle = (role: UserRole) => {
+    switch (role) {
+      case 'admin':
+        return 'bg-purple-500/20 text-purple-400 border-purple-500/40';
+      case 'patrocinador':
+        return 'bg-amber-500/20 text-amber-400 border-amber-500/40';
+      case 'intercesor':
+        return 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
+      default:
+        return 'bg-[#38bdf8]/20 text-[#38bdf8] border-[#38bdf8]/40';
+    }
+  };
+
+  const getRoleIcon = (role: UserRole) => {
+    switch (role) {
+      case 'admin': return 'shield_person';
+      case 'patrocinador': return 'stars';
+      case 'intercesor': return 'volunteer_activism';
+      default: return 'person';
+    }
+  };
+
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border-b border-[#0e9594]/30 shadow-xs transition-colors duration-200">
+    <nav className="sticky top-0 z-50 bg-[#070d19]/90 dark:bg-[#070d19]/95 backdrop-blur-md border-b border-slate-800 text-slate-100 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+        <div className="flex items-center justify-between h-16 gap-3">
           
           {/* Brand Logo & Title */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => handleTabClick('home')}
+              onClick={() => handleTabClick('portal')}
               className="flex items-center gap-2.5 text-left group focus:outline-hidden"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1a365d] to-[#0e9594] flex items-center justify-center text-white shadow-md shadow-[#0e9594]/20 group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1e3a8a] to-[#0e9594] flex items-center justify-center text-[#38bdf8] border border-[#38bdf8]/30 shadow-md shadow-[#0e9594]/20 group-hover:scale-105 transition-transform shrink-0">
                 <span className="material-symbols-outlined text-[24px]">church</span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-serif-title text-base sm:text-lg font-bold text-[#1a365d] dark:text-white tracking-wide leading-none">
+                  <span className="font-serif-title text-base sm:text-lg font-bold text-white tracking-wide leading-none">
                     MMM TURQUÍA
                   </span>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-[#e5a93b]/15 text-[#b45309] dark:bg-[#e5a93b]/25 dark:text-[#fde68a]">
-                    INTRANET
-                  </span>
                 </div>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium leading-tight">
-                  Movilización & Intercesión
+                <span className="text-[10px] text-[#d4af37] font-semibold tracking-wider leading-tight">
+                  Misión & Radio 24/7
                 </span>
               </div>
             </button>
@@ -63,14 +92,43 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center gap-1 xl:gap-2">
             <button
+              onClick={() => handleTabClick('portal')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                currentTab === 'portal'
+                  ? 'bg-[#d4af37] text-[#070d19] font-bold shadow-xs'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[17px]">home</span>
+              <span>{t.nav_portal}</span>
+            </button>
+
+            <button
+              onClick={onToggleRadio}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                isPlayingRadio
+                  ? 'bg-red-500/20 text-red-400 border border-red-500/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[17px]">
+                {isPlayingRadio ? 'volume_up' : 'radio'}
+              </span>
+              <span>{t.nav_radio}</span>
+              {isPlayingRadio && (
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+              )}
+            </button>
+
+            <button
               onClick={() => handleTabClick('home')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 currentTab === 'home'
-                  ? 'bg-[#1a365d] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-[#1a365d] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">dashboard</span>
+              <span className="material-symbols-outlined text-[17px]">dashboard</span>
               <span>{t.nav_home}</span>
             </button>
 
@@ -78,13 +136,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleTabClick('boletin')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 currentTab === 'boletin'
-                  ? 'bg-[#1a365d] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-[#1a365d] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">menu_book</span>
+              <span className="material-symbols-outlined text-[17px]">menu_book</span>
               <span>{t.nav_boletin}</span>
-              <span className="ml-0.5 px-1.5 py-0.2 bg-[#0e9594] text-white rounded-full text-[10px] font-bold">
+              <span className="px-1.5 py-0.2 bg-[#0e9594] text-white rounded-full text-[10px] font-bold">
                 9
               </span>
             </button>
@@ -93,14 +151,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleTabClick('diario')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 currentTab === 'diario'
-                  ? 'bg-[#1a365d] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-[#1a365d] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">bookmark_heart</span>
+              <span className="material-symbols-outlined text-[17px]">bookmark_heart</span>
               <span>{t.nav_diario}</span>
               {savedCount > 0 && (
-                <span className="ml-0.5 px-1.5 py-0.2 bg-[#e5a93b] text-slate-900 rounded-full text-[10px] font-bold">
+                <span className="px-1.5 py-0.2 bg-[#e5a93b] text-slate-900 rounded-full text-[10px] font-bold">
                   {savedCount}
                 </span>
               )}
@@ -110,43 +168,30 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleTabClick('expediciones')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                 currentTab === 'expediciones'
-                  ? 'bg-[#1a365d] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-[#1a365d] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-[#1a365d] text-white shadow-xs border border-[#38bdf8]/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">explore</span>
+              <span className="material-symbols-outlined text-[17px]">explore</span>
               <span>{t.nav_expediciones}</span>
-            </button>
-
-            <button
-              onClick={() => handleTabClick('ramadan')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                currentTab === 'ramadan'
-                  ? 'bg-[#1a365d] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-[#1a365d] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[18px]">nightlight</span>
-              <span>{t.nav_ramadan}</span>
-            </button>
-
-            <button
-              onClick={() => handleTabClick('perfil')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
-                currentTab === 'perfil'
-                  ? 'bg-[#1a365d] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-[#1a365d] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[18px]">account_circle</span>
-              <span>{t.nav_perfil}</span>
             </button>
           </div>
 
-          {/* Right Controls: Languages, DarkMode, WhatsApp, Hamburger */}
+          {/* Right Controls: Role Badge, Language Selector, DarkMode, CTA */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* User Role Chip in Navbar */}
+            <button
+              onClick={onOpenRoleModal}
+              className={`hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border transition-transform hover:scale-105 ${getRoleBadgeStyle(userRole)}`}
+              title="Haz clic para ver o solicitar cambio de rol"
+            >
+              <span className="material-symbols-outlined text-[15px]">{getRoleIcon(userRole)}</span>
+              <span className="capitalize">{userRole}</span>
+              {isUserApproved && <span className="text-emerald-400">✓</span>}
+            </button>
+
             {/* Language Switcher */}
-            <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-0.5 rounded-lg border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center bg-slate-800/80 p-0.5 rounded-lg border border-slate-700">
               {(['es', 'tr', 'en', 'it'] as Language[]).map((l) => (
                 <button
                   key={l}
@@ -154,7 +199,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   className={`px-2 py-1 text-[11px] font-bold rounded-md uppercase transition-colors ${
                     lang === l
                       ? 'bg-[#0e9594] text-white shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      : 'text-slate-400 hover:text-white'
                   }`}
                   title={`Cambiar a ${l.toUpperCase()}`}
                 >
@@ -166,7 +211,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Dark Mode Toggle */}
             <button
               onClick={onToggleDarkMode}
-              className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-300 hover:bg-slate-800 transition-colors"
               title={darkMode ? t.light_mode : t.dark_mode}
               aria-label="Toggle dark mode"
             >
@@ -175,22 +220,30 @@ export const Navbar: React.FC<NavbarProps> = ({
               </span>
             </button>
 
-            {/* WhatsApp CTA button */}
-            <a
-              href="https://wa.me/51938204456?text=Hola,%20deseo%20unirme%20al%20grupo%20de%20intercesi%C3%B3n%20por%20Turqu%C3%ADa"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-[#25d366] to-[#128c7e] rounded-lg shadow-sm hover:opacity-95 transition-opacity"
-            >
-              <span className="material-symbols-outlined text-[16px]">volunteer_activism</span>
-              <span className="whitespace-nowrap">{t.nav_whatsapp}</span>
-            </a>
+            {/* Main Action Button */}
+            {isUserApproved ? (
+              <button
+                onClick={() => handleTabClick('home')}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-[#070d19] bg-emerald-400 hover:bg-emerald-300 rounded-lg shadow-sm transition-all"
+              >
+                <span className="material-symbols-outlined text-[16px]">lock_open</span>
+                <span>Entrar a Intranet</span>
+              </button>
+            ) : (
+              <button
+                onClick={onOpenRoleModal}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-[#070d19] bg-gradient-to-r from-[#d4af37] to-[#b45309] rounded-lg shadow-sm hover:opacity-95 transition-opacity"
+              >
+                <span className="material-symbols-outlined text-[16px]">verified_user</span>
+                <span>Validar Cuenta</span>
+              </button>
+            )}
 
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              aria-label="Abrir menú de navegación"
+              className="lg:hidden p-2 rounded-lg text-slate-200 hover:bg-slate-800"
+              aria-label="Abrir menú"
             >
               <span className="material-symbols-outlined text-[24px]">
                 {mobileMenuOpen ? 'close' : 'menu'}
@@ -201,15 +254,36 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] px-4 py-3 space-y-1 shadow-lg">
+        <div className="lg:hidden border-t border-slate-800 bg-[#070d19] px-4 py-3 space-y-1 shadow-2xl">
+          <button
+            onClick={() => handleTabClick('portal')}
+            className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
+              currentTab === 'portal' ? 'bg-[#d4af37] text-slate-900 font-bold' : 'text-slate-200 hover:bg-slate-800'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[20px]">home</span>
+            <span>{t.nav_portal}</span>
+          </button>
+
+          <button
+            onClick={onToggleRadio}
+            className="w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg text-slate-200 hover:bg-slate-800"
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="material-symbols-outlined text-[20px]">radio</span>
+              <span>Radio Esperanza 24/7</span>
+            </div>
+            <span className={`text-xs font-bold ${isPlayingRadio ? 'text-red-400' : 'text-slate-400'}`}>
+              {isPlayingRadio ? 'EN VIVO' : 'Pausado'}
+            </span>
+          </button>
+
           <button
             onClick={() => handleTabClick('home')}
             className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'home'
-                ? 'bg-[#1a365d] text-white'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              currentTab === 'home' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">dashboard</span>
@@ -219,9 +293,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleTabClick('boletin')}
             className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'boletin'
-                ? 'bg-[#1a365d] text-white'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              currentTab === 'boletin' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
             }`}
           >
             <div className="flex items-center gap-2.5">
@@ -236,9 +308,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleTabClick('diario')}
             className={`w-full flex items-center justify-between px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'diario'
-                ? 'bg-[#1a365d] text-white'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              currentTab === 'diario' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
             }`}
           >
             <div className="flex items-center gap-2.5">
@@ -255,9 +325,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleTabClick('expediciones')}
             className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'expediciones'
-                ? 'bg-[#1a365d] text-white'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              currentTab === 'expediciones' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">explore</span>
@@ -267,9 +335,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleTabClick('ramadan')}
             className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'ramadan'
-                ? 'bg-[#1a365d] text-white'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              currentTab === 'ramadan' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">nightlight</span>
@@ -279,26 +345,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleTabClick('perfil')}
             className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm font-semibold rounded-lg ${
-              currentTab === 'perfil'
-                ? 'bg-[#1a365d] text-white'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+              currentTab === 'perfil' ? 'bg-[#1a365d] text-white' : 'text-slate-200 hover:bg-slate-800'
             }`}
           >
             <span className="material-symbols-outlined text-[20px]">account_circle</span>
             <span>{t.nav_perfil}</span>
           </button>
-
-          <div className="pt-2">
-            <a
-              href="https://wa.me/51938204456?text=Hola,%20deseo%20unirme%20al%20grupo%20de%20intercesi%C3%B3n%20por%20Turqu%C3%ADa"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-[#25d366] to-[#128c7e] rounded-lg shadow-sm"
-            >
-              <span className="material-symbols-outlined text-[18px]">volunteer_activism</span>
-              <span>{t.nav_whatsapp}</span>
-            </a>
-          </div>
         </div>
       )}
     </nav>

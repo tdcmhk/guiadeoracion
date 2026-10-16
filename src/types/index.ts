@@ -1,6 +1,22 @@
 export type Language = 'es' | 'tr' | 'en' | 'it';
 
-export type NavTab = 'home' | 'boletin' | 'diario' | 'expediciones' | 'ramadan' | 'perfil';
+export type UserRole = 'discipulo' | 'intercesor' | 'patrocinador' | 'admin';
+
+export type NavTab = 'portal' | 'home' | 'boletin' | 'diario' | 'expediciones' | 'ramadan' | 'perfil' | 'radio';
+
+export interface UserProfile {
+  uid: string;
+  nombre: string;
+  apellido?: string;
+  email: string;
+  whatsapp: string;
+  pais: string;
+  iglesia: string;
+  rol: UserRole;
+  aprobado: boolean;
+  solicitud?: UserRole;
+  fechaRegistro?: string;
+}
 
 export interface PrayerItem {
   title: string;
