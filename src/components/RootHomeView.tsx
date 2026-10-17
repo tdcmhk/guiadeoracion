@@ -43,11 +43,15 @@ export const RootHomeView: React.FC<RootHomeViewProps> = ({
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#fbbf24] text-xs font-bold tracking-wider uppercase">
             <span className="material-symbols-outlined text-[16px]">explore</span>
-            <span>Turquía & Las 7 Iglesias Históricas del Apocalipsis</span>
+            <span>
+              {t.hero_portal_top}
+              </span>
           </div>
 
           <h1 className="font-serif-title text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
-            Una Puerta Abierta en el Bósforo <span className="bg-gradient-to-r from-white via-[#fbbf24] to-[#d4af37] bg-clip-text text-transparent">para las Naciones</span>
+            <span className="bg-gradient-to-r from-white via-[#fbbf24] to-[#d4af37] bg-clip-text text-transparent">
+              {t.hero_portal_title}
+              </span>
           </h1>
 
           <p className="text-slate-300 text-sm sm:text-base lg:text-lg max-w-3xl mx-auto leading-relaxed">

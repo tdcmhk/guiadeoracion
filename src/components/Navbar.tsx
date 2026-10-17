@@ -58,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <span className="font-serif-title text-base sm:text-lg font-bold text-white tracking-wide leading-none">
-                    MMM TURQUÍA
+                    {t.nav_logo}
                   </span>
                 </div>
                 <span className="text-[10px] text-[#d4af37] font-semibold tracking-wider leading-tight">

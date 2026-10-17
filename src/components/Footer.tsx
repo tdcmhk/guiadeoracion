@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { PWAInstallModal } from './PWAInstallModal';
 
+
 export const Footer: React.FC = () => {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [showInstallModal, setShowInstallModal] = useState(false);
@@ -45,7 +46,7 @@ export const Footer: React.FC = () => {
                 <span className="material-symbols-outlined text-[20px]">church</span>
               </div>
               <span className="font-serif-title text-lg font-bold text-white tracking-wide">
-                MMM TURQUÍA — INTRANET
+               MMM
               </span>
             </div>
             <p className="text-xs text-slate-400 max-w-md">
@@ -56,7 +57,7 @@ export const Footer: React.FC = () => {
           {/* Quick Actions (WhatsApp, Share, Install) */}
           <div className="flex flex-wrap items-center justify-center md:justify-end gap-3">
             {/* WhatsApp Group */}
-            <a
+            {/*<a
               href="https://wa.me/51938204456?text=Hola,%20deseo%20unirme%20al%20grupo%20de%20intercesi%C3%B3n%20por%20Turqu%C3%ADa"
               target="_blank"
               rel="noopener noreferrer"
@@ -64,7 +65,7 @@ export const Footer: React.FC = () => {
             >
               <span className="material-symbols-outlined text-[16px]">volunteer_activism</span>
               <span>Grupo de Intercesión</span>
-            </a>
+            </a>*/}
 
             {/* Share dropdown */}
             <div className="relative">
