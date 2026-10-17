@@ -185,7 +185,7 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
                 Selecciona una cuenta rápida o escribe tu cuenta de Google:
               </p>
 
-              {/* Botón rápido del Pastor Administrador 
+              {/* Botón rápido del Pastor Administrador */}
               <button
                 type="button"
                 onClick={() => handleConfirmGoogleLogin('rvicentetapia@gmail.com', 'Pastor Ricardo Vicente Tapia')}
@@ -198,7 +198,7 @@ export const PerfilView: React.FC<PerfilViewProps> = ({
                   <div className="text-xs font-bold text-purple-900 dark:text-purple-300">Pastor Ricardo Vicente Tapia</div>
                   <div className="text-[10px] text-purple-700 dark:text-purple-400">rvicentetapia@gmail.com (Pastor Admin)</div>
                 </div>
-              </button>*/}
+              </button>
 
               {/* Opción personalizada con cualquier Google */}
               <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-2">
